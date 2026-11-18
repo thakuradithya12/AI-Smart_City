@@ -11,6 +11,9 @@
 | 2026-11-18 | `django.contrib.gis` with PostGIS, geometry SRID 4326 | Required by frozen stack and location/ward requirements. | SQLite or planar geometry distances do not meet the requirement. |
 | 2026-11-18 | No public deployment in Day 1 | Owner supplied “none yet” for server/domain; local work only and public deploy gate explicitly blocked. | Invented host or deployment account. |
 | 2026-11-18 | No pilot ward fixtures | Centre coordinates and hand-drawn polygons were left as placeholders. | Invented pilot coordinates or boundaries. |
+| 2026-11-18 | Docker pip install uses 120-second timeout and 10 retries | The pasted first build failed while downloading Django due a socket read timeout; pip documents a 15-second default timeout and configurable retry count. | Relying on a short default timeout after a transient slow PyPI response. |
+| 2026-11-18 | Generate initial migrations by explicit app labels for accounts, geography, complaints, and ai_assist | Bare `makemigrations` initially generated only the already-migrated audit app; explicit labels generated the remaining model migrations. | Assuming the first bare command will generate initial migrations for apps without migration packages. |
+| 2026-11-18 | Development uses regular static storage and omits WhiteNoise middleware | Test/dev runs do not collect a production manifest; source static files are served by Django's development server. Production retains WhiteNoise manifest storage. | Requiring `collectstatic` just to render the local login template. |
 
 ## Verification sources
 
@@ -21,6 +24,7 @@
 - [pytest on PyPI](https://pypi.org/project/pytest/), [pytest-django on PyPI](https://pypi.org/project/pytest-django/), [factory_boy on PyPI](https://pypi.org/project/factory-boy/), [Ruff on PyPI](https://pypi.org/project/ruff/), [pip-audit on PyPI](https://pypi.org/project/pip-audit/), and [Bandit on PyPI](https://pypi.org/project/bandit/).
 - [Docker Compose profiles](https://docs.docker.com/compose/how-tos/profiles/) and [Caddy image tags](https://hub.docker.com/_/caddy/tags).
 - [GitHub Actions Python workflow guide](https://docs.github.com/en/actions/tutorials/build-and-test-code/python).
+- [pip timeout and retry options](https://pip.pypa.io/en/stable/cli/pip/).
 
 ## Version pin verification rule
 

@@ -10,7 +10,7 @@ A Django website for citizens to report civic issues and follow their resolution
 4. In another terminal run `docker compose exec web python manage.py migrate` and `docker compose exec web python manage.py createsuperuser`.
 5. Open `http://localhost:8000/accounts/login/`.
 
-The current scaffold has no generated database migrations yet. Generate and verify migrations before expecting login persistence or demo seeding to work. The public HTTPS deployment is not configured: no domain or server has been supplied. The Day 1 public deployment gate is blocked and is not claimed as passed. Pilot coordinates and hand-drawn ward polygons are also pending; no pilot location or ward is seeded.
+Initial migrations for the model-bearing apps are included. The public HTTPS deployment is not configured: no domain or server has been supplied. The Day 1 public deployment gate is blocked and is not claimed as passed. Pilot coordinates and hand-drawn ward polygons are also pending; no pilot location or ward is seeded.
 
 ## Current status and known limits
 
