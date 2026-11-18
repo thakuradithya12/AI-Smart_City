@@ -1,4 +1,4 @@
-Django==5.2.20
+Django==5.2.19
 psycopg[binary]==3.3.9
 Pillow==13.0.0
 whitenoise==6.11.0

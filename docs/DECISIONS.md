@@ -3,7 +3,7 @@
 | Date | Choice | Reason | Alternative rejected |
 |---|---|---|---|
 | 2026-11-18 | Python 3.12.16 slim Trixie image | Locked Python 3.12 stack; official Python image publishes this patch/tag. | Host Python 3.15 is outside the specified runtime. |
-| 2026-11-18 | Django 5.2.20 LTS | Current 5.2 maintenance release; supports Python 3.12 and remains the supported LTS line. | Django 6.2 LTS is not released yet; 6.0/6.1 are non-LTS. |
+| 2026-11-18 | Django 5.2.19 LTS | `pip install --dry-run` confirmed 5.2.19 is the newest published 5.2.x; it supports Python 3.12 and is the current available 5.2 LTS patch. Release notes report four low and one moderate security fixes, including GeoJSON CRS and `SpatialReference` SSRF protections. | Django 5.2.20 does not exist on PyPI; Django 6.2 LTS is not released yet. |
 | 2026-11-18 | PostGIS image `postgis/postgis:17-3.7` | Current stable PostGIS 3.7 Debian image compatible with PostgreSQL 17; keeps the PostgreSQL 18 volume-path migration out of this short build. | Floating `latest` and master tags are not reproducible; PostgreSQL 18 changes the volume path. |
 | 2026-11-18 | Psycopg 3.3.9 binary extra | Current Psycopg 3 release and Django PostgreSQL driver path; binary wheel avoids system compilation in the app image. | Psycopg 2 is the older driver line. |
 | 2026-11-18 | Pillow 13.0.0; WhiteNoise 6.11.0; Gunicorn 27.0.1; django-axes 9.0.0 | Current releases verified on PyPI; Axes 9 explicitly supports Django 5.2. | Older versions were pinned before current-release review and were replaced. |
@@ -22,6 +22,10 @@
 - [Docker Compose profiles](https://docs.docker.com/compose/how-tos/profiles/) and [Caddy image tags](https://hub.docker.com/_/caddy/tags).
 - [GitHub Actions Python workflow guide](https://docs.github.com/en/actions/tutorials/build-and-test-code/python).
 
+## Version pin verification rule
+
+Never pin a version unless pip's configured package index confirms it exists. Record the date of the check in this file. Before committing requirements changes, run `pip install --dry-run -r requirements/base.txt` and `pip install --dry-run -r requirements/dev.txt` in the Python 3.12 project image so the resolver checks both exact releases and their dependency compatibility. Last checked: 2026-11-18.
+
 ## Remaining Day 1 verification
 
-The Docker Linux engine is unavailable in this workspace and outbound package downloads are blocked. Therefore image build, package install, generated migrations, app tests, local smoke test, CI run, and `check --deploy` have not yet been verified. The dependency choices above are document/tag reviewed; they have not been installed as an environment lock or checked by `pip-audit`.
+The package index check found `Django==5.2.20` did not resolve; it has been corrected to 5.2.19. The exact `pip install --dry-run` results for both requirement sets are recorded in `PROGRESS.md`. This validates dependency resolution, not application build, generated migrations, app tests, local smoke test, CI, or `check --deploy`.
