@@ -1,0 +1,27 @@
+# Technical decisions
+
+| Date | Choice | Reason | Alternative rejected |
+|---|---|---|---|
+| 2026-11-18 | Python 3.12.16 slim Trixie image | Locked Python 3.12 stack; official Python image publishes this patch/tag. | Host Python 3.15 is outside the specified runtime. |
+| 2026-11-18 | Django 5.2.20 LTS | Current 5.2 maintenance release; supports Python 3.12 and remains the supported LTS line. | Django 6.2 LTS is not released yet; 6.0/6.1 are non-LTS. |
+| 2026-11-18 | PostGIS image `postgis/postgis:17-3.7` | Current stable PostGIS 3.7 Debian image compatible with PostgreSQL 17; keeps the PostgreSQL 18 volume-path migration out of this short build. | Floating `latest` and master tags are not reproducible; PostgreSQL 18 changes the volume path. |
+| 2026-11-18 | Psycopg 3.3.9 binary extra | Current Psycopg 3 release and Django PostgreSQL driver path; binary wheel avoids system compilation in the app image. | Psycopg 2 is the older driver line. |
+| 2026-11-18 | Pillow 13.0.0; WhiteNoise 6.11.0; Gunicorn 27.0.1; django-axes 9.0.0 | Current releases verified on PyPI; Axes 9 explicitly supports Django 5.2. | Older versions were pinned before current-release review and were replaced. |
+| 2026-11-18 | pytest 9.2.0; pytest-django 4.14.0; factory_boy 3.3.3; Ruff 0.16.8; pip-audit 2.10.1; Bandit 1.9.4 | Current documented/PyPI releases selected for test, lint, dependency and static security checks. | Unpinned dependency ranges. |
+| 2026-11-18 | `django.contrib.gis` with PostGIS, geometry SRID 4326 | Required by frozen stack and location/ward requirements. | SQLite or planar geometry distances do not meet the requirement. |
+| 2026-11-18 | No public deployment in Day 1 | Owner supplied “none yet” for server/domain; local work only and public deploy gate explicitly blocked. | Invented host or deployment account. |
+| 2026-11-18 | No pilot ward fixtures | Centre coordinates and hand-drawn polygons were left as placeholders. | Invented pilot coordinates or boundaries. |
+
+## Verification sources
+
+- [Django 5.2 release notes](https://docs.djangoproject.com/en/5.2/releases/) and [GeoDjango installation](https://docs.djangoproject.com/en/5.2/ref/contrib/gis/install/).
+- [PostGIS official image overview and tag guidance](https://hub.docker.com/r/postgis/postgis/).
+- [Python official image tags](https://hub.docker.com/_/python/tags).
+- [Psycopg on PyPI](https://pypi.org/project/psycopg/), [Pillow on PyPI](https://pypi.org/project/pillow/), [WhiteNoise on PyPI](https://pypi.org/project/whitenoise/), [Gunicorn on PyPI](https://pypi.org/project/gunicorn/), and [django-axes 9 release notes](https://pypi.org/project/django-axes/9.0.0/).
+- [pytest on PyPI](https://pypi.org/project/pytest/), [pytest-django on PyPI](https://pypi.org/project/pytest-django/), [factory_boy on PyPI](https://pypi.org/project/factory-boy/), [Ruff on PyPI](https://pypi.org/project/ruff/), [pip-audit on PyPI](https://pypi.org/project/pip-audit/), and [Bandit on PyPI](https://pypi.org/project/bandit/).
+- [Docker Compose profiles](https://docs.docker.com/compose/how-tos/profiles/) and [Caddy image tags](https://hub.docker.com/_/caddy/tags).
+- [GitHub Actions Python workflow guide](https://docs.github.com/en/actions/tutorials/build-and-test-code/python).
+
+## Remaining Day 1 verification
+
+The Docker Linux engine is unavailable in this workspace and outbound package downloads are blocked. Therefore image build, package install, generated migrations, app tests, local smoke test, CI run, and `check --deploy` have not yet been verified. The dependency choices above are document/tag reviewed; they have not been installed as an environment lock or checked by `pip-audit`.

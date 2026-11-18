@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Home · AI Smart City{% endblock %}
+{% block content %}
+<h1>Welcome, {{ request.user.name|default:request.user.email }}</h1>
+<p>Your signed-in role is {{ request.user.get_role_display }}.</p>
+<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Sign out</button></form>
+{% endblock %}
