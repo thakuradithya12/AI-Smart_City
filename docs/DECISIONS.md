@@ -32,6 +32,7 @@
 | 2026-11-19 | Complaint timeline merges status events, messages and evidence by creation time | Citizens and authorized staff need one chronological history with explicit citizen/before/after evidence kinds. | Separate unordered lists that can imply the wrong sequence. |
 | 2026-11-19 | Complaint records are read-only in Django admin; workflow actions remain available only through permitted transition routes | Direct status edits would bypass role checks, required fields and append-only event creation. | Editable status fields or bulk admin status actions. |
 | 2026-11-19 | Field task, citizen, triage and department actions use `visible_to` before object access; the transition service also checks actor visibility | Hiding links alone cannot prevent IDOR or direct POST attempts. | Client-side-only role checks. |
+| 2026-11-19 | Demo categories and their local ward routing rules share one clearly labelled demo department | The seeded official and field worker must be able to exercise every seeded category end-to-end using the demo logins. The seed command aligns existing demo staff and demo rules on repeat runs. | A demo routing setup whose staff cannot see assigned reports. |
 
 ## Verification sources
 

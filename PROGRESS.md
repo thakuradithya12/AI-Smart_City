@@ -38,6 +38,9 @@
 - Docker gate evidence: `docker compose run --rm checks` — migration check `No changes detected`, `36 passed`, Ruff `All checks passed!`, pip-audit `No known vulnerabilities found`; `docker compose run --rm web python manage.py check` — no issues; `docker compose run --rm web python manage.py migrate` — no migrations to apply; rebuilt web image and container-local `/accounts/login/` smoke returned HTTP 200.
 - The required four-login browser lifecycle has not been manually run or claimed by the agent. The Day 4 gate is pending the owner's browser checklist below; no `day-4` tag is created. Day 2 browser gate/tag remain UNVERIFIED and GitHub CI remains unconfirmed.
 - Code commit: `7a64f86` (`feat: add field resolution and verification workflow`).
+- Fixed a seed-demo mismatch discovered while preparing the owner browser checklist: all demo category routes now use the demo staff department, and rerunning the seed aligns existing demo staff and routing rules. The categories remain the six defaults and the ward remains generated only from coordinates the owner enters. Regression assertion added to the seed test. Commit: `6a72210` (`fix: align demo routing with seeded staff`).
+- Latest complete Docker gate after the seed fix: migration check `No changes detected`; `36 passed`; Ruff `All checks passed!`; pip-audit `No known vulnerabilities found`. Latest image rebuild started `web`; login HTTP smoke returned 200; Django system check reported no issues.
+- Manual browser lifecycle remains pending owner confirmation. Use the four logins printed by a first seed run (citizen, triage reviewer, department official, field worker); citizen confirmation completes the four-login lifecycle. If their one-time passwords were already printed and lost, change them with `docker compose exec web python manage.py changepassword <role>@example.test`.
 
 ## 2026-11-18 — Day 1 (in progress)
 
