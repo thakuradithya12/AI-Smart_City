@@ -7,7 +7,8 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
 from apps.accounts.models import User
-from apps.geography.models import Category, Department, Ward
+from apps.geography.models import Category, Department, RoutingRule, Ward
+from django.utils import timezone
 
 class Command(BaseCommand):
     help = "Create local demo accounts with random passwords (printed once)."
@@ -26,11 +27,16 @@ class Command(BaseCommand):
         # A small square gives local demos a supported area without inventing pilot geography.
         half_side = 0.001
         ring = ((lon-half_side, lat-half_side), (lon+half_side, lat-half_side), (lon+half_side, lat+half_side), (lon-half_side, lat+half_side), (lon-half_side, lat-half_side))
-        Ward.objects.update_or_create(name="Demo Ward", defaults={"boundary": MultiPolygon(Polygon(ring), srid=4326), "source": f"hand-drawn, {date.today().isoformat()}", "effective_from": date.today()})
+        ward, _ = Ward.objects.update_or_create(name="Demo Ward", defaults={"boundary": MultiPolygon(Polygon(ring), srid=4326), "source": f"hand-drawn, {date.today().isoformat()}", "effective_from": date.today()})
         departments = [Department.objects.get_or_create(name=f"Demo Department — {name}")[0] for name in ("Roads", "Sanitation", "Water", "Lighting")]
         categories = ["pothole", "garbage", "drainage", "streetlight", "water_leakage", "other"]
         for index, category_name in enumerate(categories):
-            Category.objects.get_or_create(name=category_name, defaults={"default_due_hours": 72, "default_department": departments[index % len(departments)]})
+            category, _ = Category.objects.get_or_create(name=category_name, defaults={"default_due_hours": 72, "default_department": departments[index % len(departments)]})
+            department = category.default_department or departments[index % len(departments)]
+            if category.default_department_id is None:
+                category.default_department = department
+                category.save(update_fields=["default_department"])
+            RoutingRule.objects.get_or_create(category=category, ward=ward, version=1, defaults={"department": department, "effective_from": timezone.now()})
         roles = [
             User.Role.CITIZEN,
             User.Role.TRIAGE_REVIEWER,

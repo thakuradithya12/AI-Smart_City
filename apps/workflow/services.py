@@ -50,8 +50,8 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
         raise ValidationError("A transfer reason is required.")
     if actor and role == "admin" and not reason:
         raise ValidationError("An administrator override requires a reason.")
-    if (locked.status, to_status) == ("in_triage", "rejected") and not data.get("reason_code"):
-        raise ValidationError("A reason code is required.")
+    if (locked.status, to_status) == ("in_triage", "rejected") and not reason:
+        raise ValidationError("A rejection reason is required.")
     if (locked.status, to_status) == ("in_triage", "routed") and not data.get("rule_version"):
         raise ValidationError("A routing rule version is required.")
     if (locked.status, to_status) in {("acknowledged", "assigned"), ("reopened", "assigned")}:
@@ -62,13 +62,27 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
             raise ValidationError("The assignee must belong to the complaint department.")
 
     previous = locked.status
+    previous_department_id = locked.department_id
     locked.status = to_status
+    # A transfer back to triage clears the prior department so its officials lose visibility.
+    if (previous, to_status) == ("routed", "in_triage"):
+        locked.department = None
     for field in ("department", "assignee"):
         if field in data:
             setattr(locked, field, data[field])
     locked.save()
     StatusEvent.objects.create(complaint=locked, from_status=previous, to_status=to_status, actor=actor, role=role, reason=reason or "")
-    AuditEvent.objects.create(actor=actor, role=role, action="status_transition", object_type="Complaint", object_id=str(locked.pk), before={"status": previous}, after={"status": to_status}, reason=reason or "")
+    after = {"status": to_status}
+    if (previous, to_status) == ("routed", "in_triage"):
+        after["department_id"] = None
+    if "department" in data:
+        after["department_id"] = data["department"].pk
+    if "assignee" in data:
+        after["assignee_id"] = data["assignee"].pk
+    if "rule_version" in data:
+        after["routing_rule_version"] = data["rule_version"]
+    action = "admin_override" if role == "admin" else "status_transition"
+    AuditEvent.objects.create(actor=actor, role=role, action=action, object_type="Complaint", object_id=str(locked.pk), before={"status": previous, "department_id": previous_department_id}, after=after, reason=reason or "")
     message_body = data.get("message") if to_status == "info_requested" else data.get("reply") if previous == "info_requested" and to_status == "in_triage" else None
     if message_body:
         message = ComplaintMessage.objects.create(complaint=locked, author=actor, body=message_body)

@@ -11,7 +11,7 @@
 </head>
 <body>
   <header><a href="/">AI Smart City</a></header>
-  <main>{% block content %}{% endblock %}</main>
+  <main>{% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}</main>
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>

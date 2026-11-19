@@ -17,6 +17,7 @@ from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, Evidence, StatusEvent
 from apps.complaints.services import delete_private_files, private_storage, store_citizen_image
 from apps.geography.models import Category, Ward
+from apps.geography.models import RoutingRule
 
 
 def make_image(*, format="JPEG", size=(12, 10), exif=None):
@@ -96,6 +97,7 @@ def test_seed_demo_creates_coordinate_ward_defaults_and_prints_passwords_once():
     assert ward.source.startswith("hand-drawn, ")
     assert set(Category.objects.values_list("name", flat=True)) == {"pothole", "garbage", "drainage", "streetlight", "water_leakage", "other"}
     assert User.objects.count() == 5
+    assert RoutingRule.objects.filter(ward=ward).count() == 6
     assert output.getvalue().count("@example.test ") == 5
 
     second_output = StringIO()

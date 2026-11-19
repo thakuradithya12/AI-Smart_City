@@ -23,6 +23,7 @@
 - Planned scope: exhaustive state-transition and role permission tests; triage queue; department inbox; route, acknowledge, reject, transfer and assign actions with reasons where required; status and audit event coverage.
 - No deployment or public HTTPS claim. Continue local Docker verification in small chunks and wait for owner-provided output after each chunk.
 - Chunk 1 completed: added role- and visibility-scoped transition helpers; tests every defined status pair against each role, including status/audit event writes and information-message audit records. Docker evidence: focused `pytest -q tests/test_workflow_transitions.py` — `3 passed`; full `pytest -q` — `21 passed`; migration check — `No changes detected`; Ruff clean; pip-audit `No known vulnerabilities found`.
+- Chunk 2 completed: triage queue, ward/category rule routing and reasoned override, free-text rejection, department acknowledgement/transfer/assignment, same-department worker selection, seeded demo routing rules, and audit entries. Docker evidence: focused console/workflow/seed tests — `11 passed`; `manage.py check` — no issues; full pytest — `28 passed`; migration check — `No changes detected`; Ruff clean; pip-audit — `No known vulnerabilities found`. Container startup smoke check remains next.
 
 ## 2026-11-18 — Day 1 (in progress)
 

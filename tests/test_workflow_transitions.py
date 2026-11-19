@@ -97,12 +97,12 @@ def test_every_status_pair_and_role_matches_transition_table(workflow_setup):
                     visible = Complaint.objects.visible_to(actor).filter(pk=complaint.pk).exists()
                     assert can_transition(actor, complaint, to_status) is (expected and visible)
                 status_events_before = StatusEvent.objects.filter(complaint=complaint).count()
-                audit_before = AuditEvent.objects.filter(object_type="Complaint", object_id=str(complaint.pk), action="status_transition").count()
+                audit_before = AuditEvent.objects.filter(object_type="Complaint", object_id=str(complaint.pk), action__in=["status_transition", "admin_override"]).count()
                 if expected:
                     transition(complaint, to_status, actor=actor, reason=reason, **role_data)
                     successful_roles += 1
                     assert StatusEvent.objects.filter(complaint=complaint).count() == status_events_before + 1
-                    assert AuditEvent.objects.filter(object_type="Complaint", object_id=str(complaint.pk), action="status_transition").count() == audit_before + 1
+                    assert AuditEvent.objects.filter(object_type="Complaint", object_id=str(complaint.pk), action__in=["status_transition", "admin_override"]).count() == audit_before + 1
                     assert Complaint.objects.get(pk=complaint.pk).status == to_status
                     # Reset only the fixture row to test the next role for the same pair.
                     Complaint.objects.filter(pk=complaint.pk).update(status=from_status)
@@ -110,7 +110,7 @@ def test_every_status_pair_and_role_matches_transition_table(workflow_setup):
                     with pytest.raises(ValidationError):
                         transition(complaint, to_status, actor=actor, reason=reason, **role_data)
                     assert StatusEvent.objects.filter(complaint=complaint).count() == status_events_before
-                    assert AuditEvent.objects.filter(object_type="Complaint", object_id=str(complaint.pk), action="status_transition").count() == audit_before
+                    assert AuditEvent.objects.filter(object_type="Complaint", object_id=str(complaint.pk), action__in=["status_transition", "admin_override"]).count() == audit_before
             if (from_status, to_status) in TRANSITIONS:
                 assert successful_roles == len(TRANSITIONS[(from_status, to_status)])
             else:
