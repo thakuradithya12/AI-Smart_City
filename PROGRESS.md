@@ -8,7 +8,7 @@
 - The latest full check run reached migration consistency (`No changes detected`) but pip timed out downloading Ruff before tests started. Increased the dev requirements install timeout and retries to match the app image.
 - Latest owner-provided Docker evidence: migration consistency reported `No changes detected`; full pytest reported `18 passed`; Ruff reported `All checks passed!`; pip-audit reported `No known vulnerabilities found`.
 - The report flow, private evidence endpoint, system transition and seed command are covered by those tests. Local Ruff and compile checks also pass in this workspace.
-- Day 2 browser gate remains pending: vendor asset files are absent (network DNS prevented fetching them here; a hash-verifying PowerShell script is ready), and the owner has not supplied test coordinates for a manually seeded demo ward. No browser smoke result, commit or `day-2-local` tag is claimed.
+- Day 2 browser gate remains pending: vendor asset files are absent (network DNS prevented fetching them here; a hash-verifying PowerShell script is ready), and no test coordinates were provided for a manually seeded demo ward. No browser smoke result or `day-2-local` tag is claimed. Tested implementation committed as `26d5c97` while awaiting those gate inputs.
 - Bootstrap and Leaflet downloads were attempted but DNS resolution failed in this workspace; vendor assets are not yet present.
 
 ## 2026-11-18 — Day 1 (in progress)
