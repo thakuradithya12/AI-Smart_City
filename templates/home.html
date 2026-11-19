@@ -7,6 +7,7 @@
 <nav aria-label="Citizen actions"><p><a href="{% url 'report' %}">Report a problem</a></p><p><a href="{% url 'my_complaints' %}">My complaints</a></p></nav>
 {% elif request.user.role == "triage_reviewer" or request.user.role == "admin" %}<p><a href="{% url 'triage_queue' %}">Triage queue</a></p>
 {% elif request.user.role == "department_official" or request.user.role == "supervisor" %}<p><a href="{% url 'department_inbox' %}">Department inbox</a></p>
-{% else %}<p>Field tasks will be available in a later build day.</p>{% endif %}
+{% elif request.user.role == "field_worker" %}<p><a href="{% url 'field_tasks' %}">My field tasks</a></p>
+{% endif %}
 <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Sign out</button></form>
 {% endblock %}

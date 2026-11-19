@@ -16,6 +16,8 @@ from apps.complaints.models import Complaint, Evidence
 from apps.complaints.services import delete_private_files, private_storage, store_citizen_image
 from apps.geography.models import Ward
 from apps.workflow.services import transition
+from apps.workflow.permissions import can_transition
+from apps.console.forms import AssignComplaintForm, MessageForm, ReasonForm, VerifyForm
 
 
 def register(request):
@@ -86,7 +88,32 @@ def my_complaints(request):
 @login_required
 def complaint_detail(request, pk):
     complaint = get_object_or_404(Complaint.objects.visible_to(request.user), pk=pk)
-    return render(request, "complaints/detail.html", {"complaint": complaint})
+    status_labels = dict(Complaint.Status.choices)
+    timeline = [
+        {"kind": "status", "created_at": event.created_at, "label": status_labels.get(event.to_status, event.to_status), "reason": event.reason}
+        for event in complaint.status_events.all()
+    ]
+    timeline.extend(
+        {"kind": "message", "created_at": message.created_at, "label": message.author.name, "body": message.body}
+        for message in complaint.messages.select_related("author").all()
+    )
+    timeline.extend(
+        {"kind": "evidence", "created_at": evidence.uploaded_at, "label": evidence.get_kind_display(), "evidence": evidence}
+        for evidence in complaint.evidence.all()
+    )
+    timeline.sort(key=lambda item: item["created_at"])
+    return render(request, "complaints/detail.html", {
+        "complaint": complaint,
+        "timeline": timeline,
+        "can_cancel": can_transition(request.user, complaint, Complaint.Status.CANCELLED),
+        "can_reply": can_transition(request.user, complaint, Complaint.Status.IN_TRIAGE) and complaint.status == Complaint.Status.INFO_REQUESTED,
+        "can_verify": can_transition(request.user, complaint, Complaint.Status.VERIFIED_CLOSED),
+        "can_dispute": can_transition(request.user, complaint, Complaint.Status.REOPENED),
+        "can_request_info": can_transition(request.user, complaint, Complaint.Status.INFO_REQUESTED),
+        "can_reassign": can_transition(request.user, complaint, Complaint.Status.ASSIGNED) and request.user.role == User.Role.SUPERVISOR,
+        "verify_form": VerifyForm(), "reason_form": ReasonForm(), "message_form": MessageForm(),
+        "assign_form": AssignComplaintForm(department=complaint.department) if request.user.role == User.Role.SUPERVISOR else None,
+    })
 
 
 @login_required

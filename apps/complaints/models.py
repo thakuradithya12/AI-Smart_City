@@ -49,6 +49,13 @@ class Complaint(models.Model):
     duplicate_of = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
     objects = ComplaintQuerySet.as_manager()
 
+    @property
+    def is_overdue(self):
+        return bool(
+            self.due_at and self.due_at < timezone.now()
+            and self.status not in {self.Status.VERIFIED_CLOSED, self.Status.REJECTED, self.Status.CANCELLED}
+        )
+
 class Evidence(models.Model):
     class Kind(models.TextChoices):
         CITIZEN = "citizen", "Citizen"

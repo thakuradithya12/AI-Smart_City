@@ -1,4 +1,6 @@
+import ast
 from datetime import date
+from pathlib import Path
 
 import pytest
 from django.contrib.gis.geos import MultiPolygon, Point, Polygon
@@ -6,7 +8,7 @@ from django.core.exceptions import ValidationError
 
 from apps.accounts.models import User
 from apps.audit.models import AuditEvent
-from apps.complaints.models import Complaint, Evidence, StatusEvent
+from apps.complaints.models import Complaint, Evidence, Resolution, StatusEvent
 from apps.geography.models import Category, Department, Ward
 from apps.workflow.permissions import allowed_transition_targets, can_transition
 from apps.workflow.services import TRANSITIONS, transition
@@ -84,12 +86,20 @@ def test_every_status_pair_and_role_matches_transition_table(workflow_setup):
                     sha256="0" * 64,
                     uploaded_by=setup["users"][User.Role.FIELD_WORKER],
                 )
+            if from_status == Complaint.Status.RESOLVED_PENDING_VERIFICATION:
+                Resolution.objects.create(
+                    complaint=complaint,
+                    claimed_by=setup["users"][User.Role.FIELD_WORKER],
+                    claim_note="The repair work is recorded.",
+                )
             data, reason = transition_data((from_status, to_status), setup)
             successful_roles = 0
             for role in ALL_ROLES:
                 actor = None if role == "system" else setup["users"][role]
                 expected = role in TRANSITIONS.get((from_status, to_status), set())
                 role_data = dict(data)
+                if to_status == Complaint.Status.VERIFIED_CLOSED and role == User.Role.CITIZEN:
+                    role_data["method"] = "citizen_confirmation"
                 if (from_status, to_status) == (Complaint.Status.INFO_REQUESTED, Complaint.Status.IN_TRIAGE) and role == "system":
                     role_data["reply"] = None
                     role_data["timeout"] = True
@@ -150,3 +160,21 @@ def test_information_request_and_citizen_reply_are_audited_messages(workflow_set
     transition(complaint, Complaint.Status.IN_TRIAGE, actor=citizen, reply="Near the library.")
     assert list(complaint.messages.values_list("body", flat=True)) == ["Please add a landmark.", "Near the library."]
     assert AuditEvent.objects.filter(action="complaint_message_added", object_type="ComplaintMessage").count() == 2
+
+
+def test_application_status_assignments_stay_inside_transition_service():
+    app_root = Path(__file__).resolve().parents[1] / "apps"
+    violations = []
+    for source in app_root.rglob("*.py"):
+        if "migrations" in source.parts or source.name == "services.py" and source.parent.name == "workflow":
+            continue
+        tree = ast.parse(source.read_text(encoding="utf-8"), filename=str(source))
+        for node in ast.walk(tree):
+            targets = []
+            if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+            elif isinstance(node, ast.AugAssign):
+                targets = [node.target]
+            if any(isinstance(target, ast.Attribute) and target.attr == "status" for target in targets):
+                violations.append(f"{source}:{node.lineno}")
+    assert violations == []

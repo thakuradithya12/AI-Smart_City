@@ -6,15 +6,36 @@ from apps.geography.models import Department
 
 class RouteComplaintForm(forms.Form):
     department = forms.ModelChoiceField(queryset=Department.objects.order_by("name"), required=False)
-    reason = forms.CharField(required=False, widget=forms.Textarea(attrs={"rows": 2}))
+    reason = forms.CharField(required=False, min_length=5, max_length=500, widget=forms.Textarea(attrs={"rows": 2, "minlength": 5, "maxlength": 500}))
 
 
 class RejectComplaintForm(forms.Form):
-    reason = forms.CharField(min_length=3, widget=forms.Textarea(attrs={"rows": 2}))
+    reason = forms.CharField(min_length=5, max_length=500, widget=forms.Textarea(attrs={"rows": 2, "minlength": 5, "maxlength": 500}))
 
 
 class TransferComplaintForm(forms.Form):
-    reason = forms.CharField(min_length=3, widget=forms.Textarea(attrs={"rows": 2}))
+    reason = forms.CharField(min_length=5, max_length=500, widget=forms.Textarea(attrs={"rows": 2, "minlength": 5, "maxlength": 500}))
+
+
+class MessageForm(forms.Form):
+    message = forms.CharField(min_length=5, max_length=2000, widget=forms.Textarea(attrs={"rows": 3}))
+
+
+class ReasonForm(forms.Form):
+    reason = forms.CharField(min_length=5, max_length=500, widget=forms.Textarea(attrs={"rows": 3, "minlength": 5, "maxlength": 500}))
+
+
+class FieldEvidenceForm(forms.Form):
+    kind = forms.ChoiceField(choices=(("field_before", "Before work"), ("field_after", "After work")))
+    photo = forms.ImageField()
+
+
+class WorkDoneForm(forms.Form):
+    note = forms.CharField(min_length=5, max_length=2000, widget=forms.Textarea(attrs={"rows": 3}))
+
+
+class VerifyForm(forms.Form):
+    method = forms.ChoiceField(choices=(("site_review", "Site review"), ("citizen_confirmation", "Citizen confirmation")))
 
 
 class AssignComplaintForm(forms.Form):

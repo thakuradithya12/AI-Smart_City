@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}My field tasks · AI Smart City{% endblock %}{% block content %}
+<h1>My field tasks</h1>
+{% for complaint in complaints %}<article class="card"><h2><a href="{% url 'field_task_detail' complaint.pk %}">{{ complaint.public_id }}</a></h2><p>{{ complaint.category.name }} · {{ complaint.get_status_display }} · {{ complaint.ward.name }}</p><p>Due: {{ complaint.due_at }}{% if complaint.is_overdue %} <strong class="badge">Overdue</strong>{% endif %}</p></article>{% empty %}<p>No assigned field tasks.</p>{% endfor %}
+{% endblock %}

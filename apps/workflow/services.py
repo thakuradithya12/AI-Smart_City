@@ -1,8 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.utils import timezone
 
 from apps.audit.models import AuditEvent
-from apps.complaints.models import Complaint, ComplaintMessage, StatusEvent
+from apps.complaints.models import Complaint, ComplaintMessage, Resolution, StatusEvent
 
 # One table controls every valid status transition; later days add console actions through this service.
 TRANSITIONS = {
@@ -32,20 +33,28 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
     allowed_roles = TRANSITIONS.get((locked.status, to_status), set())
     if role not in allowed_roles:
         raise ValidationError("This status transition is not allowed.")
+    if actor and not Complaint.objects.visible_to(actor).filter(pk=locked.pk).exists():
+        raise ValidationError("This user cannot act on this complaint.")
     if (locked.status, to_status) == ("in_triage", "info_requested") and not data.get("message"):
         raise ValidationError("An information request message is required.")
     if (locked.status, to_status) == ("info_requested", "in_triage") and not (data.get("reply") or data.get("timeout")):
         raise ValidationError("A citizen reply or timeout is required.")
-    if to_status in {"rejected", "reopened"} and not reason:
-        raise ValidationError("A reason is required.")
+    if to_status in {"rejected", "reopened"} or (locked.status, to_status) == ("routed", "in_triage") or role == "admin":
+        if not reason or not 5 <= len(reason.strip()) <= 500:
+            raise ValidationError("A reason of 5 to 500 characters is required.")
     if (locked.status, to_status) in {("in_triage", "routed"), ("acknowledged", "assigned"), ("reopened", "assigned")}:
         if not data.get("department") and not getattr(locked, "department_id", None):
             raise ValidationError("A department is required.")
     if (locked.status, to_status) == ("in_progress", "resolved_pending_verification"):
-        if not locked.evidence.filter(kind="field_after").exists() or not data.get("note"):
+        if not locked.evidence.filter(kind="field_after").exists() or not data.get("note", "").strip():
             raise ValidationError("After evidence and a note are required.")
-    if (locked.status, to_status) == ("resolved_pending_verification", "verified_closed") and not data.get("method"):
-        raise ValidationError("A verification method is required.")
+    if (locked.status, to_status) == ("resolved_pending_verification", "verified_closed"):
+        if not data.get("method"):
+            raise ValidationError("A verification method is required.")
+        if role == "citizen" and data["method"] != "citizen_confirmation":
+            raise ValidationError("Citizen confirmation must be recorded as the verification method.")
+        if role == "supervisor" and data["method"] != "site_review":
+            raise ValidationError("Supervisor verification must use the site review method.")
     if (locked.status, to_status) == ("routed", "in_triage") and not reason:
         raise ValidationError("A transfer reason is required.")
     if actor and role == "admin" and not reason:
@@ -63,6 +72,8 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
 
     previous = locked.status
     previous_department_id = locked.department_id
+    resolution_before = None
+    resolution_after = None
     locked.status = to_status
     # A transfer back to triage clears the prior department so its officials lose visibility.
     if (previous, to_status) == ("routed", "in_triage"):
@@ -71,6 +82,58 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
         if field in data:
             setattr(locked, field, data[field])
     locked.save()
+    if (previous, to_status) == ("in_progress", "resolved_pending_verification"):
+        prior_resolution = Resolution.objects.filter(complaint=locked).first()
+        if prior_resolution:
+            resolution_before = {
+                "claimed_by_id": prior_resolution.claimed_by_id,
+                "claimed_at": prior_resolution.claimed_at.isoformat(),
+                "claim_note": prior_resolution.claim_note,
+                "verified_by_id": prior_resolution.verified_by_id,
+                "verified_at": prior_resolution.verified_at.isoformat() if prior_resolution.verified_at else None,
+                "method": prior_resolution.method,
+                "outcome": prior_resolution.outcome,
+            }
+        resolution, _created = Resolution.objects.update_or_create(
+            complaint=locked,
+            defaults={
+                "claimed_by": actor,
+                "claimed_at": timezone.now(),
+                "claim_note": data["note"].strip(),
+                "verified_by": None,
+                "verified_at": None,
+                "method": "",
+                "outcome": "",
+            },
+        )
+        resolution_after = {
+            "claimed_by_id": resolution.claimed_by_id,
+            "claimed_at": resolution.claimed_at.isoformat(),
+            "claim_note": resolution.claim_note,
+            "outcome": resolution.outcome,
+        }
+    elif (previous, to_status) in {
+        ("resolved_pending_verification", "verified_closed"),
+        ("resolved_pending_verification", "reopened"),
+    }:
+        resolution = Resolution.objects.select_for_update().get(complaint=locked)
+        resolution_before = {
+            "verified_by_id": resolution.verified_by_id,
+            "verified_at": resolution.verified_at.isoformat() if resolution.verified_at else None,
+            "method": resolution.method,
+            "outcome": resolution.outcome,
+        }
+        resolution.verified_by = actor
+        resolution.verified_at = timezone.now()
+        resolution.method = data.get("method") or f"{role}_dispute"
+        resolution.outcome = "verified" if to_status == "verified_closed" else "disputed"
+        resolution.save(update_fields=["verified_by", "verified_at", "method", "outcome"])
+        resolution_after = {
+            "verified_by_id": resolution.verified_by_id,
+            "verified_at": resolution.verified_at.isoformat(),
+            "method": resolution.method,
+            "outcome": resolution.outcome,
+        }
     StatusEvent.objects.create(complaint=locked, from_status=previous, to_status=to_status, actor=actor, role=role, reason=reason or "")
     after = {"status": to_status}
     if (previous, to_status) == ("routed", "in_triage"):
@@ -81,8 +144,13 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
         after["assignee_id"] = data["assignee"].pk
     if "rule_version" in data:
         after["routing_rule_version"] = data["rule_version"]
+    if resolution_after:
+        after["resolution"] = resolution_after
+    before = {"status": previous, "department_id": previous_department_id}
+    if resolution_before:
+        before["resolution"] = resolution_before
     action = "admin_override" if role == "admin" else "status_transition"
-    AuditEvent.objects.create(actor=actor, role=role, action=action, object_type="Complaint", object_id=str(locked.pk), before={"status": previous, "department_id": previous_department_id}, after=after, reason=reason or "")
+    AuditEvent.objects.create(actor=actor, role=role, action=action, object_type="Complaint", object_id=str(locked.pk), before=before, after=after, reason=reason or "")
     message_body = data.get("message") if to_status == "info_requested" else data.get("reply") if previous == "info_requested" and to_status == "in_triage" else None
     if message_body:
         message = ComplaintMessage.objects.create(complaint=locked, author=actor, body=message_body)
