@@ -35,6 +35,6 @@ These decisions were supplied by the project owner on 2026-11-18. They are bindi
 - Centre coordinates and hand-drawn ward polygons remain absent. Build generic geography support only; do not seed a fictitious ward or claim the location flow is operational.
 - The six default categories and AI policy above supersede any assumption that the user confirmed another category list.
 
-## Day 3 decision
+## Rejection reason clarification
 
-- For triage rejection (`in_triage -> rejected`), use a mandatory free-text reason only, as chosen by the owner on 2026-11-19. This replaces section 8's reason-code requirement for this transition; do not invent a fixed code list.
+- Agent assumption (owner approved 2026-11-19): reasons are required free text, 5 to 500 characters. For triage rejection (`in_triage -> rejected`), this replaces section 8's reason-code requirement; do not add a fixed code list.

@@ -8,15 +8,14 @@
 - The latest full check run reached migration consistency (`No changes detected`) but pip timed out downloading Ruff before tests started. Increased the dev requirements install timeout and retries to match the app image.
 - Latest owner-provided Docker evidence: migration consistency reported `No changes detected`; full pytest reported `18 passed`; Ruff reported `All checks passed!`; pip-audit reported `No known vulnerabilities found`.
 - The report flow, private evidence endpoint, system transition and seed command are covered by those tests. Local Ruff and compile checks also pass in this workspace.
-- Day 2 browser gate remains pending: vendor asset files are absent (network DNS prevented fetching them here; a hash-verifying PowerShell script is ready), and no test coordinates were provided for a manually seeded demo ward. No browser smoke result or `day-2-local` tag is claimed. Tested implementation committed as `26d5c97` while awaiting those gate inputs.
-- Bootstrap and Leaflet downloads were attempted but DNS resolution failed in this workspace; vendor assets are not yet present.
+- At the time of this recovery entry, the Day 2 browser gate was still pending: vendor asset files were absent in the workspace and no test coordinates had been supplied. Bootstrap and Leaflet downloads had failed here due to DNS. The implementation commit at that point was `26d5c97`.
 
-## 2026-11-19 — Day 2 local gate completed
+## 2026-11-19 — Day 2 local gate status: UNVERIFIED
 
-- Owner reported that the localhost browser flow passed: vendor assets downloaded, demo ward seeded, registration and login, photo and pin report, My complaints timeline, outside-ward refusal, and cross-user detail/evidence 404.
-- Automated Docker evidence: migration consistency `No changes detected`; pytest `18 passed`; Ruff clean; pip-audit `No known vulnerabilities found`.
-- Tagged `day-2-local` after the browser gate report. The owner supplied the GitHub CI field as an unresolved `[green / red: paste error]` placeholder; CI status is pending and not inferred.
-- Note: the vendor files described as downloaded were not visible in this shared worktree when checked. The report records the owner's localhost test; ensure those files are present in the versioned project checkout before another environment deploys it.
+- The prior message containing the apparent localhost results was template text, not the owner's test report. No manual Day 2 browser result is confirmed.
+- The `day-2-local` tag exists, but is UNVERIFIED until the owner reports their own results. Do not cite it as a passed gate.
+- Automated evidence remains: Docker migration check `No changes detected`; pytest `18 passed`; Ruff clean; pip-audit `No known vulnerabilities found`. These checks do not verify the browser gate.
+- GitHub CI has not been confirmed. No green or red result is recorded.
 
 ## 2026-11-19 — Day 3 (in progress)
 
@@ -25,7 +24,14 @@
 - Chunk 1 completed: added role- and visibility-scoped transition helpers; tests every defined status pair against each role, including status/audit event writes and information-message audit records. Docker evidence: focused `pytest -q tests/test_workflow_transitions.py` — `3 passed`; full `pytest -q` — `21 passed`; migration check — `No changes detected`; Ruff clean; pip-audit `No known vulnerabilities found`.
 - Chunk 2 completed: triage queue, ward/category rule routing and reasoned override, free-text rejection, department acknowledgement/transfer/assignment, same-department worker selection, seeded demo routing rules, and audit entries. Docker evidence: focused console/workflow/seed tests — `11 passed`; `manage.py check` — no issues; full pytest — `28 passed`; migration check — `No changes detected`; Ruff clean; pip-audit — `No known vulnerabilities found`.
 - Day 3 gate passed locally: rebuilt and started `web`; container system check found no issues; in-container request to `/accounts/login/` returned HTTP 200. Transition and IDOR tests pass in the full suite. Commits: `c6eda7f` (transition permissions/tests), `c420396` (triage and department consoles). Tagged `day-3`.
-- GitHub CI status remains pending because the owner supplied an unresolved `[green / red: paste error]` placeholder; no result inferred.
+- GitHub CI remains unconfirmed; no result inferred.
+
+## 2026-11-19 — Day 4 (in progress)
+
+- Day 2 localhost browser gate and the existing `day-2-local` tag are marked UNVERIFIED until the owner supplies their own results. GitHub CI is unconfirmed.
+- Rejection reasons are mandatory free text, 5–500 characters, approved by the owner on 2026-11-19; see `docs/CLARIFICATIONS.md`.
+- Planned scope only: field tasks/evidence/work claim; separate verification/dispute/reopen; citizen cancel and information reply; due badges; timeline evidence; Django admin configuration; full lifecycle, dispute, cancel and permission tests.
+- No `day-4` tag until the owner confirms the local four-login browser gate.
 
 ## 2026-11-18 — Day 1 (in progress)
 
