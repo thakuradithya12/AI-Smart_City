@@ -11,6 +11,18 @@
 - Day 2 browser gate remains pending: vendor asset files are absent (network DNS prevented fetching them here; a hash-verifying PowerShell script is ready), and no test coordinates were provided for a manually seeded demo ward. No browser smoke result or `day-2-local` tag is claimed. Tested implementation committed as `26d5c97` while awaiting those gate inputs.
 - Bootstrap and Leaflet downloads were attempted but DNS resolution failed in this workspace; vendor assets are not yet present.
 
+## 2026-11-19 — Day 2 local gate completed
+
+- Owner reported that the localhost browser flow passed: vendor assets downloaded, demo ward seeded, registration and login, photo and pin report, My complaints timeline, outside-ward refusal, and cross-user detail/evidence 404.
+- Automated Docker evidence: migration consistency `No changes detected`; pytest `18 passed`; Ruff clean; pip-audit `No known vulnerabilities found`.
+- Tagged `day-2-local` after the browser gate report. The owner supplied the GitHub CI field as an unresolved `[green / red: paste error]` placeholder; CI status is pending and not inferred.
+- Note: the vendor files described as downloaded were not visible in this shared worktree when checked. The report records the owner's localhost test; ensure those files are present in the versioned project checkout before another environment deploys it.
+
+## 2026-11-19 — Day 3 (in progress)
+
+- Planned scope: exhaustive state-transition and role permission tests; triage queue; department inbox; route, acknowledge, reject, transfer and assign actions with reasons where required; status and audit event coverage.
+- No deployment or public HTTPS claim. Continue local Docker verification in small chunks and wait for owner-provided output after each chunk.
+
 ## 2026-11-18 — Day 1 (in progress)
 
 - Read the complete root AGENTS.md and captured owner decisions in `docs/CLARIFICATIONS.md`.
