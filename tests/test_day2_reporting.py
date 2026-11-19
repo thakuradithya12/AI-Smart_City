@@ -98,6 +98,9 @@ def test_seed_demo_creates_coordinate_ward_defaults_and_prints_passwords_once():
     assert set(Category.objects.values_list("name", flat=True)) == {"pothole", "garbage", "drainage", "streetlight", "water_leakage", "other"}
     assert User.objects.count() == 5
     assert RoutingRule.objects.filter(ward=ward).count() == 6
+    demo_department = User.objects.get(role=User.Role.FIELD_WORKER).department
+    assert set(Category.objects.values_list("default_department_id", flat=True)) == {demo_department.pk}
+    assert set(RoutingRule.objects.filter(ward=ward).values_list("department_id", flat=True)) == {demo_department.pk}
     assert output.getvalue().count("@example.test ") == 5
 
     second_output = StringIO()

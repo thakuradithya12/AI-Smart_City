@@ -28,15 +28,20 @@ class Command(BaseCommand):
         half_side = 0.001
         ring = ((lon-half_side, lat-half_side), (lon+half_side, lat-half_side), (lon+half_side, lat+half_side), (lon-half_side, lat+half_side), (lon-half_side, lat-half_side))
         ward, _ = Ward.objects.update_or_create(name="Demo Ward", defaults={"boundary": MultiPolygon(Polygon(ring), srid=4326), "source": f"hand-drawn, {date.today().isoformat()}", "effective_from": date.today()})
-        departments = [Department.objects.get_or_create(name=f"Demo Department — {name}")[0] for name in ("Roads", "Sanitation", "Water", "Lighting")]
+        # All seeded categories share the staff department so one demo login set can exercise a full workflow.
+        demo_department, _ = Department.objects.get_or_create(name="Demo Department — Roads")
+        for name in ("Sanitation", "Water", "Lighting"):
+            Department.objects.get_or_create(name=f"Demo Department — {name}")
         categories = ["pothole", "garbage", "drainage", "streetlight", "water_leakage", "other"]
-        for index, category_name in enumerate(categories):
-            category, _ = Category.objects.get_or_create(name=category_name, defaults={"default_due_hours": 72, "default_department": departments[index % len(departments)]})
-            department = category.default_department or departments[index % len(departments)]
-            if category.default_department_id is None:
-                category.default_department = department
-                category.save(update_fields=["default_department"])
-            RoutingRule.objects.get_or_create(category=category, ward=ward, version=1, defaults={"department": department, "effective_from": timezone.now()})
+        for category_name in categories:
+            category, _ = Category.objects.update_or_create(
+                name=category_name,
+                defaults={"default_due_hours": 72, "default_department": demo_department},
+            )
+            RoutingRule.objects.update_or_create(
+                category=category, ward=ward, version=1,
+                defaults={"department": demo_department, "effective_from": timezone.now()},
+            )
         roles = [
             User.Role.CITIZEN,
             User.Role.TRIAGE_REVIEWER,
@@ -44,7 +49,6 @@ class Command(BaseCommand):
             User.Role.SUPERVISOR,
             User.Role.FIELD_WORKER,
         ]
-        department, _ = Department.objects.get_or_create(name="Demo Department")
         for role in roles:
             email = f"{role}@example.test"
             password = secrets.token_urlsafe(24)
@@ -54,11 +58,14 @@ class Command(BaseCommand):
                 "username": email,
             }
             if role in {User.Role.DEPARTMENT_OFFICIAL, User.Role.SUPERVISOR, User.Role.FIELD_WORKER}:
-                defaults["department"] = department
+                defaults["department"] = demo_department
             user, created = User.objects.get_or_create(email=email, defaults=defaults)
             if created:
                 user.set_password(password)
                 user.save(update_fields=["password"])
                 self.stdout.write(f"{email} {password}")
             else:
+                if role in {User.Role.DEPARTMENT_OFFICIAL, User.Role.SUPERVISOR, User.Role.FIELD_WORKER} and user.department_id != demo_department.pk:
+                    user.department = demo_department
+                    user.save(update_fields=["department"])
                 self.stdout.write(f"Skipped existing account: {email}")
