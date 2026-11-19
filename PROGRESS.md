@@ -32,6 +32,12 @@
 - Rejection reasons are mandatory free text, 5–500 characters, approved by the owner on 2026-11-19; see `docs/CLARIFICATIONS.md`.
 - Planned scope only: field tasks/evidence/work claim; separate verification/dispute/reopen; citizen cancel and information reply; due badges; timeline evidence; Django admin configuration; full lifecycle, dispute, cancel and permission tests.
 - No `day-4` tag until the owner confirms the local four-login browser gate.
+- Implemented field-worker task list/detail, start work, private before/after photo uploads, work note and gated mark-done action. The transition service now writes separate Resolution claim and verification fields, validates 5–500 character reasons, checks object visibility, and audits resolution before/after values.
+- Added supervisor verification/dispute/reassignment, citizen confirmation/dispute/cancel and info-request reply actions, chronological status/message/evidence timeline, due/overdue badges, status filters, and read-only workflow records plus filtered configuration/user listings in Django admin.
+- Added Day 4 end-to-end tests for the four-role lifecycle, dispute/reopen/reassign, citizen cancel, info request/reply, field-worker IDOR and evidence access, cross-department supervisor denial, no-after-photo rejection, and the codebase scan preventing status assignments outside `transition()`.
+- Docker gate evidence: `docker compose run --rm checks` — migration check `No changes detected`, `36 passed`, Ruff `All checks passed!`, pip-audit `No known vulnerabilities found`; `docker compose run --rm web python manage.py check` — no issues; `docker compose run --rm web python manage.py migrate` — no migrations to apply; rebuilt web image and container-local `/accounts/login/` smoke returned HTTP 200.
+- The required four-login browser lifecycle has not been manually run or claimed by the agent. The Day 4 gate is pending the owner's browser checklist below; no `day-4` tag is created. Day 2 browser gate/tag remain UNVERIFIED and GitHub CI remains unconfirmed.
+- Code commit: `7a64f86` (`feat: add field resolution and verification workflow`).
 
 ## 2026-11-18 — Day 1 (in progress)
 

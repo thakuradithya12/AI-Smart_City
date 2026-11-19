@@ -26,6 +26,12 @@
 | 2026-11-19 | Triage rejection stores a mandatory 5–500 character free-text reason rather than a fixed code | Owner approved this agent assumption on 2026-11-19; this replaces section 8's reason-code requirement. | Inventing fixed rejection codes. |
 | 2026-11-19 | Route using the most recent effective ward-specific rule, then fall back to the most recent effective all-wards rule | Ward/category rules make jurisdiction-specific routing explicit; only currently effective rules can route complaints. | Arbitrary department assignment without a rule record. |
 | 2026-11-19 | Routing and assignment details are included in status audit before/after data | The status event explains the workflow step while the audit event also captures department, assignee and routing-rule version. | Logging only the status value for operational changes. |
+| 2026-11-19 | Field evidence uploads reuse Pillow validation and private storage, then are served only through the visibility-checked evidence view | Citizens and field workers need the same constrained image validation and private media handling. | Public media URLs or a second less-tested upload path. |
+| 2026-11-19 | Work claims and verification are persisted separately on `Resolution` inside `transition()` | A department or field worker's claim must not itself close a complaint; verification stores its own actor, time, method and outcome. | Treating a work-done status as proof of a fix. |
+| 2026-11-19 | Workflow audit entries include claim and verification before/after fields | Auditors need to distinguish who claimed work from who verified it, including repeated claims after reopening. | Recording only a status string for lifecycle transitions. |
+| 2026-11-19 | Complaint timeline merges status events, messages and evidence by creation time | Citizens and authorized staff need one chronological history with explicit citizen/before/after evidence kinds. | Separate unordered lists that can imply the wrong sequence. |
+| 2026-11-19 | Complaint records are read-only in Django admin; workflow actions remain available only through permitted transition routes | Direct status edits would bypass role checks, required fields and append-only event creation. | Editable status fields or bulk admin status actions. |
+| 2026-11-19 | Field task, citizen, triage and department actions use `visible_to` before object access; the transition service also checks actor visibility | Hiding links alone cannot prevent IDOR or direct POST attempts. | Client-side-only role checks. |
 
 ## Verification sources
 
