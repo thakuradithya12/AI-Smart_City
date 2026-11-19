@@ -1,6 +1,6 @@
 # Progress
 
-## 2026-11-19 — Day 2 validation recovery (in progress)
+## 2026-11-19 — Day 2 validation recovery and owner verification
 
 - Owner's Docker output confirms the app image builds and `python manage.py check` reports no issues. Direct `pytest` and `ruff` commands in the `web` service failed because that image installs only `requirements/base.txt`.
 - Added a Compose `checks` service that installs the development requirements in its disposable container, then runs pytest, Ruff and pip-audit. Next: owner reruns `docker compose run --rm checks` and returns the output; fix any findings before committing the Day 2 chunks.
@@ -8,12 +8,12 @@
 - The latest full check run reached migration consistency (`No changes detected`) but pip timed out downloading Ruff before tests started. Increased the dev requirements install timeout and retries to match the app image.
 - Latest owner-provided Docker evidence: migration consistency reported `No changes detected`; full pytest reported `18 passed`; Ruff reported `All checks passed!`; pip-audit reported `No known vulnerabilities found`.
 - The report flow, private evidence endpoint, system transition and seed command are covered by those tests. Local Ruff and compile checks also pass in this workspace.
-- At the time of this recovery entry, the Day 2 browser gate was still pending: vendor asset files were absent in the workspace and no test coordinates had been supplied. Bootstrap and Leaflet downloads had failed here due to DNS. The implementation commit at that point was `26d5c97`.
+- The earlier recovery note about missing browser assets was superseded by the later owner-run browser checklist below.
 
-## 2026-11-19 — Day 2 local gate status: UNVERIFIED
+## 2026-11-19 — Day 2 local browser gate: VERIFIED BY OWNER
 
-- The prior message containing the apparent localhost results was template text, not the owner's test report. No manual Day 2 browser result is confirmed.
-- The `day-2-local` tag exists, but is UNVERIFIED until the owner reports their own results. Do not cite it as a passed gate.
+- Owner confirmed on 2026-11-19 that the localhost browser gate worked: vendor assets loaded, demo ward seeded, registration/login, photo-and-pin report, timeline, outside-ward refusal, and cross-user 404 all worked.
+- Existing tag `day-2-local` points to `d0052d71db79724278d03c9da2c7fed4c938ce35`, the Day 2 gate record. Preserve that tag and mark its browser gate as owner verified.
 - Automated evidence remains: Docker migration check `No changes detected`; pytest `18 passed`; Ruff clean; pip-audit `No known vulnerabilities found`. These checks do not verify the browser gate.
 - GitHub CI has not been confirmed. No green or red result is recorded.
 
@@ -26,21 +26,31 @@
 - Day 3 gate passed locally: rebuilt and started `web`; container system check found no issues; in-container request to `/accounts/login/` returned HTTP 200. Transition and IDOR tests pass in the full suite. Commits: `c6eda7f` (transition permissions/tests), `c420396` (triage and department consoles). Tagged `day-3`.
 - GitHub CI remains unconfirmed; no result inferred.
 
-## 2026-11-19 — Day 4 (in progress)
+## 2026-11-19 — Day 4 browser gate: VERIFIED BY OWNER
 
-- Day 2 localhost browser gate and the existing `day-2-local` tag are marked UNVERIFIED until the owner supplies their own results. GitHub CI is unconfirmed.
+- Owner confirmed on 2026-11-19 that the four-login browser lifecycle worked. The `day-4` tag is set at the Day 4 implementation endpoint `dadb26f`. GitHub CI is unconfirmed.
 - Rejection reasons are mandatory free text, 5–500 characters, approved by the owner on 2026-11-19; see `docs/CLARIFICATIONS.md`.
 - Planned scope only: field tasks/evidence/work claim; separate verification/dispute/reopen; citizen cancel and information reply; due badges; timeline evidence; Django admin configuration; full lifecycle, dispute, cancel and permission tests.
-- No `day-4` tag until the owner confirms the local four-login browser gate.
 - Implemented field-worker task list/detail, start work, private before/after photo uploads, work note and gated mark-done action. The transition service now writes separate Resolution claim and verification fields, validates 5–500 character reasons, checks object visibility, and audits resolution before/after values.
 - Added supervisor verification/dispute/reassignment, citizen confirmation/dispute/cancel and info-request reply actions, chronological status/message/evidence timeline, due/overdue badges, status filters, and read-only workflow records plus filtered configuration/user listings in Django admin.
 - Added Day 4 end-to-end tests for the four-role lifecycle, dispute/reopen/reassign, citizen cancel, info request/reply, field-worker IDOR and evidence access, cross-department supervisor denial, no-after-photo rejection, and the codebase scan preventing status assignments outside `transition()`.
 - Docker gate evidence: `docker compose run --rm checks` — migration check `No changes detected`, `36 passed`, Ruff `All checks passed!`, pip-audit `No known vulnerabilities found`; `docker compose run --rm web python manage.py check` — no issues; `docker compose run --rm web python manage.py migrate` — no migrations to apply; rebuilt web image and container-local `/accounts/login/` smoke returned HTTP 200.
-- The required four-login browser lifecycle has not been manually run or claimed by the agent. The Day 4 gate is pending the owner's browser checklist below; no `day-4` tag is created. Day 2 browser gate/tag remain UNVERIFIED and GitHub CI remains unconfirmed.
+- The four-login browser lifecycle was later confirmed by the owner on 2026-11-19; the Day 4 gate is verified by owner. GitHub CI remains unconfirmed.
 - Code commit: `7a64f86` (`feat: add field resolution and verification workflow`).
 - Fixed a seed-demo mismatch discovered while preparing the owner browser checklist: all demo category routes now use the demo staff department, and rerunning the seed aligns existing demo staff and routing rules. The categories remain the six defaults and the ward remains generated only from coordinates the owner enters. Regression assertion added to the seed test. Commit: `6a72210` (`fix: align demo routing with seeded staff`).
 - Latest complete Docker gate after the seed fix: migration check `No changes detected`; `36 passed`; Ruff `All checks passed!`; pip-audit `No known vulnerabilities found`. Latest image rebuild started `web`; login HTTP smoke returned 200; Django system check reported no issues.
-- Manual browser lifecycle remains pending owner confirmation. Use the four logins printed by a first seed run (citizen, triage reviewer, department official, field worker); citizen confirmation completes the four-login lifecycle. If their one-time passwords were already printed and lost, change them with `docker compose exec web python manage.py changepassword <role>@example.test`.
+- The owner has confirmed the manual browser lifecycle. Use the four logins printed by a first seed run (citizen, triage reviewer, department official, field worker); citizen confirmation completes the four-login lifecycle. If their one-time passwords were already printed and lost, change them with `docker compose exec web python manage.py changepassword <role>@example.test`.
+
+## 2026-11-19 — Deployment preparation and AI dataset research (in progress)
+
+- Owner verified the Day 2 localhost browser gate and the Day 4 four-login lifecycle on 2026-11-19. `day-2-local` already existed and points to its Day 2 gate record; `day-4` is tagged at `dadb26f`. GitHub CI remains unconfirmed.
+- Prepared production Compose/Caddy configuration, production security settings, a PostgreSQL-backed report rate limiter (5 report POSTs per citizen per hour), an Axes login lockout (5 failed attempts per user/IP per rolling hour), a 300-second HSTS policy, a candidate-health deployment/rollback script, restricted backup and disposable restore-test scripts, and an Ubuntu VM runbook.
+- Added the report throttle regression test. Docker build, tests, lint, audit, and production `check --deploy` are **not verified in this run** because Docker Desktop's Linux engine API returned `permission denied` on `docker version`. No remote action or training/data download was performed.
+- AI research shortlist is in `ml/DATASETS.md` and is marked candidate/not downloaded. Three provisional image categories are proposed; rights and group-split audits remain required before training. No metrics or model performance claims exist.
+- Public deployment remains blocked: no server/domain was supplied. Pilot centre coordinates and hand-drawn ward polygons remain unresolved. GitHub CI result remains blocked on owner report.
+- Docker verification completed locally: `docker compose build web` succeeded; `docker compose run --rm checks` reported `No changes detected`, `37 passed in 52.11s`, `All checks passed!`, and `No known vulnerabilities found`; the production-like `check --deploy` exited 0 with the expected HSTS warnings for the deliberate short 300-second policy; production Compose `config --quiet` exited 0. The first stale-image production check reproduced the earlier import failure; rebuilding the image fixed it. A host `bash -n` attempt was blocked by Windows access to `bash.exe`, so script syntax was not independently verified that way.
+- No remote action, model training or dataset download was performed. Public deployment remains blocked: no server/domain was supplied. Pilot centre coordinates and hand-drawn ward polygons remain unresolved. GitHub CI result remains unconfirmed and is not inferred from local checks.
+- Next: wait for owner-provided server/domain and pilot centre before live deployment; record the GitHub CI result when the owner reports it.
 
 ## 2026-11-18 — Day 1 (in progress)
 

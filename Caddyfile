@@ -1,3 +1,4 @@
+# Domain is supplied by the production Compose environment; Caddy manages HTTPS for this host.
 {$DOMAIN} {
     encode zstd gzip
     reverse_proxy web:8000

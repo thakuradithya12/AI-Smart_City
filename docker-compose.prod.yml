@@ -1,8 +1,103 @@
 services:
-  web:
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2
-    restart: unless-stopped
   db:
+    image: postgis/postgis:17-3.7
     restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    image: ${APP_IMAGE:?Set APP_IMAGE in .env}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.prod
+      DJANGO_DEBUG: "False"
+      POSTGRES_HOST: db
+    command: ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2"]
+    expose: ["8000"]
+    volumes:
+      - private_media:/app/private_media
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; r=urllib.request.Request('http://127.0.0.1:8000/accounts/login/', headers={'Host': '${DOMAIN}', 'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(r, timeout=5)"
+      interval: 15s
+      timeout: 8s
+      retries: 5
+      start_period: 30s
+
+  candidate:
+    image: ${CANDIDATE_IMAGE:-${APP_IMAGE:-ai-smart-city:initial}}
+    profiles: ["deploy"]
+    env_file: .env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.prod
+      DJANGO_DEBUG: "False"
+      POSTGRES_HOST: db
+    command: ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2"]
+    ports: ["127.0.0.1:18001:8000"]
+    volumes:
+      - private_media:/app/private_media
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; r=urllib.request.Request('http://127.0.0.1:8000/accounts/login/', headers={'Host': '${DOMAIN}', 'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(r, timeout=5)"
+      interval: 5s
+      timeout: 8s
+      retries: 12
+      start_period: 30s
+
+  worker:
+    image: ${APP_IMAGE:?Set APP_IMAGE in .env}
+    profiles: ["ai"]
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.prod
+      DJANGO_DEBUG: "False"
+      POSTGRES_HOST: db
+    command: ["python", "manage.py", "run_ai_worker"]
+    volumes:
+      - private_media:/app/private_media
+    depends_on:
+      db:
+        condition: service_healthy
+
   caddy:
+    image: caddy:2.11.9-alpine
     restart: unless-stopped
+    env_file: .env
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  private_media:
+  caddy_data:
+  caddy_config:

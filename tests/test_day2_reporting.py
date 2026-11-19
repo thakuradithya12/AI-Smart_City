@@ -8,6 +8,7 @@ from django.contrib.gis.geos import MultiPolygon, Point, Polygon
 from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.core.exceptions import ValidationError
+from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from django.urls import reverse
@@ -133,6 +134,19 @@ def test_report_creates_complaint_evidence_and_events(client, citizen, ward, cat
     assert AuditEvent.objects.filter(object_id=str(complaint.pk)).count() == 2
     evidence = complaint.evidence.get()
     delete_private_files((evidence.original_path, evidence.display_path))
+
+
+@pytest.mark.django_db
+@override_settings(REPORT_POST_LIMIT=1, REPORT_POST_WINDOW_SECONDS=3600)
+def test_report_post_limit_is_enforced_for_authenticated_citizen(client, citizen):
+    cache.clear()
+    client.force_login(citizen)
+    assert client.get(reverse("report")).status_code == 200
+    assert client.post(reverse("report"), {}).status_code == 200
+    limited = client.post(reverse("report"), {})
+    assert limited.status_code == 429
+    assert "Report limit reached" in limited.content.decode()
+    cache.clear()
 
 
 @pytest.mark.django_db

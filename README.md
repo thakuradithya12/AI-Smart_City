@@ -17,3 +17,7 @@ Initial migrations for the model-bearing apps are included. The public HTTPS dep
 Day 1 implementation is in progress. Complaint workflow, evidence upload, ward data, AI training/inference, CI execution, backups, and deployment are not yet delivered. Do not use this skeleton for real complaints.
 
 Day 2 local routes, demo seeding and the vendor asset download/check command are documented in [`docs/README.md`](docs/README.md).
+
+## Production operations
+
+The detailed fresh Ubuntu VM, deploy, rollback, backup, and restore commands are in [`docs/RUNBOOK_UBUNTU.md`](docs/RUNBOOK_UBUNTU.md). Do not deploy until a real server/domain and pilot location have been supplied and reviewed.

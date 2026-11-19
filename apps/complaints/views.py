@@ -2,10 +2,12 @@ from datetime import timedelta
 
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.core.cache import cache
 from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -35,6 +37,22 @@ def register(request):
 def report(request):
     if request.user.role != User.Role.CITIZEN:
         raise Http404
+    # Limit every authenticated report POST before parsing or storing its uploaded image.
+    if request.method == "POST":
+        limit = getattr(settings, "REPORT_POST_LIMIT", 5)
+        window = getattr(settings, "REPORT_POST_WINDOW_SECONDS", 3600)
+        key = f"report-post:{request.user.pk}"
+        try:
+            if not cache.add(key, 1, timeout=window):
+                try:
+                    count = cache.incr(key)
+                except ValueError:
+                    count = 1 if cache.add(key, 1, timeout=window) else limit + 1
+                if count > limit:
+                    return HttpResponse("Report limit reached. Please try again later.", status=429)
+        except Exception:
+            # Fail closed if the shared limiter is unavailable; report creation must not bypass the limit.
+            return HttpResponse("Reporting is temporarily unavailable. Please try again later.", status=503)
     form = ReportForm(request.POST or None, request.FILES or None)
     if request.method == "POST" and form.is_valid():
         longitude = float(form.cleaned_data["longitude"])
