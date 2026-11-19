@@ -1,0 +1,97 @@
+from datetime import timedelta
+
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.gis.geos import Point
+from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.http import FileResponse, Http404
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+
+from apps.accounts.models import User
+from apps.audit.models import AuditEvent
+from apps.complaints.forms import CitizenRegistrationForm, ReportForm
+from apps.complaints.models import Complaint, Evidence
+from apps.complaints.services import delete_private_files, private_storage, store_citizen_image
+from apps.geography.models import Ward
+from apps.workflow.services import transition
+
+
+def register(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+    form = CitizenRegistrationForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        user = form.save()
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+        return redirect("home")
+    return render(request, "complaints/register.html", {"form": form})
+
+
+@login_required
+def report(request):
+    if request.user.role != User.Role.CITIZEN:
+        raise Http404
+    form = ReportForm(request.POST or None, request.FILES or None)
+    if request.method == "POST" and form.is_valid():
+        longitude = float(form.cleaned_data["longitude"])
+        latitude = float(form.cleaned_data["latitude"])
+        point = Point(longitude, latitude, srid=4326)
+        # Only locally supplied ward polygons decide jurisdiction; no ward means fail closed.
+        ward = Ward.objects.filter(boundary__covers=point).first()
+        if ward is None:
+            form.add_error(None, "That pin is outside the supported area. Please choose a location inside a supported ward.")
+        else:
+            paths = []
+            try:
+                with transaction.atomic():
+                    original_path, display_path, image_hash = store_citizen_image(form.cleaned_data["photo"])
+                    paths.extend((original_path, display_path))
+                    category = form.cleaned_data["category"]
+                    complaint = Complaint.objects.create(
+                        citizen=request.user, category=category,
+                        description=form.cleaned_data["description"], location=point,
+                        gps_accuracy_m=form.cleaned_data["gps_accuracy_m"],
+                        ward=ward, due_at=timezone.now() + timedelta(hours=category.default_due_hours),
+                        consent_at=timezone.now(),
+                    )
+                    complaint.public_id = f"ASC-{timezone.localdate():%Y}-{complaint.pk:06d}"
+                    complaint.save(update_fields=["public_id"])
+                    Evidence.objects.create(complaint=complaint, kind=Evidence.Kind.CITIZEN,
+                        original_path=original_path, display_path=display_path, sha256=image_hash, uploaded_by=request.user)
+                    AuditEvent.objects.create(actor=request.user, role=request.user.role, action="complaint_submitted",
+                        object_type="Complaint", object_id=str(complaint.pk), after={"status": "submitted", "ward": ward.pk})
+                    transition(complaint, Complaint.Status.IN_TRIAGE, actor=None)
+            except ValidationError as exc:
+                delete_private_files(paths)
+                for error in exc.messages:
+                    form.add_error(None, error)
+            except Exception:
+                delete_private_files(paths)
+                raise
+            else:
+                return redirect("complaint_detail", pk=complaint.pk)
+    return render(request, "complaints/report.html", {"form": form})
+
+
+@login_required
+def my_complaints(request):
+    if request.user.role != User.Role.CITIZEN:
+        raise Http404
+    complaints = Complaint.objects.visible_to(request.user).order_by("-created_at")
+    return render(request, "complaints/my_complaints.html", {"complaints": complaints})
+
+
+@login_required
+def complaint_detail(request, pk):
+    complaint = get_object_or_404(Complaint.objects.visible_to(request.user), pk=pk)
+    return render(request, "complaints/detail.html", {"complaint": complaint})
+
+
+@login_required
+def evidence_file(request, pk):
+    evidence = get_object_or_404(Evidence.objects.select_related("complaint"), pk=pk)
+    if not Complaint.objects.visible_to(request.user).filter(pk=evidence.complaint_id).exists():
+        raise Http404
+    return FileResponse(private_storage.open(evidence.display_path, "rb"), content_type="image/jpeg")

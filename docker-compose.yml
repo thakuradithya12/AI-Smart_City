@@ -18,9 +18,21 @@ services:
     env_file: .env
     ports:
       - "8000:8000"
+    volumes:
+      - private_media:/app/private_media
     depends_on:
       db:
         condition: service_healthy
+  checks:
+    build: .
+    env_file: .env
+    profiles: ["checks"]
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["sh", "-c", "python -m pip install --no-cache-dir --timeout 120 --retries 10 -r requirements/dev.txt && python manage.py makemigrations --check --dry-run && pytest -q && ruff check . && pip-audit -r requirements/base.txt"]
   caddy:
     image: caddy:2.11.9-alpine
     profiles: ["production"]
@@ -40,5 +52,6 @@ services:
         condition: service_healthy
 volumes:
   postgres_data:
+  private_media:
   caddy_data:
   caddy_config:

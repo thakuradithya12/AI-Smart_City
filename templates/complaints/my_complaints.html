@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}My complaints · AI Smart City{% endblock %}{% block content %}
+<h1>My complaints</h1><p><a class="button" href="{% url 'report' %}">Report a problem</a></p>
+{% for complaint in complaints %}<article class="card"><h2><a href="{% url 'complaint_detail' complaint.pk %}">{{ complaint.public_id }}</a></h2><p>{{ complaint.category.name }} · {{ complaint.get_status_display }}</p><time>{{ complaint.created_at }}</time></article>{% empty %}<p>No complaints yet.</p>{% endfor %}
+{% endblock %}

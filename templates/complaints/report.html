@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% load static %}{% block title %}Report a problem · AI Smart City{% endblock %}{% block content %}
+<section class="card"><h1>Report a problem</h1><p class="emergency">This platform is not an emergency service. For immediate danger, contact local emergency services.</p>
+<form method="post" enctype="multipart/form-data" id="report-form">{% csrf_token %}{{ form.non_field_errors }}
+<label for="id_category">Category</label>{{ form.category }}{{ form.category.errors }}
+<label for="id_description">Description (optional)</label>{{ form.description }}{{ form.description.errors }}
+<label for="id_photo">Photo (JPEG, PNG or WebP; maximum 8 MB)</label>{{ form.photo }}{{ form.photo.errors }}
+<fieldset><legend>Location</legend><p>Move the pin to the problem location, then confirm it. If the map does not load, enter coordinates below.</p><div id="report-map" aria-label="Map for selecting a report location"></div><button type="button" id="locate-button">Use my location</button><label for="id_latitude">Latitude</label>{{ form.latitude }}{{ form.latitude.errors }}<label for="id_longitude">Longitude</label>{{ form.longitude }}{{ form.longitude.errors }}<label for="id_gps_accuracy_m">GPS accuracy in metres (optional)</label>{{ form.gps_accuracy_m }}{{ form.gps_accuracy_m.errors }}<label class="check">{{ form.consent }} I have read the privacy notice: we store your name, email and report details to process this complaint.</label>{{ form.consent.errors }}<label class="check">{{ form.pin_confirmed }} {{ form.pin_confirmed.label }}</label>{{ form.pin_confirmed.errors }}</fieldset>
+<button type="submit">Submit report</button></form></section>
+{% endblock %}{% block extra_head %}<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">{% endblock %}{% block extra_scripts %}<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script><script src="{% static 'js/report-map.js' %}"></script>{% endblock %}

@@ -15,3 +15,5 @@ Initial migrations for the model-bearing apps are included. The public HTTPS dep
 ## Current status and known limits
 
 Day 1 implementation is in progress. Complaint workflow, evidence upload, ward data, AI training/inference, CI execution, backups, and deployment are not yet delivered. Do not use this skeleton for real complaints.
+
+Day 2 local routes, demo seeding and the vendor asset download/check command are documented in [`docs/README.md`](docs/README.md).

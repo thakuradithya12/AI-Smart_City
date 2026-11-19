@@ -38,7 +38,7 @@ class Complaint(models.Model):
     suggested_category = models.ForeignKey("geography.Category", null=True, blank=True, on_delete=models.SET_NULL, related_name="suggested_complaints")
     description = models.TextField(blank=True)
     location = models.PointField(srid=4326)
-    gps_accuracy_m = models.PositiveIntegerField(null=True, blank=True)
+    gps_accuracy_m = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     ward = models.ForeignKey("geography.Ward", null=True, blank=True, on_delete=models.PROTECT)
     department = models.ForeignKey("geography.Department", null=True, blank=True, on_delete=models.PROTECT)
     status = models.CharField(max_length=40, choices=Status.choices, default=Status.SUBMITTED)

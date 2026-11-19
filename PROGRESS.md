@@ -1,5 +1,16 @@
 # Progress
 
+## 2026-11-19 — Day 2 validation recovery (in progress)
+
+- Owner's Docker output confirms the app image builds and `python manage.py check` reports no issues. Direct `pytest` and `ruff` commands in the `web` service failed because that image installs only `requirements/base.txt`.
+- Added a Compose `checks` service that installs the development requirements in its disposable container, then runs pytest, Ruff and pip-audit. Next: owner reruns `docker compose run --rm checks` and returns the output; fix any findings before committing the Day 2 chunks.
+- The first two check-service runs used the cached copied source and therefore still executed the earlier login test; bind-mounted the working tree into the service so the same verification command always sees edits.
+- The latest full check run reached migration consistency (`No changes detected`) but pip timed out downloading Ruff before tests started. Increased the dev requirements install timeout and retries to match the app image.
+- Latest owner-provided Docker evidence: migration consistency reported `No changes detected`; full pytest reported `18 passed`; Ruff reported `All checks passed!`; pip-audit reported `No known vulnerabilities found`.
+- The report flow, private evidence endpoint, system transition and seed command are covered by those tests. Local Ruff and compile checks also pass in this workspace.
+- Day 2 browser gate remains pending: vendor asset files are absent (network DNS prevented fetching them here; a hash-verifying PowerShell script is ready), and the owner has not supplied test coordinates for a manually seeded demo ward. No browser smoke result, commit or `day-2-local` tag is claimed.
+- Bootstrap and Leaflet downloads were attempted but DNS resolution failed in this workspace; vendor assets are not yet present.
+
 ## 2026-11-18 — Day 1 (in progress)
 
 - Read the complete root AGENTS.md and captured owner decisions in `docs/CLARIFICATIONS.md`.

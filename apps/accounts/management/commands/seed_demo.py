@@ -1,17 +1,36 @@
 import secrets
+from datetime import date
+
+from django.contrib.gis.geos import MultiPolygon, Polygon
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
 from apps.accounts.models import User
-from apps.geography.models import Department
+from apps.geography.models import Category, Department, Ward
 
 class Command(BaseCommand):
     help = "Create local demo accounts with random passwords (printed once)."
 
+    def add_arguments(self, parser):
+        parser.add_argument("--lat", type=float, required=True)
+        parser.add_argument("--lon", type=float, required=True)
+        parser.add_argument("--force", action="store_true")
+
     def handle(self, *args, **options):
-        if not settings.DEBUG and not getattr(settings, "ALLOW_DEMO_SEED", False):
-            raise CommandError("Demo accounts are disabled outside development/demo settings.")
+        if not settings.DEBUG and not options["force"]:
+            raise CommandError("Refusing demo seed with DEBUG=False. Pass --force to continue.")
+        lat, lon = options["lat"], options["lon"]
+        if not -90 <= lat <= 90 or not -180 <= lon <= 180:
+            raise CommandError("Latitude or longitude is outside valid coordinate bounds.")
+        # A small square gives local demos a supported area without inventing pilot geography.
+        half_side = 0.001
+        ring = ((lon-half_side, lat-half_side), (lon+half_side, lat-half_side), (lon+half_side, lat+half_side), (lon-half_side, lat+half_side), (lon-half_side, lat-half_side))
+        Ward.objects.update_or_create(name="Demo Ward", defaults={"boundary": MultiPolygon(Polygon(ring), srid=4326), "source": f"hand-drawn, {date.today().isoformat()}", "effective_from": date.today()})
+        departments = [Department.objects.get_or_create(name=f"Demo Department — {name}")[0] for name in ("Roads", "Sanitation", "Water", "Lighting")]
+        categories = ["pothole", "garbage", "drainage", "streetlight", "water_leakage", "other"]
+        for index, category_name in enumerate(categories):
+            Category.objects.get_or_create(name=category_name, defaults={"default_due_hours": 72, "default_department": departments[index % len(departments)]})
         roles = [
             User.Role.CITIZEN,
             User.Role.TRIAGE_REVIEWER,
