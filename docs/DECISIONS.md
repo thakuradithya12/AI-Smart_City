@@ -20,6 +20,8 @@
 | 2026-11-19 | Bootstrap 5.3.8 (MIT) and Leaflet 1.9.4 (BSD-2-Clause), locally vendored | Bootstrap's official 5.3 docs show 5.3.8 assets and integrity hashes; Leaflet's installation guide recommends 1.9.4 for the stable 1.x classic-script API. Workspace DNS prevented fetching; use the documented PowerShell download and hash check before browser testing. | Remote runtime CDNs and unpinned latest versions. |
 | 2026-11-19 | GPS accuracy stored to two decimal places | Browser geolocation reports accuracy as a measurement that may include fractions; retain that value instead of truncating it to an integer. | Integer truncation. |
 | 2026-11-19 | Pin confirmation is a required server-validated form field | Client-side checks can be bypassed; server validation ensures the citizen confirms the submitted pin. | JavaScript-only confirmation. |
+| 2026-11-19 | Transition targets are derived from the section 8 table and role visibility in `apps/workflow/permissions.py` | Console actions and tests need one server-side permission helper; the transition service remains the only writer of complaint status. | Repeating role and status checks in each view. |
+| 2026-11-19 | Information request and citizen reply messages are created inside `transition()` and receive a separate audit event | Message content is part of the workflow record and must commit or roll back with the status change. | Saving messages independently in console views. |
 
 ## Verification sources
 

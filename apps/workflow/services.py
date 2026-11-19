@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 
 from apps.audit.models import AuditEvent
-from apps.complaints.models import Complaint, StatusEvent
+from apps.complaints.models import Complaint, ComplaintMessage, StatusEvent
 
 # One table controls every valid status transition; later days add console actions through this service.
 TRANSITIONS = {
@@ -69,4 +69,8 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
     locked.save()
     StatusEvent.objects.create(complaint=locked, from_status=previous, to_status=to_status, actor=actor, role=role, reason=reason or "")
     AuditEvent.objects.create(actor=actor, role=role, action="status_transition", object_type="Complaint", object_id=str(locked.pk), before={"status": previous}, after={"status": to_status}, reason=reason or "")
+    message_body = data.get("message") if to_status == "info_requested" else data.get("reply") if previous == "info_requested" and to_status == "in_triage" else None
+    if message_body:
+        message = ComplaintMessage.objects.create(complaint=locked, author=actor, body=message_body)
+        AuditEvent.objects.create(actor=actor, role=role, action="complaint_message_added", object_type="ComplaintMessage", object_id=str(message.pk), after={"complaint_id": locked.pk, "body": message_body})
     return locked
