@@ -1,5 +1,13 @@
 # Progress
 
+## 2026-11-21 — Phase 0 runtime verification
+
+- Started Docker Desktop and accessed its Linux engine with approved elevated Docker access. Rebuilt and started current PostGIS/web containers; DB health check passed.
+- First `docker compose run --rm checks`: migration consistency passed, pytest found 2 failures and 35 passes. Fixed complaint timeline evidence label and updated login tests for the intentional public landing plus authenticated workspace. Second run: `No changes detected`; `38 passed in 64.17s`; Ruff `All checks passed!`; pip-audit `No known vulnerabilities found`.
+- `check --deploy` exited 0. It reported only the expected `SECURE_HSTS_INCLUDE_SUBDOMAINS` and `SECURE_HSTS_PRELOAD` warnings; these remain off pending a real stable domain.
+- Rebuilt web from the corrected worktree. HTTP smoke returned 200 for `/`, `/ui-showcase/`, one supplied screen, `/workspace/` (the test client verifies the login redirect), and `/accounts/login/`. Browser visibly rendered the supplied CivicOps landing at `http://localhost:8000/` with the hero, report CTA, tracking panel and gallery link.
+- Full output recorded in [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md). This is local evidence only; GitHub CI was not checked and complete backend acceptance is not claimed. Next: Phase 1 workflow integrity/data consistency audit per `docs/BACKEND_ROADMAP.md`.
+
 ## 2026-11-21 — Backend roadmap Phase 0 attempt
 
 - Reviewed current worktree and recent commits. Preserved the existing uncommitted `/` UI showcase and `ml/DATASETS.md` owner changes; did not reset, stage, or overwrite them.
