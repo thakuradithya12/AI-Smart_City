@@ -4,14 +4,42 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}AI Smart City{% endblock %}</title>
+  <meta name="theme-color" content="#172b4d">
+  <title>{% block title %}AI Smart City · Civic service portal{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block extra_head %}{% endblock %}
 </head>
 <body>
-  <header><a href="/">AI Smart City</a></header>
-  <main>{% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}</main>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="{% if request.user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}" aria-label="AI Smart City home">
+        <span class="brand-mark" aria-hidden="true">ASC</span><span>AI Smart City<small>Civic service portal</small></span>
+      </a>
+      {% if request.user.is_authenticated %}
+      <nav class="primary-nav" aria-label="Main navigation">
+        <a href="{% url 'home' %}"{% if request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %}>Overview</a>
+        {% if request.user.role == "citizen" %}
+          <a href="{% url 'report' %}"{% if request.resolver_match.url_name == 'report' %} aria-current="page"{% endif %}>Report an issue</a>
+          <a href="{% url 'my_complaints' %}"{% if request.resolver_match.url_name == 'my_complaints' %} aria-current="page"{% endif %}>My complaints</a>
+        {% elif request.user.role == "triage_reviewer" or request.user.role == "admin" %}
+          <a href="{% url 'triage_queue' %}"{% if request.resolver_match.url_name == 'triage_queue' %} aria-current="page"{% endif %}>Triage queue</a>
+        {% elif request.user.role == "department_official" or request.user.role == "supervisor" %}
+          <a href="{% url 'department_inbox' %}"{% if request.resolver_match.url_name == 'department_inbox' %} aria-current="page"{% endif %}>Department inbox</a>
+        {% elif request.user.role == "field_worker" %}
+          <a href="{% url 'field_tasks' %}"{% if request.resolver_match.url_name == 'field_tasks' %} aria-current="page"{% endif %}>My field tasks</a>
+        {% endif %}
+      </nav>
+      <div class="account-menu"><span class="user-name">{{ request.user.name|default:request.user.email }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button-quiet" type="submit">Sign out</button></form></div>
+      {% else %}<a class="button" href="{% url 'login' %}">Sign in</a>{% endif %}
+    </div>
+  </header>
+  <main id="main-content" class="page-shell">
+    {% for message in messages %}<p class="notice{% if message.tags %} {{ message.tags }}{% endif %}" role="status">{{ message }}</p>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer"><div><strong>AI Smart City</strong><span>Report local issues. Follow progress. Help improve your neighbourhood.</span></div><span class="footer-note">This platform is not an emergency service.</span></footer>
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>

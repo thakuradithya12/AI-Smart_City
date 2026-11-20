@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work Order Execution — WO-2026-0891 — CivicOps Field</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[884px] flex flex-col max-w-md mx-auto bg-app-background pb-24" data-stitch-vh="min-h-[884px]===min-h-screen">
+    <!-- Contextual Task Header -->
+    <header class="bg-primary text-on-primary px-lg py-md flex items-center justify-between gap-sm sticky top-0 z-20">
+      <div class="flex items-center gap-sm min-w-0">
+        <a href="#field-home" aria-label="Back to today&#39;s tasks" class="w-10 h-10 rounded flex items-center justify-center hover:bg-primary-action/20 shrink-0">
+          <i data-lucide="arrow-left" class="w-5 h-5 text-on-primary" aria-hidden="true"></i>
+        </a>
+        <div class="min-w-0">
+          <div data-design-text-token="mono-sm" class="font-mono text-mono-sm text-outline">WO-2026-0891</div>
+          <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary truncate">Main shutoff &amp; clamp repair</div>
+        </div>
+      </div>
+      <span class="px-sm py-0.5 rounded-full bg-error text-on-error font-label text-label-sm shrink-0">Critical</span>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-lg flex flex-col gap-lg">
+      <!-- Location & Deadline Card -->
+      <section class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+        <div class="flex items-start justify-between gap-md">
+          <div>
+            <div data-design-text-token="label-sm" class="font-label text-label-sm uppercase tracking-wider text-secondary-text">Site location</div>
+            <div data-design-text-token="title-md" class="font-title text-title-md text-primary mt-xs">Oak St &amp; 4th Ave · Ward 4</div>
+            <div data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text mt-xs tabular-nums">45.5231° N, 122.6765° W</div>
+          </div>
+          <button type="button" class="min-h-11 px-md rounded border border-outline bg-surface font-label text-label-md text-primary inline-flex items-center gap-xs shrink-0 hover:bg-surface-container-low">
+            <i data-lucide="navigation" class="w-4 h-4 text-primary-action" aria-hidden="true"></i>
+            <span>Directions</span>
+          </button>
+        </div>
+
+        <div class="pt-md border-t border-outline-variant flex items-center justify-between text-error">
+          <div class="flex items-center gap-xs">
+            <i data-lucide="clock" class="w-4 h-4" aria-hidden="true"></i>
+            <span data-design-text-token="label-md" class="font-label text-label-md tabular-nums">SLA deadline: Nov 20, 08:00</span>
+          </div>
+          <span data-design-text-token="label-sm" class="font-label text-label-sm">In progress</span>
+        </div>
+      </section>
+
+      <!-- Citizen Intake Photo Reference -->
+      <section class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+        <header class="flex items-center justify-between">
+          <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Reported condition</h2>
+          <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text">CMP-2026-04182</span>
+        </header>
+        <img src="https://lh3.googleusercontent.com/aida/ALJJyrCHN5rJNSVO8BXr1u4M4KMdXLC5BmyWYQ28pnU-HCE08T2GSUTyov-p_-iAa6mdWWHL7plsepR-q9yNHJeSSZccdTpAxOUjwj_TTzWhSXGgo30KIHN-i4rhBlbBI3inGjOENWOX-5dPSKJFhXvGQet30KKUmSxn94gZXhyQl9sOq2eJtck9cwIg5Yem9UIvzwawYBZH7FglwtgkwkFLV3wHeVO1L7qpY-G5t4R0qxKB0gmEI9ursTwy2ATkmnIPjIYZnnc" alt="Water main rupture reported at Oak St and 4th Ave" class="w-full h-40 object-cover rounded border border-outline-variant">
+        <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">
+          Pressurized leak emerging near curb valve box. Isolate 8-inch lateral before installing stainless repair clamp.
+        </p>
+      </section>
+
+      <!-- Field Execution Checklist -->
+      <section class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+        <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Execution checklist</h2>
+        <div class="flex flex-col gap-sm">
+          <label class="flex items-center gap-md p-sm rounded bg-surface-container-low border border-outline-variant">
+            <input type="checkbox" checked class="w-5 h-5 rounded border-outline text-primary-action">
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-primary">Isolate curb valve &amp; set traffic cones</span>
+          </label>
+          <label class="flex items-center gap-md p-sm rounded bg-surface-container-low border border-outline-variant">
+            <input type="checkbox" checked class="w-5 h-5 rounded border-outline text-primary-action">
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-primary">Install 8-inch stainless repair clamp</span>
+          </label>
+          <label class="flex items-center gap-md p-sm rounded bg-surface border border-outline-variant">
+            <input type="checkbox" class="w-5 h-5 rounded border-outline text-primary-action">
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-primary">Pressure-test joint &amp; flush hydrant</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- After-Repair Evidence Upload -->
+      <section class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+        <header class="flex items-center justify-between">
+          <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Completion evidence</h2>
+          <span data-design-text-token="label-sm" class="font-label text-label-sm text-success">1 photo attached</span>
+        </header>
+        <img src="https://lh3.googleusercontent.com/aida/ALJJyrDXGZHdp4ilvqYhbsDynSgpLSu1mOVMEp7hCeqW4VD2CuaezDoNiDdO2ckkVH4vvuxj23niYS3riFn06MJ9qawwUyYlFhrEwsnildujYv-rHGiBbq8klU7fNHt094T7US2xln1q_TQdeAoZWq-p81_4rpY2GVTXAWwKQx0uBOcypaA4gm-mPGS20oIZCaJhQVecXwTU3Wscn5L0Mq8vqSXWD8V-4JgF9mwwbMgpTHrCUfqYqFPoShpQ-9Kisme-QHuV" alt="Repaired pavement and dry curb after clamp installation" class="w-full h-40 object-cover rounded border border-outline-variant">
+        <button type="button" class="min-h-11 w-full inline-flex items-center justify-center gap-xs rounded border border-outline bg-surface-container-low font-label text-label-md text-primary hover:bg-surface-container">
+          <i data-lucide="camera" class="w-4 h-4 text-primary-action" aria-hidden="true"></i>
+          <span>Add another photo</span>
+        </button>
+        <div>
+          <label for="field-notes" class="block font-label text-label-md text-primary mb-xs">Field resolution notes</label>
+          <textarea id="field-notes" rows="2" class="w-full rounded border border-outline-variant bg-surface font-body text-body-sm text-primary p-sm">Replaced corroded gasket with 8-inch stainless clamp. Line pressure stabilized at 62 PSI.</textarea>
+        </div>
+      </section>
+    </main>
+
+    <!-- Fixed Bottom Action Bar -->
+    <footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface border-t border-outline-variant p-md grid grid-cols-2 gap-sm z-30">
+      <button type="button" class="min-h-11 inline-flex items-center justify-center gap-xs rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">
+        <i data-lucide="pause-circle" class="w-4 h-4 text-on-warning-container" aria-hidden="true"></i>
+        <span>Flag blocker</span>
+      </button>
+      <button type="button" class="min-h-11 inline-flex items-center justify-center gap-xs rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">
+        <i data-lucide="send" class="w-4 h-4" aria-hidden="true"></i>
+        <span>Submit for QA</span>
+      </button>
+    </footer>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

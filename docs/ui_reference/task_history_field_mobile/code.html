@@ -1,0 +1,187 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task History — CivicOps Field Operations</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[884px] flex flex-col max-w-md mx-auto bg-app-background pb-24" data-stitch-vh="min-h-[884px]===min-h-screen">
+    <!-- Field Officer Header -->
+    <header class="bg-primary text-on-primary px-lg py-md flex items-center justify-between sticky top-0 z-20">
+      <div class="flex items-center gap-sm">
+        <a href="#profile" aria-label="Back to profile" class="w-10 h-10 rounded flex items-center justify-center hover:bg-primary-action/20">
+          <i data-lucide="arrow-left" class="w-5 h-5 text-on-primary" aria-hidden="true"></i>
+        </a>
+        <div>
+          <h1 data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">Completed task history</h1>
+          <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">D. Kowalski · Last 30 days</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-lg flex flex-col gap-md">
+      <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-xs">
+        <div class="flex items-center justify-between gap-sm">
+          <span class="font-mono text-mono-sm text-primary-action">WO-2026-0865</span>
+          <span class="px-sm py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">QA approved</span>
+        </div>
+        <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Curb inlet grate replacement</div>
+        <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Water &amp; Sewer · Completed Nov 18, 15:20</div>
+        <div class="pt-sm mt-xs border-t border-outline-variant flex items-center justify-between">
+          <span class="font-label text-label-sm text-secondary-text">2 completion photos</span>
+          <a href="#report-1" class="font-label text-label-md text-primary-action hover:underline">View report</a>
+        </div>
+      </article>
+
+      <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-xs">
+        <div class="flex items-center justify-between gap-sm">
+          <span class="font-mono text-mono-sm text-primary-action">WO-2026-0852</span>
+          <span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">Rework requested</span>
+        </div>
+        <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Service lateral valve box reset</div>
+        <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Water &amp; Sewer · Completed Nov 16, 11:45</div>
+        <div class="pt-sm mt-xs border-t border-outline-variant flex items-center justify-between">
+          <span class="font-label text-label-sm text-secondary-text">Supervisor note attached</span>
+          <a href="#report-2" class="font-label text-label-md text-primary-action hover:underline">View report</a>
+        </div>
+      </article>
+
+      <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-xs">
+        <div class="flex items-center justify-between gap-sm">
+          <span class="font-mono text-mono-sm text-primary-action">WO-2026-0840</span>
+          <span class="px-sm py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">QA approved</span>
+        </div>
+        <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Hydrant pressure test · Ward 4</div>
+        <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Water &amp; Sewer · Completed Nov 14, 09:30</div>
+        <div class="pt-sm mt-xs border-t border-outline-variant flex items-center justify-between">
+          <span class="font-label text-label-sm text-secondary-text">1 completion photo</span>
+          <a href="#report-3" class="font-label text-label-md text-primary-action hover:underline">View report</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Fixed Mobile Bottom Navigation -->
+    <nav aria-label="Field officer bottom navigation" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface border-t border-outline-variant px-md py-xs grid grid-cols-4 gap-xs z-30">
+      <a href="#home" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="home" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Home</span>
+      </a>
+      <a href="#tasks" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="clipboard-check" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Tasks</span>
+      </a>
+      <a href="#map" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="map-pin" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Map</span>
+      </a>
+      <a href="#profile" aria-current="page" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-primary-action">
+        <i data-lucide="user" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Profile</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

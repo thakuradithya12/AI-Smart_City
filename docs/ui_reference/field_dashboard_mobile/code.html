@@ -1,0 +1,262 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field Dashboard — CivicOps Field Operations</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[884px] flex flex-col max-w-md mx-auto bg-app-background pb-24" data-stitch-vh="min-h-[884px]===min-h-screen">
+    <!-- Field Officer Header -->
+    <header class="bg-primary text-on-primary px-lg py-md flex items-center justify-between sticky top-0 z-20">
+      <div class="flex items-center gap-sm">
+        <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+          <i data-lucide="hard-hat" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+        </div>
+        <div>
+          <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">D. Kowalski</div>
+          <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">Field Ops · Crew Alpha</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-sm">
+        <button type="button" aria-label="Notifications (3 unread)" class="relative inline-flex items-center justify-center w-11 h-11 rounded border border-primary-action/40 bg-primary text-on-primary hover:bg-primary-action/20">
+          <i data-lucide="bell" class="w-5 h-5" aria-hidden="true"></i>
+          <span aria-hidden="true" class="absolute top-1.5 right-1.5 inline-flex items-center justify-center min-w-4 h-4 px-xs rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">3</span>
+        </button>
+        <a href="#profile" aria-label="Officer profile" class="w-11 h-11 rounded-full bg-primary-action text-on-primary-action flex items-center justify-center font-label text-label-md">
+          DK
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-lg flex flex-col gap-xl">
+      <!-- Greeting -->
+      <section>
+        <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Good morning, Dan</h1>
+        <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Thursday, Nov 20 · Shift 06:00 – 14:30 · Sample schedule</p>
+      </section>
+
+      <!-- 4 Field KPI Cards (2x2) -->
+      <section aria-label="My task summary" class="grid grid-cols-2 gap-md items-stretch">
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-xs h-full">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">Assigned</span>
+          <span data-design-text-token="display-sm" class="font-display text-display-sm text-primary tabular-nums">5</span>
+        </article>
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-xs h-full">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">Due today</span>
+          <span data-design-text-token="display-sm" class="font-display text-display-sm text-error tabular-nums">3</span>
+        </article>
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-xs h-full">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">In progress</span>
+          <span data-design-text-token="display-sm" class="font-display text-display-sm text-primary-action tabular-nums">1</span>
+        </article>
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-xs h-full">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">Completed today</span>
+          <span data-design-text-token="display-sm" class="font-display text-display-sm text-success tabular-nums">2</span>
+        </article>
+      </section>
+
+      <!-- Primary Section: Today's Tasks -->
+      <section aria-label="Today&#39;s assigned tasks" class="flex flex-col gap-md">
+        <header class="flex items-center justify-between">
+          <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Today&#39;s tasks</h2>
+          <a href="#all-tasks" class="font-label text-label-md text-primary-action hover:underline">All tasks</a>
+        </header>
+
+        <!-- Task Card 1: Critical / In Progress -->
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+          <div class="flex items-center justify-between gap-sm">
+            <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">WO-2026-0891</span>
+            <div class="flex items-center gap-xs">
+              <span class="px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span>
+              <span class="px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">In Progress</span>
+            </div>
+          </div>
+
+          <div>
+            <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">Emergency main shutoff &amp; clamp repair</h3>
+            <div class="flex items-center gap-xs mt-xs text-secondary-text">
+              <i data-lucide="map-pin" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+              <span data-design-text-token="body-sm" class="font-body text-body-sm">Oak St &amp; 4th Ave · Ward 4</span>
+            </div>
+            <div class="flex items-center gap-xs mt-xs text-error">
+              <i data-lucide="clock" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+              <span data-design-text-token="label-md" class="font-label text-label-md tabular-nums">Due Nov 20, 08:00</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-sm pt-sm border-t border-outline-variant">
+            <button type="button" class="min-h-11 inline-flex items-center justify-center gap-xs rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">
+              <i data-lucide="navigation" class="w-4 h-4 text-primary-action" aria-hidden="true"></i>
+              <span>Navigate</span>
+            </button>
+            <a href="#open-task-1" class="min-h-11 inline-flex items-center justify-center gap-xs rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">
+              <span>Open task</span>
+              <i data-lucide="chevron-right" class="w-4 h-4" aria-hidden="true"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- Task Card 2: High / Assigned -->
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+          <div class="flex items-center justify-between gap-sm">
+            <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">WO-2026-0896</span>
+            <div class="flex items-center gap-xs">
+              <span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span>
+              <span class="px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Assigned</span>
+            </div>
+          </div>
+
+          <div>
+            <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">Inspect pressure drop on Main St</h3>
+            <div class="flex items-center gap-xs mt-xs text-secondary-text">
+              <i data-lucide="map-pin" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+              <span data-design-text-token="body-sm" class="font-body text-body-sm">412 W. Main St · Ward 2</span>
+            </div>
+            <div class="flex items-center gap-xs mt-xs text-secondary-text">
+              <i data-lucide="clock" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+              <span data-design-text-token="label-md" class="font-label text-label-md tabular-nums">Due Nov 20, 11:30</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-sm pt-sm border-t border-outline-variant">
+            <button type="button" class="min-h-11 inline-flex items-center justify-center gap-xs rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">
+              <i data-lucide="navigation" class="w-4 h-4 text-primary-action" aria-hidden="true"></i>
+              <span>Navigate</span>
+            </button>
+            <a href="#open-task-2" class="min-h-11 inline-flex items-center justify-center gap-xs rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">
+              <span>Open task</span>
+              <i data-lucide="chevron-right" class="w-4 h-4" aria-hidden="true"></i>
+            </a>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <!-- Fixed Mobile Bottom Navigation (Home, Tasks, Map, Profile) -->
+    <nav aria-label="Field officer bottom navigation" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface border-t border-outline-variant px-md py-xs grid grid-cols-4 gap-xs z-30">
+      <a href="#home" aria-current="page" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-primary-action">
+        <i data-lucide="home" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Home</span>
+      </a>
+      <a href="#tasks" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="clipboard-check" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Tasks</span>
+      </a>
+      <a href="#map" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="map-pin" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Map</span>
+      </a>
+      <a href="#profile" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="user" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Profile</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    });
+  </script>
+
+
+</body></html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Complaints — CivicOps Citizen Portal</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[884px] flex flex-col max-w-md mx-auto bg-app-background pb-24" data-stitch-vh="min-h-[884px]===min-h-screen">
+    <!-- Approachable Citizen Header -->
+    <header class="bg-surface border-b border-outline-variant px-lg py-md flex items-center justify-between sticky top-0 z-20">
+      <div class="flex items-center gap-sm">
+        <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+          <i data-lucide="landmark" class="w-4 h-4 text-on-primary-action" aria-hidden="true"></i>
+        </div>
+        <div>
+          <div data-design-text-token="title-md" class="font-title text-title-md text-primary leading-tight">CivicOps</div>
+          <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Resident Portal</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-sm">
+        <button type="button" aria-label="Notifications (2 unread)" class="relative inline-flex items-center justify-center w-11 h-11 rounded border border-outline-variant bg-surface text-secondary-text hover:text-primary">
+          <i data-lucide="bell" class="w-5 h-5" aria-hidden="true"></i>
+          <span aria-hidden="true" class="absolute top-1.5 right-1.5 inline-flex items-center justify-center min-w-4 h-4 px-xs rounded-full bg-primary-action text-on-primary-action font-label text-label-sm tabular-nums">2</span>
+        </button>
+        <a href="#profile" aria-label="Marcus Chen profile" class="w-11 h-11 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">
+          MC
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-lg flex flex-col gap-lg">
+      <section class="flex items-center justify-between gap-sm">
+        <div>
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">My complaints</h1>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Track status updates and verify completed repairs.</p>
+        </div>
+      </section>
+
+      <!-- Filter Tabs -->
+      <nav aria-label="Filter complaints" class="grid grid-cols-3 gap-xs bg-surface-container p-xs rounded-md border border-outline-variant">
+        <button type="button" class="min-h-10 rounded bg-surface text-primary font-label text-label-md border border-outline-variant">All (6)</button>
+        <button type="button" class="min-h-10 rounded text-secondary-text font-label text-label-md hover:text-primary">Active (3)</button>
+        <button type="button" class="min-h-10 rounded text-secondary-text font-label text-label-md hover:text-primary">Resolved (3)</button>
+      </nav>
+
+      <!-- Verification Action Card -->
+      <article class="bg-surface border border-primary-action rounded-md p-lg flex flex-col gap-md">
+        <div class="flex items-center justify-between gap-sm">
+          <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04091</span>
+          <span class="inline-flex items-center gap-xs px-sm py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">
+            <i data-lucide="check-circle-2" class="w-3 h-3" aria-hidden="true"></i>
+            <span>Ready to verify</span>
+          </span>
+        </div>
+
+        <div>
+          <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Crosswalk repainting at Maple St</h2>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">
+            Roads &amp; Pavements marked this repair complete on Nov 18, 2026. Please confirm if the crosswalk is clearly visible.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-sm pt-sm border-t border-outline-variant">
+          <button type="button" class="min-h-11 inline-flex items-center justify-center gap-xs rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">
+            <i data-lucide="rotate-ccw" class="w-4 h-4 text-error" aria-hidden="true"></i>
+            <span>Reopen issue</span>
+          </button>
+          <button type="button" class="min-h-11 inline-flex items-center justify-center gap-xs rounded bg-success text-on-success font-label text-label-md hover:bg-primary">
+            <i data-lucide="check" class="w-4 h-4" aria-hidden="true"></i>
+            <span>Confirm fixed</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Active Complaint List -->
+      <section aria-label="Submitted reports" class="flex flex-col gap-md">
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm">
+          <div class="flex items-center justify-between gap-sm">
+            <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
+            <span class="px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">Work in progress</span>
+          </div>
+          <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Water leak at Oak St &amp; 4th Ave</div>
+          <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Water &amp; Sewer · Crew Alpha on site</div>
+          <div class="flex items-center justify-between pt-sm border-t border-outline-variant">
+            <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text tabular-nums">Updated Nov 20, 07:45</span>
+            <a href="#track-1" class="font-label text-label-md text-primary-action hover:underline">View timeline</a>
+          </div>
+        </article>
+
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm">
+          <div class="flex items-center justify-between gap-sm">
+            <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04112</span>
+            <span class="px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Under review</span>
+          </div>
+          <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Flickering streetlight on Birch Ln</div>
+          <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Street Lighting · Queued for dispatch</div>
+          <div class="flex items-center justify-between pt-sm border-t border-outline-variant">
+            <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text tabular-nums">Submitted Nov 19, 19:20</span>
+            <a href="#track-2" class="font-label text-label-md text-primary-action hover:underline">View timeline</a>
+          </div>
+        </article>
+
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm">
+          <div class="flex items-center justify-between gap-sm">
+            <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text">CMP-2026-03840</span>
+            <span class="px-sm py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">Verified closed</span>
+          </div>
+          <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Fallen branch blocking sidewalk</div>
+          <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Parks &amp; Forestry · Closed Nov 12, 2026</div>
+        </article>
+      </section>
+    </main>
+
+    <!-- Fixed Mobile Bottom Navigation -->
+    <nav aria-label="Citizen bottom navigation" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface border-t border-outline-variant px-md py-xs grid grid-cols-4 gap-xs z-30">
+      <a href="#home" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="home" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Home</span>
+      </a>
+      <a href="#report" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="plus-circle" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Report</span>
+      </a>
+      <a href="#complaints" aria-current="page" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-primary-action">
+        <i data-lucide="file-text" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">My reports</span>
+      </a>
+      <a href="#map" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="map-pin" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Nearby</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

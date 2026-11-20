@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field Officer Profile — CivicOps Field Operations</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[884px] flex flex-col max-w-md mx-auto bg-app-background pb-24" data-stitch-vh="min-h-[884px]===min-h-screen">
+    <!-- Field Officer Header -->
+    <header class="bg-primary text-on-primary px-lg py-md flex items-center justify-between sticky top-0 z-20">
+      <h1 data-design-text-token="title-md" class="font-title text-title-md text-on-primary">Officer profile</h1>
+      <span class="px-sm py-0.5 rounded-full bg-success text-on-success font-label text-label-sm">On shift</span>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-lg flex flex-col gap-lg">
+      <!-- Officer Badge Card -->
+      <section class="bg-surface border border-outline-variant rounded-md p-lg flex items-center gap-md">
+        <div class="w-14 h-14 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline text-headline-md shrink-0">
+          DK
+        </div>
+        <div class="min-w-0">
+          <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Dan Kowalski</div>
+          <div data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">OFF-104 · Crew Alpha Lead</div>
+          <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Water &amp; Sewer · Ward 4</div>
+        </div>
+      </section>
+
+      <!-- Shift Details -->
+      <section class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm">
+        <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Shift &amp; assignment</h2>
+        <div class="flex items-center justify-between pt-xs">
+          <span class="font-body text-body-sm text-secondary-text">Active shift</span>
+          <span class="font-mono text-mono-sm text-primary tabular-nums">06:00 – 14:30</span>
+        </div>
+        <div class="flex items-center justify-between pt-xs border-t border-outline-variant">
+          <span class="font-body text-body-sm text-secondary-text">Vehicle unit</span>
+          <span class="font-mono text-mono-sm text-primary">UTL-204 (Hydro Truck)</span>
+        </div>
+      </section>
+
+      <!-- Shortcuts -->
+      <section class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm">
+        <a href="#history" class="w-full min-h-11 px-md rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low flex items-center justify-between">
+          <span>Completed task history</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-secondary-text" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="w-full min-h-11 px-md rounded border border-outline bg-surface font-label text-label-md text-error hover:bg-error-container flex items-center justify-between">
+          <span>End shift &amp; sign out</span>
+          <i data-lucide="log-out" class="w-4 h-4" aria-hidden="true"></i>
+        </button>
+      </section>
+    </main>
+
+    <!-- Fixed Mobile Bottom Navigation -->
+    <nav aria-label="Field officer bottom navigation" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface border-t border-outline-variant px-md py-xs grid grid-cols-4 gap-xs z-30">
+      <a href="#home" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="home" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Home</span>
+      </a>
+      <a href="#tasks" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="clipboard-check" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Tasks</span>
+      </a>
+      <a href="#map" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="map-pin" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Map</span>
+      </a>
+      <a href="#profile" aria-current="page" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-primary-action">
+        <i data-lucide="user" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Profile</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

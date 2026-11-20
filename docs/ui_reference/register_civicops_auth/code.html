@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Resident Account — CivicOps</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Public Top Header -->
+    <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between">
+      <a href="#landing" class="flex items-center gap-sm">
+        <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+          <i data-lucide="landmark" class="w-4 h-4 text-on-primary-action" aria-hidden="true"></i>
+        </div>
+        <span data-design-text-token="title-md" class="font-title text-title-md text-primary">CivicOps</span>
+      </a>
+      <a href="#login" class="font-label text-label-md text-primary-action hover:underline">Already have an account? Sign in</a>
+    </header>
+
+    <!-- Centered Registration Card -->
+    <main class="flex-1 flex items-center justify-center p-xl">
+      <section class="w-full max-w-md bg-surface border border-outline-variant rounded-lg p-2xl flex flex-col gap-xl">
+        <div>
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Create resident account</h1>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">
+            Report neighborhood infrastructure issues and receive real-time repair updates.
+          </p>
+        </div>
+
+        <form class="flex flex-col gap-md" action="#verify">
+          <div>
+            <label for="reg-name" class="block font-label text-label-md text-primary mb-xs">Full name</label>
+            <input id="reg-name" type="text" placeholder="Marcus Chen" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+          </div>
+
+          <div>
+            <label for="reg-email" class="block font-label text-label-md text-primary mb-xs">Email address</label>
+            <input id="reg-email" type="email" placeholder="marcus.chen@example.org" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+            <div>
+              <label for="reg-phone" class="block font-label text-label-md text-primary mb-xs">Phone (optional)</label>
+              <input id="reg-phone" type="tel" placeholder="(503) 555-0148" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+            </div>
+            <div>
+              <label for="reg-ward" class="block font-label text-label-md text-primary mb-xs">Neighborhood ward</label>
+              <select id="reg-ward" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+                <option>Ward 4 · Oakridge</option>
+                <option>Ward 1 · Harborview</option>
+                <option>Ward 2 · Civic Core</option>
+                <option>Ward 3 · Elmwood</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="reg-password" class="block font-label text-label-md text-primary mb-xs">Password</label>
+            <input id="reg-password" type="password" placeholder="At least 8 characters" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+          </div>
+
+          <label class="flex items-start gap-sm pt-xs">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 rounded border-outline text-primary-action">
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">
+              I agree to the <a href="#terms" class="text-primary-action hover:underline">Terms of Service</a> and <a href="#privacy" class="text-primary-action hover:underline">Privacy Policy</a>.
+            </span>
+          </label>
+
+          <button type="submit" class="w-full py-md rounded bg-primary-action text-on-primary-action font-label text-title-md hover:bg-primary mt-xs">
+            Create resident account
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resolution Feedback — CivicOps Citizen Portal</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[884px] flex flex-col max-w-md mx-auto bg-app-background pb-24" data-stitch-vh="min-h-[884px]===min-h-screen">
+    <!-- Citizen Header -->
+    <header class="bg-surface border-b border-outline-variant px-lg py-md flex items-center justify-between sticky top-0 z-20">
+      <div class="flex items-center gap-sm">
+        <a href="#complaint-detail" aria-label="Back to complaint" class="w-10 h-10 rounded flex items-center justify-center text-primary hover:bg-surface-container-low">
+          <i data-lucide="arrow-left" class="w-5 h-5" aria-hidden="true"></i>
+        </a>
+        <div>
+          <h1 data-design-text-token="title-md" class="font-title text-title-md text-primary leading-tight">Resolution feedback</h1>
+          <div data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Form -->
+    <main class="flex-1 p-lg flex flex-col gap-lg">
+      <section class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+        <div>
+          <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">How was the city repair?</h2>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">
+            Your feedback helps supervisors evaluate Water &amp; Sewer response quality.
+          </p>
+        </div>
+
+        <!-- 5-Step Satisfaction Selector -->
+        <div class="grid grid-cols-5 gap-xs" role="radiogroup" aria-label="Satisfaction rating">
+          <button type="button" class="min-h-11 rounded border border-outline-variant bg-surface font-label text-label-md text-secondary-text hover:border-primary-action">1</button>
+          <button type="button" class="min-h-11 rounded border border-outline-variant bg-surface font-label text-label-md text-secondary-text hover:border-primary-action">2</button>
+          <button type="button" class="min-h-11 rounded border border-outline-variant bg-surface font-label text-label-md text-secondary-text hover:border-primary-action">3</button>
+          <button type="button" class="min-h-11 rounded border border-outline-variant bg-surface font-label text-label-md text-secondary-text hover:border-primary-action">4</button>
+          <button type="button" aria-checked="true" class="min-h-11 rounded bg-primary-action text-on-primary-action font-label text-label-md">5</button>
+        </div>
+
+        <div class="flex flex-col gap-xs pt-sm border-t border-outline-variant">
+          <span class="font-label text-label-md text-primary">What went well?</span>
+          <label class="flex items-center gap-sm p-sm rounded bg-surface-container-low border border-outline-variant">
+            <input type="checkbox" checked class="w-4 h-4 rounded border-outline text-primary-action">
+            <span class="font-body text-body-sm text-primary">Issue fully resolved on first visit</span>
+          </label>
+          <label class="flex items-center gap-sm p-sm rounded bg-surface-container-low border border-outline-variant">
+            <input type="checkbox" checked class="w-4 h-4 rounded border-outline text-primary-action">
+            <span class="font-body text-body-sm text-primary">Clear status updates provided</span>
+          </label>
+        </div>
+
+        <div>
+          <label for="fb-notes" class="block font-label text-label-md text-primary mb-xs">Additional comments (optional)</label>
+          <textarea id="fb-notes" rows="3" placeholder="Share any details about the repair or site cleanup..." class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-sm text-primary"></textarea>
+        </div>
+      </section>
+    </main>
+
+    <!-- Fixed Submit Footer -->
+    <footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface border-t border-outline-variant p-md z-30">
+      <button type="button" class="w-full min-h-11 rounded bg-primary-action text-on-primary-action font-label text-title-md hover:bg-primary">Submit feedback</button>
+    </footer>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

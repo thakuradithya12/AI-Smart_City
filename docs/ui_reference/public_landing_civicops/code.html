@@ -1,0 +1,248 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivicOps — Municipal Issue Reporting &amp; Public Transparency</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Public Top Navigation -->
+    <header class="bg-surface border-b border-outline-variant sticky top-0 z-20">
+      <div class="max-w-7xl mx-auto px-xl h-16 flex items-center justify-between gap-lg">
+        <a href="#top" class="flex items-center gap-sm">
+          <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+            <i data-lucide="landmark" class="w-4 h-4 text-on-primary-action" aria-hidden="true"></i>
+          </div>
+          <span data-design-text-token="title-md" class="font-title text-title-md text-primary">CivicOps</span>
+        </a>
+
+        <nav aria-label="Public navigation" class="hidden md:flex items-center gap-xl">
+          <a href="#public-issues" class="font-label text-label-md text-secondary-text hover:text-primary">Public issues map</a>
+          <a href="#how-it-works" class="font-label text-label-md text-secondary-text hover:text-primary">How it works</a>
+          <a href="#help" class="font-label text-label-md text-secondary-text hover:text-primary">Help &amp; FAQ</a>
+          <a href="#contact" class="font-label text-label-md text-secondary-text hover:text-primary">Contact</a>
+        </nav>
+
+        <div class="flex items-center gap-sm">
+          <a href="#login" class="px-md py-sm rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">Sign in</a>
+          <a href="#report" class="px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">Report an issue</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="flex-1">
+      <section class="bg-surface border-b border-outline-variant py-4xl px-xl">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-2xl items-center">
+          <div class="lg:col-span-7 flex flex-col gap-lg">
+            <div class="inline-flex items-center gap-sm self-start px-md py-xs rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">
+              <i data-lucide="map-pin" class="w-3 h-3" aria-hidden="true"></i>
+              <span>Official Municipal Service Portal · Sample City</span>
+            </div>
+            <h1 data-design-text-token="display-sm" class="font-display text-display-sm text-primary text-balance">
+              Report neighborhood infrastructure issues and track repairs to verified completion.
+            </h1>
+            <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text max-w-prose text-pretty">
+              Submit potholes, water leaks, streetlight outages, or drainage blockages in under two minutes. Every report is routed to the responsible city department and verified before closure.
+            </p>
+            <div class="flex flex-wrap items-center gap-md pt-xs">
+              <a href="#report" class="inline-flex items-center gap-sm px-xl py-md rounded bg-primary-action text-on-primary-action font-label text-title-md hover:bg-primary">
+                <i data-lucide="plus-circle" class="w-4 h-4" aria-hidden="true"></i>
+                <span>Report an issue</span>
+              </a>
+              <a href="#public-issues" class="inline-flex items-center gap-sm px-xl py-md rounded border border-outline bg-surface text-primary font-label text-title-md hover:bg-surface-container-low">
+                <i data-lucide="map" class="w-4 h-4 text-primary-action" aria-hidden="true"></i>
+                <span>View public issues map</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Track Card -->
+          <div class="lg:col-span-5 bg-surface-container-low border border-outline-variant rounded-md p-xl flex flex-col gap-lg">
+            <div>
+              <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Track a submitted report</h2>
+              <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Enter your reference ID to check live repair status.</p>
+            </div>
+            <form id="track-form" class="flex flex-col gap-md">
+              <div>
+                <label for="track-id" class="block font-label text-label-md text-primary mb-xs">Complaint reference ID</label>
+                <input id="track-id" type="text" value="CMP-2026-04182" placeholder="e.g., CMP-2026-04182" class="w-full rounded border border-outline-variant bg-surface px-md py-sm font-mono text-mono-sm text-primary">
+              </div>
+              <button type="submit" class="w-full py-sm px-lg rounded bg-primary text-on-primary font-label text-label-md hover:bg-primary-action">
+                Check status
+              </button>
+            </form>
+            <div id="track-result" class="bg-surface border border-outline-variant rounded p-md flex flex-col gap-xs">
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
+                <span class="px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">Work in progress</span>
+              </div>
+              <div class="font-label text-label-md text-primary">Water leak at Oak St &amp; 4th Ave</div>
+              <div class="font-body text-body-sm text-secondary-text">Assigned to Water &amp; Sewer · Crew on site</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works -->
+      <section id="how-it-works" class="py-3xl px-xl max-w-7xl mx-auto">
+        <div class="mb-xl">
+          <h2 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">How civic resolution works</h2>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">Transparent accountability from initial report to verified closure.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-lg items-stretch">
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm h-full">
+            <div class="w-9 h-9 rounded bg-primary-action-container text-primary-action flex items-center justify-center">
+              <i data-lucide="camera" class="w-4 h-4" aria-hidden="true"></i>
+            </div>
+            <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">1. Submit location &amp; photo</h3>
+            <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Pin the exact street location and attach a photo so crews know what to bring.</p>
+          </article>
+
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm h-full">
+            <div class="w-9 h-9 rounded bg-primary-action-container text-primary-action flex items-center justify-center">
+              <i data-lucide="git-branch" class="w-4 h-4" aria-hidden="true"></i>
+            </div>
+            <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">2. Routed to department</h3>
+            <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">City coordinators assign the responsible department and dispatch a field work order.</p>
+          </article>
+
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm h-full">
+            <div class="w-9 h-9 rounded bg-primary-action-container text-primary-action flex items-center justify-center">
+              <i data-lucide="wrench" class="w-4 h-4" aria-hidden="true"></i>
+            </div>
+            <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">3. Field repair &amp; evidence</h3>
+            <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Field officers complete the repair and upload before-and-after photo proof.</p>
+          </article>
+
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm h-full">
+            <div class="w-9 h-9 rounded bg-success-container text-success flex items-center justify-center">
+              <i data-lucide="check-circle-2" class="w-4 h-4" aria-hidden="true"></i>
+            </div>
+            <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">4. Verified resolved</h3>
+            <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Supervisors audit the repair and residents confirm the issue is resolved.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- Public Footer -->
+    <footer class="bg-surface border-t border-outline-variant py-xl px-xl">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-md">
+        <span data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">CivicOps Municipal Operations Platform · Sample Public Portal</span>
+        <div class="flex items-center gap-lg font-label text-label-md text-secondary-text">
+          <a href="#about" class="hover:text-primary">About</a>
+          <a href="#privacy" class="hover:text-primary">Privacy policy</a>
+          <a href="#terms" class="hover:text-primary">Terms of service</a>
+          <a href="#contact" class="hover:text-primary">Support</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    });
+  </script>
+
+
+</body></html>

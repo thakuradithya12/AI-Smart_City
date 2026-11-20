@@ -1,0 +1,172 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inspection Form — WO-2026-0896 — CivicOps Field</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[884px] flex flex-col max-w-md mx-auto bg-app-background pb-24" data-stitch-vh="min-h-[884px]===min-h-screen">
+    <!-- Contextual Header -->
+    <header class="bg-primary text-on-primary px-lg py-md flex items-center justify-between gap-sm sticky top-0 z-20">
+      <div class="flex items-center gap-sm min-w-0">
+        <a href="#task-detail" aria-label="Back to work order" class="w-10 h-10 rounded flex items-center justify-center hover:bg-primary-action/20 shrink-0">
+          <i data-lucide="arrow-left" class="w-5 h-5 text-on-primary" aria-hidden="true"></i>
+        </a>
+        <div class="min-w-0">
+          <div data-design-text-token="mono-sm" class="font-mono text-mono-sm text-outline">WO-2026-0896</div>
+          <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary truncate">Site inspection form</div>
+        </div>
+      </div>
+      <span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm shrink-0">High</span>
+    </header>
+
+    <!-- Main Form -->
+    <main class="flex-1 p-lg flex flex-col gap-lg">
+      <section class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+        <div>
+          <label for="insp-result" class="block font-label text-label-md text-primary mb-xs">Inspection result</label>
+          <select id="insp-result" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+            <option>Confirmed pressure drop — valve repair needed</option>
+            <option>Confirmed main leak</option>
+            <option>No fault found on city main</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="insp-severity" class="block font-label text-label-md text-primary mb-xs">Assessed severity</label>
+          <select id="insp-severity" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+            <option>High — repair within 4 hours</option>
+            <option>Critical — immediate shutoff</option>
+            <option>Medium — scheduled maintenance</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="insp-equip" class="block font-label text-label-md text-primary mb-xs">Equipment / parts required</label>
+          <input id="insp-equip" type="text" value="6-inch pressure gauge, valve key" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+        </div>
+
+        <div>
+          <label for="insp-notes" class="block font-label text-label-md text-primary mb-xs">Field assessment notes</label>
+          <textarea id="insp-notes" rows="3" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-sm text-primary">Static pressure reads 34 PSI (normal 60 PSI) at 412 W. Main St meter pit. Recommend isolating north block valve.</textarea>
+        </div>
+
+        <label class="flex items-center gap-md p-sm rounded bg-surface-container-low border border-outline-variant">
+          <input type="checkbox" checked class="w-5 h-5 rounded border-outline text-primary-action">
+          <span data-design-text-token="body-sm" class="font-body text-body-sm text-primary">Requires follow-up repair crew</span>
+        </label>
+      </section>
+    </main>
+
+    <!-- Fixed Bottom Submit Bar -->
+    <footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface border-t border-outline-variant p-md z-30">
+      <button type="button" class="w-full min-h-11 inline-flex items-center justify-center gap-xs rounded bg-primary-action text-on-primary-action font-label text-title-md hover:bg-primary">
+        <i data-lucide="clipboard-check" class="w-4 h-4" aria-hidden="true"></i>
+        <span>Submit inspection report</span>
+      </button>
+    </footer>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

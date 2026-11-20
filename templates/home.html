@@ -1,13 +1,28 @@
 {% extends "base.html" %}
-{% block title %}Home · AI Smart City{% endblock %}
+{% block title %}Overview · AI Smart City{% endblock %}
 {% block content %}
-<h1>Welcome, {{ request.user.name|default:request.user.email }}</h1>
-<p>Your signed-in role is {{ request.user.get_role_display }}.</p>
-{% if request.user.role == "citizen" %}
-<nav aria-label="Citizen actions"><p><a href="{% url 'report' %}">Report a problem</a></p><p><a href="{% url 'my_complaints' %}">My complaints</a></p></nav>
-{% elif request.user.role == "triage_reviewer" or request.user.role == "admin" %}<p><a href="{% url 'triage_queue' %}">Triage queue</a></p>
-{% elif request.user.role == "department_official" or request.user.role == "supervisor" %}<p><a href="{% url 'department_inbox' %}">Department inbox</a></p>
-{% elif request.user.role == "field_worker" %}<p><a href="{% url 'field_tasks' %}">My field tasks</a></p>
-{% endif %}
-<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Sign out</button></form>
+<header class="page-heading">
+  <div><p class="eyebrow">{{ request.user.get_role_display }} workspace</p><h1>Hello, {{ request.user.name|default:request.user.email }}</h1><p>Review civic reports and follow the work happening across your service area.</p></div>
+  {% if request.user.role == "citizen" %}<a class="button" href="{% url 'report' %}">＋ Report an issue</a>{% elif queue_url_name %}<a class="button" href="{% url queue_url_name %}">Open your work queue</a>{% endif %}
+</header>
+<section class="stat-grid" aria-label="Complaint overview">
+  <article class="stat-card"><span class="stat-label">All complaints</span><strong class="stat-value">{{ total_count }}</strong><div class="stat-foot">Visible to your account</div></article>
+  <article class="stat-card"><span class="stat-label">Active</span><strong class="stat-value">{{ active_count }}</strong><div class="stat-foot">Still moving through the workflow</div></article>
+  <article class="stat-card"><span class="stat-label">Verified closed</span><strong class="stat-value">{{ closed_count }}</strong><div class="stat-foot">Fixes independently confirmed</div></article>
+  <article class="stat-card"><span class="stat-label">Needs attention</span><strong class="stat-value">{{ attention_count }}</strong><div class="stat-foot">Triage, routing or verification</div></article>
+</section>
+<section class="panel" aria-labelledby="recent-title">
+  <div class="card-head"><div><p class="eyebrow">Latest activity</p><h2 id="recent-title">Recent complaints</h2></div>
+    {% if request.user.role == "citizen" %}<a class="button button-secondary" href="{% url 'my_complaints' %}">View all</a>{% elif queue_url_name %}<a class="button button-secondary" href="{% url queue_url_name %}">Open queue</a>{% endif %}
+  </div>
+  {% for complaint in recent_complaints %}
+  <article class="card card-spaced">
+    <div class="card-head"><h2><a class="mono" href="{% url 'complaint_detail' complaint.pk %}">{{ complaint.public_id }}</a></h2><span class="badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></div>
+    <div class="card-meta"><span>{{ complaint.category.name }}</span><span>{{ complaint.ward.name|default:"Ward pending" }}</span><span>{{ complaint.created_at|date:"M j, Y · H:i" }}</span></div>
+    {% if complaint.due_at %}<p class="card-copy">Due {{ complaint.due_at|date:"M j, Y" }}{% if complaint.is_overdue %} <span class="badge overdue">Overdue</span>{% endif %}</p>{% endif %}
+  </article>
+  {% empty %}
+  <div class="empty-state card-spaced"><h2>No complaints to show yet</h2><p>When a report is submitted or routed to your team, it will appear here.</p>{% if request.user.role == "citizen" %}<a class="button" href="{% url 'report' %}">Report an issue</a>{% elif queue_url_name %}<a class="button" href="{% url queue_url_name %}">Open your work queue</a>{% endif %}</div>
+  {% endfor %}
+</section>
 {% endblock %}

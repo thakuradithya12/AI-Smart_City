@@ -14,7 +14,9 @@ Initial migrations for the model-bearing apps are included. The public HTTPS dep
 
 ## Current status and known limits
 
-Day 1 implementation is in progress. Complaint workflow, evidence upload, ward data, AI training/inference, CI execution, backups, and deployment are not yet delivered. Do not use this skeleton for real complaints.
+The local citizen and staff complaint lifecycle is implemented through report submission, triage/routing, department assignment, field evidence and work claims, and separate verification/reopen actions. The CivicOps UI archive integration is documented in [`docs/UI_DESIGN.md`](docs/UI_DESIGN.md), with the extracted screens in [`docs/ui_reference/`](docs/ui_reference/).
+
+The public HTTPS deployment remains unconfigured because no domain or server has been supplied. Pilot centre coordinates and authoritative ward boundaries are pending. AI training and inference were not delivered; the candidate dataset research is documented in [`ml/DATASETS.md`](ml/DATASETS.md). Latest deployment and verification limits are recorded in [`PROGRESS.md`](PROGRESS.md) and [`docs/LIMITS.md`](docs/LIMITS.md).
 
 Day 2 local routes, demo seeding and the vendor asset download/check command are documented in [`docs/README.md`](docs/README.md).
 

@@ -1,0 +1,659 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complaints — CivicOps Administration</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col lg:flex-row" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Persistent Left Sidebar -->
+    <aside id="app-sidebar" class="w-full lg:w-60 shrink-0 bg-primary text-on-primary flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant min-h-0 lg:min-h-[1024px] transition-[width] duration-surface-enter ease-surface-enter" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+      <div class="flex flex-col">
+        <div class="h-14 px-lg flex items-center justify-between border-b border-primary-action/30">
+          <div class="flex items-center gap-md min-w-0">
+            <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="landmark" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+            </div>
+            <div class="sidebar-label min-w-0">
+              <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">CivicOps</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">City Admin</div>
+            </div>
+          </div>
+          <button id="sidebar-toggle" type="button" aria-label="Toggle sidebar" class="hidden lg:inline-flex items-center justify-center w-7 h-7 rounded text-outline hover:text-on-primary hover:bg-primary-action/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-primary">
+            <i data-lucide="panel-left-close" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <nav aria-label="City administration navigation" class="p-md flex flex-col gap-lg">
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Overview</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#city-overview" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">City overview</span>
+                </a>
+              </li>
+              <li>
+                <a href="#geographic-map" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="map" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Geographic map</span>
+                </a>
+              </li>
+              <li>
+                <a href="#analytics" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="bar-chart-3" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Analytics &amp; reports</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Operations</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#complaints" aria-current="page" class="flex items-center justify-between gap-sm px-md py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="inbox" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Complaints</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-primary/40 text-on-primary font-label text-label-sm tabular-nums">42</span>
+                </a>
+              </li>
+              <li>
+                <a href="#work-orders" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Work orders</span>
+                </a>
+              </li>
+              <li>
+                <a href="#escalations" class="flex items-center justify-between gap-sm px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="alert-octagon" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Escalation center</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">9</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Governance</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#departments" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="building-2" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Departments</span>
+                </a>
+              </li>
+              <li>
+                <a href="#personnel" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="users" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Personnel</span>
+                </a>
+              </li>
+              <li>
+                <a href="#zones" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="map-pinned" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Zones &amp; wards</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sla" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="timer" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">SLA monitoring</span>
+                </a>
+              </li>
+              <li>
+                <a href="#audit" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="shield-check" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Audit logs</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="p-md border-t border-primary-action/30 flex flex-col gap-xs">
+        <a href="#settings" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="settings" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">System settings</span>
+        </a>
+        <a href="#logout" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="log-out" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">Sign out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Top Utility Header -->
+      <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between gap-lg sticky top-0 z-20">
+        <div class="flex items-center gap-sm min-w-0">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text hidden sm:inline">City Administration</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-secondary-text hidden sm:inline" aria-hidden="true"></i>
+          <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Complaints</span>
+          <span data-design-text-token="label-sm" class="ml-sm px-sm py-0.5 rounded-sm bg-surface-container text-secondary-text font-label text-label-sm border border-outline-variant">Sample dataset</span>
+        </div>
+
+        <div class="flex items-center gap-md">
+          <div class="relative hidden md:block w-72">
+            <i data-lucide="search" class="w-4 h-4 text-secondary-text absolute left-md top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true"></i>
+            <input type="search" placeholder="Search complaint ID, ward, work order..." aria-label="Global search" class="w-full pl-2xl pr-md py-1.5 rounded bg-surface-container-low border border-outline-variant font-body text-body-sm text-on-surface placeholder:text-secondary-text focus:outline-none focus:border-primary-action focus:ring-1 focus:ring-primary-action">
+          </div>
+
+          <button type="button" aria-label="Notifications (14 unread)" class="relative inline-flex items-center justify-center w-9 h-9 rounded border border-outline-variant bg-surface text-secondary-text hover:text-primary hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+            <i data-lucide="bell" class="w-4 h-4" aria-hidden="true"></i>
+            <span data-component-id="badge-numeric" data-component-type="badge" data-component-variant="numeric" aria-hidden="true" class="absolute -top-xs -right-xs inline-flex items-center justify-center min-w-4 h-4 px-xs rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">
+              <span data-design-text-token="label-sm">14</span>
+            </span>
+          </button>
+
+          <button type="button" aria-label="Help and documentation" class="inline-flex items-center justify-center w-9 h-9 rounded border border-outline-variant bg-surface text-secondary-text hover:text-primary hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+            <i data-lucide="help-circle" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+
+          <div class="h-6 w-px bg-outline-variant hidden sm:block"></div>
+
+          <div class="flex items-center gap-sm">
+            <div class="w-8 h-8 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">
+              EV
+            </div>
+            <div class="hidden xl:block leading-tight">
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Elena Vance</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">City Ops Director</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-xl flex flex-col gap-xl max-w-7xl w-full mx-auto">
+        <!-- Page Header -->
+        <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-lg">
+          <div>
+            <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Complaints</h1>
+            <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">
+              Review, route, and monitor reported civic issues across all municipal departments.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-sm">
+            <!-- Contextual Bulk Action (hidden until rows selected) -->
+            <div id="bulk-bar" class="hidden items-center gap-sm px-md py-xs rounded bg-primary-action-container border border-primary-action/30">
+              <span id="bulk-count" data-design-text-token="label-md" class="font-label text-label-md text-primary">0 selected</span>
+              <button type="button" class="px-md py-xs rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">Assign department</button>
+              <button type="button" class="px-md py-xs rounded bg-surface border border-outline text-primary font-label text-label-md hover:bg-surface-container-low">Change priority</button>
+            </div>
+            <button data-component-id="button-secondary" data-component-type="button" data-component-variant="secondary" type="button" class="inline-flex items-center justify-center gap-sm px-lg py-sm rounded bg-surface border border-outline text-primary font-label text-label-md hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+              <i data-lucide="download" class="w-4 h-4 text-secondary-text" aria-hidden="true"></i>
+              <span data-design-text-token="label-md">Export CSV</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Compact KPI Summary Row -->
+        <section aria-label="Complaint status summary" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-md items-stretch">
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Total</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary tabular-nums">1,284</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">New</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary tabular-nums">42</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">In Review</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary-action tabular-nums">68</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Assigned</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary tabular-nums">114</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">In Progress</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary-action tabular-nums">136</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Overdue</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-error tabular-nums">23</span>
+          </article>
+        </section>
+
+        <!-- Filter Toolbar + Data Table -->
+        <section class="bg-surface border border-outline-variant rounded-md overflow-hidden flex flex-col">
+          <!-- Filter Toolbar -->
+          <div class="p-lg border-b border-outline-variant flex flex-col gap-md bg-surface-container-low">
+            <div class="flex flex-wrap items-center gap-sm">
+              <div class="relative flex-1 min-w-60">
+                <i data-lucide="search" class="w-4 h-4 text-secondary-text absolute left-md top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true"></i>
+                <input id="filter-search" type="search" placeholder="Search complaint ID, title, or address..." aria-label="Search complaints" class="w-full pl-2xl pr-md py-sm rounded bg-surface border border-outline-variant font-body text-body-sm text-on-surface placeholder:text-secondary-text focus:border-primary-action focus:ring-1 focus:ring-primary-action">
+              </div>
+
+              <select id="filter-status" aria-label="Filter by status" class="px-md py-sm rounded bg-surface border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+                <option value="all">Status: All</option>
+                <option value="New">New</option>
+                <option value="In Review">In Review</option>
+                <option value="Assigned">Assigned</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Escalated">Escalated</option>
+                <option value="Resolved">Resolved</option>
+              </select>
+
+              <select id="filter-category" aria-label="Filter by category" class="px-md py-sm rounded bg-surface border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+                <option value="all">Category: All</option>
+                <option value="Water &amp; Sewer">Water &amp; Sewer</option>
+                <option value="Roads &amp; Pavements">Roads &amp; Pavements</option>
+                <option value="Traffic Signals">Traffic Signals</option>
+                <option value="Streetlighting">Streetlighting</option>
+                <option value="Stormwater Drainage">Stormwater Drainage</option>
+                <option value="Waste &amp; Sanitation">Waste &amp; Sanitation</option>
+              </select>
+
+              <select id="filter-priority" aria-label="Filter by priority" class="px-md py-sm rounded bg-surface border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+                <option value="all">Priority: All</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+
+              <select id="filter-department" aria-label="Filter by department" class="px-md py-sm rounded bg-surface border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+                <option value="all">Department: All</option>
+                <option value="Unassigned">Unassigned</option>
+                <option value="Water &amp; Sewer">Water &amp; Sewer</option>
+                <option value="Roads &amp; Pavements">Roads &amp; Pavements</option>
+                <option value="Traffic Engineering">Traffic Engineering</option>
+                <option value="Streetlighting">Streetlighting</option>
+                <option value="Stormwater Drainage">Stormwater Drainage</option>
+                <option value="Waste &amp; Sanitation">Waste &amp; Sanitation</option>
+              </select>
+
+              <select id="filter-ward" aria-label="Filter by ward" class="px-md py-sm rounded bg-surface border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+                <option value="all">Ward: All</option>
+                <option value="Ward 1">Ward 1</option>
+                <option value="Ward 2">Ward 2</option>
+                <option value="Ward 3">Ward 3</option>
+                <option value="Ward 4">Ward 4</option>
+                <option value="Ward 5">Ward 5</option>
+                <option value="Ward 6">Ward 6</option>
+                <option value="Ward 7">Ward 7</option>
+              </select>
+
+              <button id="clear-filters-btn" data-component-id="button-tertiary" data-component-type="button" data-component-variant="tertiary" type="button" class="px-md py-sm rounded font-label text-label-md text-primary-action hover:bg-primary-action-container">
+                <span data-design-text-token="label-md">Clear filters</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div data-component-id="table-selectable" data-component-type="table" data-component-variant="selectable" class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-surface-container-low border-b border-outline-variant">
+                <tr>
+                  <th scope="col" class="w-10 px-lg py-md">
+                    <input id="select-all" type="checkbox" aria-label="Select all visible complaints" class="rounded-sm border-outline text-primary-action focus:ring-primary-action">
+                  </th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">ID</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap min-w-56">Issue</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Location</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Priority</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Department</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Status</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Reported</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">SLA</th>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text text-right whitespace-nowrap">Action</th>
+                </tr>
+              </thead>
+              <tbody id="complaints-tbody" class="divide-y divide-outline-variant">
+                <tr class="complaint-row hover:bg-surface-container-low cursor-pointer" data-id="CMP-2026-04185" data-title="Downed streetlight pole blocking bike lane" data-category="Streetlighting" data-priority="High" data-department="Unassigned" data-status="New" data-ward="Ward 1">
+                  <td class="px-lg py-md"><input type="checkbox" aria-label="Select CMP-2026-04185" class="row-check rounded-sm border-outline text-primary-action focus:ring-primary-action"></td>
+                  <td class="px-md py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04185</td>
+                  <td class="px-md py-md">
+                    <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Downed streetlight pole blocking bike lane</div>
+                    <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Streetlighting</div>
+                  </td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">N. Lombard St · Ward 1</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Unassigned</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">New</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 20, 06:11</td>
+                  <td class="px-md py-md font-label text-label-md text-primary tabular-nums whitespace-nowrap">5h 12m left</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                </tr>
+
+                <tr class="complaint-row hover:bg-surface-container-low cursor-pointer" data-id="CMP-2026-04182" data-title="Main water line rupture at Oak &amp; 4th" data-category="Water &amp; Sewer" data-priority="Critical" data-department="Water &amp; Sewer" data-status="In Progress" data-ward="Ward 4">
+                  <td class="px-lg py-md"><input type="checkbox" aria-label="Select CMP-2026-04182" class="row-check rounded-sm border-outline text-primary-action focus:ring-primary-action"></td>
+                  <td class="px-md py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04182</td>
+                  <td class="px-md py-md">
+                    <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Main water line rupture at Oak &amp; 4th</div>
+                    <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Water &amp; Sewer</div>
+                  </td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Oak &amp; 4th Ave · Ward 4</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Water &amp; Sewer</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">In Progress</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 20, 02:50</td>
+                  <td class="px-md py-md font-label text-label-md text-error tabular-nums whitespace-nowrap">Overdue 3h 20m</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                </tr>
+
+                <tr class="complaint-row hover:bg-surface-container-low cursor-pointer" data-id="CMP-2026-04179" data-title="4-way traffic signal blackout at Civic Plaza" data-category="Traffic Signals" data-priority="Critical" data-department="Traffic Engineering" data-status="Escalated" data-ward="Ward 2">
+                  <td class="px-lg py-md"><input type="checkbox" aria-label="Select CMP-2026-04179" class="row-check rounded-sm border-outline text-primary-action focus:ring-primary-action"></td>
+                  <td class="px-md py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04179</td>
+                  <td class="px-md py-md">
+                    <div data-design-text-token="label-md" class="font-label text-label-md text-primary">4-way traffic signal blackout at Civic Plaza</div>
+                    <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Traffic Signals</div>
+                  </td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Civic Plaza · Ward 2</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Traffic Engineering</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Escalated</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 19, 22:15</td>
+                  <td class="px-md py-md font-label text-label-md text-error tabular-nums whitespace-nowrap">Overdue 4h 45m</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                </tr>
+
+                <tr class="complaint-row hover:bg-surface-container-low cursor-pointer" data-id="CMP-2026-04175" data-title="Deep sinkhole on E. Burnside lane 2" data-category="Roads &amp; Pavements" data-priority="High" data-department="Roads &amp; Pavements" data-status="Assigned" data-ward="Ward 3">
+                  <td class="px-lg py-md"><input type="checkbox" aria-label="Select CMP-2026-04175" class="row-check rounded-sm border-outline text-primary-action focus:ring-primary-action"></td>
+                  <td class="px-md py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04175</td>
+                  <td class="px-md py-md">
+                    <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Deep sinkhole on E. Burnside lane 2</div>
+                    <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Roads &amp; Pavements</div>
+                  </td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">E. Burnside · Ward 3</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Roads &amp; Pavements</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">Assigned</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 19, 17:40</td>
+                  <td class="px-md py-md font-label text-label-md text-on-warning-container tabular-nums whitespace-nowrap">1h 30m left</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                </tr>
+
+                <tr class="complaint-row hover:bg-surface-container-low cursor-pointer" data-id="CMP-2026-04171" data-title="Blocked storm culvert flooding intersection" data-category="Stormwater Drainage" data-priority="High" data-department="Stormwater Drainage" data-status="In Progress" data-ward="Ward 7">
+                  <td class="px-lg py-md"><input type="checkbox" aria-label="Select CMP-2026-04171" class="row-check rounded-sm border-outline text-primary-action focus:ring-primary-action"></td>
+                  <td class="px-md py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04171</td>
+                  <td class="px-md py-md">
+                    <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Blocked storm culvert flooding intersection</div>
+                    <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Stormwater Drainage</div>
+                  </td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Riverfront Pkwy · Ward 7</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Stormwater Drainage</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">In Progress</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 19, 16:12</td>
+                  <td class="px-md py-md font-label text-label-md text-on-warning-container tabular-nums whitespace-nowrap">45m left</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                </tr>
+
+                <tr class="complaint-row hover:bg-surface-container-low cursor-pointer" data-id="CMP-2026-04168" data-title="6 streetlights out along Midtown Corridor" data-category="Streetlighting" data-priority="Medium" data-department="Streetlighting" data-status="In Review" data-ward="Ward 5">
+                  <td class="px-lg py-md"><input type="checkbox" aria-label="Select CMP-2026-04168" class="row-check rounded-sm border-outline text-primary-action focus:ring-primary-action"></td>
+                  <td class="px-md py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04168</td>
+                  <td class="px-md py-md">
+                    <div data-design-text-token="label-md" class="font-label text-label-md text-primary">6 streetlights out along Midtown Corridor</div>
+                    <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Streetlighting</div>
+                  </td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Midtown Ave · Ward 5</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Medium</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Streetlighting</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">In Review</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 19, 15:20</td>
+                  <td class="px-md py-md font-label text-label-md text-secondary-text tabular-nums whitespace-nowrap">18h left</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                </tr>
+
+                <tr class="complaint-row hover:bg-surface-container-low cursor-pointer" data-id="CMP-2026-04164" data-title="Overflowing commercial bin enclosure" data-category="Waste &amp; Sanitation" data-priority="Medium" data-department="Waste &amp; Sanitation" data-status="Resolved" data-ward="Ward 6">
+                  <td class="px-lg py-md"><input type="checkbox" aria-label="Select CMP-2026-04164" class="row-check rounded-sm border-outline text-primary-action focus:ring-primary-action"></td>
+                  <td class="px-md py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04164</td>
+                  <td class="px-md py-md">
+                    <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Overflowing commercial bin enclosure</div>
+                    <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Waste &amp; Sanitation</div>
+                  </td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Swan Island · Ward 6</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Medium</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Waste &amp; Sanitation</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="inline-flex items-center px-sm py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">Resolved</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 19, 14:05</td>
+                  <td class="px-md py-md font-label text-label-md text-success whitespace-nowrap">Met SLA</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State (shown when filters return 0 rows) -->
+          <div id="empty-state" class="hidden p-4xl flex-col items-center justify-center text-center gap-md">
+            <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-secondary-text">
+              <i data-lucide="search-x" class="w-6 h-6" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">No complaints found</h3>
+              <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">No records match your current search or filter criteria.</p>
+            </div>
+            <button id="empty-clear-btn" type="button" class="px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">
+              Clear filters
+            </button>
+          </div>
+
+          <!-- Pagination Footer -->
+          <footer class="px-lg py-md border-t border-outline-variant flex flex-wrap items-center justify-between gap-md bg-surface-container-low">
+            <span id="row-count-label" data-design-text-token="label-md" class="font-label text-label-md text-secondary-text tabular-nums">Showing 7 of 7 sample records</span>
+            <div class="flex items-center gap-xs">
+              <button type="button" disabled class="px-md py-xs rounded border border-outline-variant bg-surface-container font-label text-label-md text-secondary-text cursor-not-allowed">Previous</button>
+              <button type="button" aria-current="page" class="px-md py-xs rounded bg-primary-action text-on-primary-action font-label text-label-md tabular-nums">1</button>
+              <button type="button" class="px-md py-xs rounded border border-outline-variant bg-surface font-label text-label-md text-primary hover:bg-surface-container tabular-nums">2</button>
+              <button type="button" class="px-md py-xs rounded border border-outline-variant bg-surface font-label text-label-md text-primary hover:bg-surface-container tabular-nums">3</button>
+              <button type="button" class="px-md py-xs rounded border border-outline-variant bg-surface font-label text-label-md text-primary hover:bg-surface-container">Next</button>
+            </div>
+          </footer>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      // Sidebar collapse
+      const sidebar = document.getElementById('app-sidebar');
+      const toggleBtn = document.getElementById('sidebar-toggle');
+      let collapsed = false;
+      if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', () => {
+          collapsed = !collapsed;
+          sidebar.classList.toggle('lg:w-60', !collapsed);
+          sidebar.classList.toggle('lg:w-16', collapsed);
+          document.querySelectorAll('.sidebar-label').forEach((el) => el.classList.toggle('hidden', collapsed));
+        });
+      }
+
+      // Multi-filter logic
+      const searchEl = document.getElementById('filter-search');
+      const statusEl = document.getElementById('filter-status');
+      const catEl = document.getElementById('filter-category');
+      const prioEl = document.getElementById('filter-priority');
+      const deptEl = document.getElementById('filter-department');
+      const wardEl = document.getElementById('filter-ward');
+      const rows = Array.from(document.querySelectorAll('.complaint-row'));
+      const emptyState = document.getElementById('empty-state');
+      const countLabel = document.getElementById('row-count-label');
+
+      function applyFilters() {
+        const q = searchEl.value.trim().toLowerCase();
+        const st = statusEl.value;
+        const cat = catEl.value;
+        const prio = prioEl.value;
+        const dept = deptEl.value;
+        const ward = wardEl.value;
+
+        let visible = 0;
+        rows.forEach((row) => {
+          const matchQ = !q || row.dataset.id.toLowerCase().includes(q) || row.dataset.title.toLowerCase().includes(q);
+          const matchSt = st === 'all' || row.dataset.status === st;
+          const matchCat = cat === 'all' || row.dataset.category === cat;
+          const matchPrio = prio === 'all' || row.dataset.priority === prio;
+          const matchDept = dept === 'all' || row.dataset.department === dept;
+          const matchWard = ward === 'all' || row.dataset.ward === ward;
+          const show = matchQ && matchSt && matchCat && matchPrio && matchDept && matchWard;
+          row.classList.toggle('hidden', !show);
+          if (show) visible++;
+        });
+
+        emptyState.classList.toggle('hidden', visible > 0);
+        emptyState.classList.toggle('flex', visible === 0);
+        countLabel.textContent = `Showing ${visible} of ${rows.length} sample records`;
+      }
+
+      [searchEl, statusEl, catEl, prioEl, deptEl, wardEl].forEach((el) => {
+        el.addEventListener('input', applyFilters);
+        el.addEventListener('change', applyFilters);
+      });
+
+      function resetFilters() {
+        searchEl.value = '';
+        statusEl.value = 'all';
+        catEl.value = 'all';
+        prioEl.value = 'all';
+        deptEl.value = 'all';
+        wardEl.value = 'all';
+        applyFilters();
+      }
+
+      document.getElementById('clear-filters-btn').addEventListener('click', resetFilters);
+      document.getElementById('empty-clear-btn').addEventListener('click', resetFilters);
+
+      // Bulk selection
+      const selectAll = document.getElementById('select-all');
+      const rowChecks = Array.from(document.querySelectorAll('.row-check'));
+      const bulkBar = document.getElementById('bulk-bar');
+      const bulkCount = document.getElementById('bulk-count');
+
+      function updateBulkBar() {
+        const selected = rowChecks.filter((c) => c.checked).length;
+        bulkBar.classList.toggle('hidden', selected === 0);
+        bulkBar.classList.toggle('flex', selected > 0);
+        bulkCount.textContent = `${selected} selected`;
+      }
+
+      selectAll.addEventListener('change', () => {
+        rowChecks.forEach((c) => {
+          if (!c.closest('tr').classList.contains('hidden')) {
+            c.checked = selectAll.checked;
+          }
+        });
+        updateBulkBar();
+      });
+
+      rowChecks.forEach((c) => c.addEventListener('change', updateBulkBar));
+    });
+  </script>
+
+
+</body></html>

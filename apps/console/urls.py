@@ -2,11 +2,28 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import path
 from apps.complaints.views import complaint_detail, evidence_file, my_complaints, register, report
+from apps.accounts.models import User
+from apps.complaints.models import Complaint
 from . import views as workflow_views
 
 @login_required
 def home(request):
-    return render(request, "home.html")
+    visible = Complaint.objects.visible_to(request.user).select_related("category", "ward", "department")
+    active = visible.exclude(status__in=[Complaint.Status.VERIFIED_CLOSED, Complaint.Status.REJECTED, Complaint.Status.CANCELLED])
+    context = {
+        "total_count": visible.count(),
+        "active_count": active.count(),
+        "closed_count": visible.filter(status=Complaint.Status.VERIFIED_CLOSED).count(),
+        "attention_count": visible.filter(status__in=[Complaint.Status.IN_TRIAGE, Complaint.Status.ROUTED, Complaint.Status.RESOLVED_PENDING_VERIFICATION]).count(),
+        "recent_complaints": visible.order_by("-created_at")[:5],
+    }
+    if request.user.role in {User.Role.TRIAGE_REVIEWER, User.Role.ADMIN}:
+        context["queue_url_name"] = "triage_queue"
+    elif request.user.role in {User.Role.DEPARTMENT_OFFICIAL, User.Role.SUPERVISOR}:
+        context["queue_url_name"] = "department_inbox"
+    elif request.user.role == User.Role.FIELD_WORKER:
+        context["queue_url_name"] = "field_tasks"
+    return render(request, "home.html", context)
 
 urlpatterns = [
     path("", home, name="home"),

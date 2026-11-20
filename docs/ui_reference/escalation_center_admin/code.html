@@ -1,0 +1,328 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escalation Center — CivicOps Administration</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col lg:flex-row" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Persistent Left Sidebar (Admin Shell) -->
+    <aside id="app-sidebar" class="w-full lg:w-60 shrink-0 bg-primary text-on-primary flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant min-h-0 lg:min-h-[1024px]" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+      <div class="flex flex-col">
+        <div class="h-14 px-lg flex items-center justify-between border-b border-primary-action/30">
+          <div class="flex items-center gap-md min-w-0">
+            <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="landmark" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+            </div>
+            <div class="min-w-0">
+              <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">CivicOps</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">City Admin</div>
+            </div>
+          </div>
+        </div>
+
+        <nav aria-label="City administration navigation" class="p-md flex flex-col gap-lg">
+          <div>
+            <div class="px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">Overview</div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#city-overview" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">City overview</span>
+                </a>
+              </li>
+              <li>
+                <a href="#geographic-map" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="map" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Geographic map</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">Operations</div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#complaints" class="flex items-center justify-between gap-sm px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="inbox" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span data-design-text-token="label-md">Complaints</span>
+                  </span>
+                  <span class="px-sm py-0.5 rounded-full bg-primary-action/30 text-on-primary font-label text-label-sm tabular-nums">42</span>
+                </a>
+              </li>
+              <li>
+                <a href="#work-orders" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Work orders</span>
+                </a>
+              </li>
+              <li>
+                <a href="#escalations" aria-current="page" class="flex items-center justify-between gap-sm px-md py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="alert-octagon" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span data-design-text-token="label-md">Escalation center</span>
+                  </span>
+                  <span class="px-sm py-0.5 rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">9</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="p-md border-t border-primary-action/30 flex flex-col gap-xs">
+        <a href="#logout" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+          <i data-lucide="log-out" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span data-design-text-token="label-md">Sign out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between gap-lg sticky top-0 z-20">
+        <div class="flex items-center gap-sm min-w-0">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text hidden sm:inline">City Administration</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-secondary-text hidden sm:inline" aria-hidden="true"></i>
+          <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Escalation center</span>
+          <span data-design-text-token="label-sm" class="ml-sm px-sm py-0.5 rounded-sm bg-surface-container text-secondary-text font-label text-label-sm border border-outline-variant">Sample dataset</span>
+        </div>
+
+        <div class="flex items-center gap-sm">
+          <div class="w-8 h-8 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">EV</div>
+          <div class="hidden xl:block leading-tight">
+            <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Elena Vance</div>
+            <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">City Ops Director</div>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 p-xl flex flex-col gap-xl max-w-7xl w-full mx-auto">
+        <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-lg">
+          <div>
+            <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Escalation center</h1>
+            <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">
+              Intervene on SLA-breached, unassigned overdue, and high-risk civic complaints.
+            </p>
+          </div>
+        </section>
+
+        <!-- 4 Summary Metrics -->
+        <section aria-label="Escalation summary" class="grid grid-cols-2 lg:grid-cols-4 gap-lg items-stretch">
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">Critical escalations</span>
+            <span data-design-text-token="display-sm" class="font-display text-display-sm text-error tabular-nums">9</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">SLA breached</span>
+            <span data-design-text-token="display-sm" class="font-display text-display-sm text-error tabular-nums">23</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">Near deadline</span>
+            <span data-design-text-token="display-sm" class="font-display text-display-sm text-on-warning-container tabular-nums">14</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">Unassigned overdue</span>
+            <span data-design-text-token="display-sm" class="font-display text-display-sm text-primary tabular-nums">3</span>
+          </article>
+        </section>
+
+        <!-- Escalation Table -->
+        <section class="bg-surface border border-outline-variant rounded-md overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-surface-container-low border-b border-outline-variant">
+                <tr>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text">Complaint ID</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text min-w-56">Issue</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Department</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Priority</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Delay</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Level</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Owner</th>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-outline-variant">
+                <tr class="hover:bg-surface-container-low">
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04182</td>
+                  <td class="px-md py-md font-label text-label-md text-primary">Main water line rupture at Oak &amp; 4th</td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Water &amp; Sewer</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span></td>
+                  <td class="px-md py-md font-label text-label-md text-error tabular-nums whitespace-nowrap">+3h 20m</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Level 1</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Hannah Lin</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><button type="button" class="intervene-btn font-label text-label-md text-primary-action hover:underline">Intervene</button></td>
+                </tr>
+                <tr class="hover:bg-surface-container-low">
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04179</td>
+                  <td class="px-md py-md font-label text-label-md text-primary">4-way traffic signal blackout at Civic Plaza</td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Traffic Engineering</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span></td>
+                  <td class="px-md py-md font-label text-label-md text-error tabular-nums whitespace-nowrap">+4h 45m</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Level 2</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">R. Nair</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><button type="button" class="intervene-btn font-label text-label-md text-primary-action hover:underline">Intervene</button></td>
+                </tr>
+                <tr class="hover:bg-surface-container-low">
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04151</td>
+                  <td class="px-md py-md font-label text-label-md text-primary">Collapsed retaining curb near Hawthorne Bridge</td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Roads &amp; Pavements</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span></td>
+                  <td class="px-md py-md font-label text-label-md text-error tabular-nums whitespace-nowrap">+1d 4h</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Level 2</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Unassigned</td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><button type="button" class="intervene-btn font-label text-label-md text-primary-action hover:underline">Intervene</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Intervention Modal -->
+  <div id="intervene-modal" class="hidden fixed inset-0 z-50 bg-primary/60 items-center justify-center p-xl" role="dialog" aria-modal="true" aria-labelledby="intervene-title">
+    <div class="bg-surface border border-outline-variant rounded-lg max-w-md w-full overflow-hidden">
+      <header class="px-xl py-lg border-b border-outline-variant flex items-center justify-between">
+        <h2 id="intervene-title" class="font-headline text-headline-md text-primary">Record operational intervention</h2>
+        <button id="close-intervene" type="button" aria-label="Close modal" class="w-8 h-8 rounded flex items-center justify-center text-secondary-text hover:text-primary hover:bg-surface-container">
+          <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+        </button>
+      </header>
+      <form id="intervene-form" class="p-xl flex flex-col gap-md">
+        <div>
+          <label for="int-action" class="block font-label text-label-md text-primary mb-xs">Intervention action</label>
+          <select id="int-action" class="w-full rounded border border-outline-variant bg-surface-container-low px-md py-sm font-body text-body-sm text-primary">
+            <option>Reassign to standby crew</option>
+            <option>Add supervisor oversight</option>
+            <option>Escalate to Critical (P1)</option>
+          </select>
+        </div>
+        <div>
+          <label for="int-note" class="block font-label text-label-md text-primary mb-xs">Intervention reason *</label>
+          <textarea id="int-note" rows="3" required placeholder="Document reason and immediate recovery plan..." class="w-full rounded border border-outline-variant bg-surface-container-low p-md font-body text-body-sm text-on-surface"></textarea>
+        </div>
+        <div class="flex justify-end gap-sm pt-md border-t border-outline-variant">
+          <button id="cancel-intervene" type="button" class="px-lg py-sm rounded border border-outline bg-surface font-label text-label-md text-primary">Cancel</button>
+          <button type="submit" class="px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">Save intervention</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+      const modal = document.getElementById('intervene-modal');
+      const openModal = () => { modal.classList.remove('hidden'); modal.classList.add('flex'); };
+      const closeModal = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
+      document.querySelectorAll('.intervene-btn').forEach((b) => b.addEventListener('click', openModal));
+      document.getElementById('close-intervene').addEventListener('click', closeModal);
+      document.getElementById('cancel-intervene').addEventListener('click', closeModal);
+      document.getElementById('intervene-form').addEventListener('submit', (e) => { e.preventDefault(); closeModal(); });
+    });
+  </script>
+
+
+</body></html>

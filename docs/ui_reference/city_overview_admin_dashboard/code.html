@@ -1,0 +1,1034 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>City Overview — CivicOps Administration</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col lg:flex-row" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Persistent Left Sidebar (240px expanded, collapsible to 72px) -->
+    <aside id="app-sidebar" class="w-full lg:w-60 shrink-0 bg-primary text-on-primary flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant min-h-0 lg:min-h-[1024px] transition-[width] duration-surface-enter ease-surface-enter" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+      <div class="flex flex-col">
+        <!-- Brand Header -->
+        <div class="h-14 px-lg flex items-center justify-between border-b border-primary-action/30">
+          <div class="flex items-center gap-md min-w-0">
+            <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="landmark" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+            </div>
+            <div class="sidebar-label min-w-0">
+              <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">CivicOps</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">City Admin</div>
+            </div>
+          </div>
+          <button id="sidebar-toggle" type="button" aria-label="Toggle sidebar" class="hidden lg:inline-flex items-center justify-center w-7 h-7 rounded text-outline hover:text-on-primary hover:bg-primary-action/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-primary">
+            <i data-lucide="panel-left-close" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <!-- Role Navigation Groups -->
+        <nav aria-label="City administration navigation" class="p-md flex flex-col gap-lg">
+          <!-- Group: Overview -->
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Overview</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#city-overview" aria-current="page" class="flex items-center gap-md px-md py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md">
+                  <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">City overview</span>
+                </a>
+              </li>
+              <li>
+                <a href="#geographic-map" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="map" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Geographic map</span>
+                </a>
+              </li>
+              <li>
+                <a href="#analytics" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="bar-chart-3" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Analytics &amp; reports</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Group: Operations -->
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Operations</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#complaints" class="flex items-center justify-between gap-sm px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="inbox" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Complaints</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-primary-action/30 text-on-primary font-label text-label-sm tabular-nums">42</span>
+                </a>
+              </li>
+              <li>
+                <a href="#work-orders" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Work orders</span>
+                </a>
+              </li>
+              <li>
+                <a href="#escalations" class="flex items-center justify-between gap-sm px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="alert-octagon" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Escalation center</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">9</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Group: Organization & Governance -->
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Governance</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#departments" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="building-2" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Departments</span>
+                </a>
+              </li>
+              <li>
+                <a href="#personnel" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="users" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Personnel</span>
+                </a>
+              </li>
+              <li>
+                <a href="#zones" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="map-pinned" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Zones &amp; wards</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sla" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="timer" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">SLA monitoring</span>
+                </a>
+              </li>
+              <li>
+                <a href="#audit" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="shield-check" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Audit logs</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Sidebar Footer: Settings & Profile -->
+      <div class="p-md border-t border-primary-action/30 flex flex-col gap-xs">
+        <a href="#settings" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="settings" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">System settings</span>
+        </a>
+        <a href="#logout" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="log-out" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">Sign out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Top Utility Header (56px) -->
+      <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between gap-lg sticky top-0 z-20">
+        <!-- Breadcrumbs & Workspace Context -->
+        <div class="flex items-center gap-sm min-w-0">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text hidden sm:inline">City Administration</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-secondary-text hidden sm:inline" aria-hidden="true"></i>
+          <span data-design-text-token="label-md" class="font-label text-label-md text-primary">City overview</span>
+          <span data-design-text-token="label-sm" class="ml-sm px-sm py-0.5 rounded-sm bg-surface-container text-secondary-text font-label text-label-sm border border-outline-variant">Sample dataset</span>
+        </div>
+
+        <!-- Global Search & User Controls -->
+        <div class="flex items-center gap-md">
+          <div class="relative hidden md:block w-72">
+            <i data-lucide="search" class="w-4 h-4 text-secondary-text absolute left-md top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true"></i>
+            <input id="global-search" type="search" placeholder="Search complaint ID, ward, work order..." aria-label="Global search" class="w-full pl-2xl pr-md py-1.5 rounded bg-surface-container-low border border-outline-variant font-body text-body-sm text-on-surface placeholder:text-secondary-text focus:outline-none focus:border-primary-action focus:ring-1 focus:ring-primary-action">
+          </div>
+
+          <button type="button" aria-label="Notifications (14 unread)" class="relative inline-flex items-center justify-center w-9 h-9 rounded border border-outline-variant bg-surface text-secondary-text hover:text-primary hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+            <i data-lucide="bell" class="w-4 h-4" aria-hidden="true"></i>
+            <span data-component-id="badge-numeric" data-component-type="badge" data-component-variant="numeric" aria-hidden="true" class="absolute -top-xs -right-xs inline-flex items-center justify-center min-w-4 h-4 px-xs rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">
+              <span data-design-text-token="label-sm">14</span>
+            </span>
+          </button>
+
+          <button type="button" aria-label="Help and documentation" class="inline-flex items-center justify-center w-9 h-9 rounded border border-outline-variant bg-surface text-secondary-text hover:text-primary hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+            <i data-lucide="help-circle" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+
+          <div class="h-6 w-px bg-outline-variant hidden sm:block"></div>
+
+          <div class="flex items-center gap-sm">
+            <div class="w-8 h-8 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">
+              EV
+            </div>
+            <div class="hidden xl:block leading-tight">
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Elena Vance</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">City Ops Director</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <main id="city-overview" class="flex-1 p-xl flex flex-col gap-xl max-w-7xl w-full mx-auto">
+        <!-- A. Page Header -->
+        <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-lg">
+          <div>
+            <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">City overview</h1>
+            <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs text-pretty">
+              Monitor civic issues, SLA compliance, and department workload across all 8 municipal wards.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-sm">
+            <div class="inline-flex items-center gap-sm px-md py-sm rounded bg-surface border border-outline-variant">
+              <i data-lucide="calendar" class="w-4 h-4 text-secondary-text" aria-hidden="true"></i>
+              <select aria-label="Reporting period" id="date-range-select" class="border-0 bg-transparent p-0 pr-xl font-label text-label-md text-primary focus:ring-0">
+                <option value="30d" selected>Oct 21 – Nov 20, 2026 (30D)</option>
+                <option value="7d">Nov 13 – Nov 20, 2026 (7D)</option>
+                <option value="90d">Aug 22 – Nov 20, 2026 (90D)</option>
+              </select>
+            </div>
+            <button id="refresh-btn" data-component-id="button-icon" data-component-type="button" data-component-variant="icon" type="button" aria-label="Refresh operational data" class="inline-flex items-center justify-center w-9 h-9 rounded border border-outline bg-surface text-secondary-text hover:text-primary hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action transition-colors duration-state-change ease-state-change">
+              <i data-lucide="refresh-cw" class="w-4 h-4" aria-hidden="true"></i>
+            </button>
+            <button data-component-id="button-secondary" data-component-type="button" data-component-variant="secondary" type="button" class="inline-flex items-center justify-center gap-sm px-lg py-sm rounded bg-surface border border-outline text-primary font-label text-label-md hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action transition-colors duration-state-change ease-state-change">
+              <i data-lucide="download" class="w-4 h-4 text-secondary-text" aria-hidden="true"></i>
+              <span data-design-text-token="label-md">Export summary</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- B. KPI Row (6 concise metrics) -->
+        <section aria-label="Key operational metrics" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-lg items-stretch">
+          <!-- Total -->
+          <article data-component-id="card-elevated" data-component-type="card" data-component-variant="outlined" class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-sm h-full">
+            <header class="flex items-center justify-between gap-sm">
+              <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Total</span>
+              <i data-lucide="file-text" class="w-4 h-4 text-secondary-text shrink-0" aria-hidden="true"></i>
+            </header>
+            <div>
+              <div data-design-text-token="display-sm" class="font-display text-display-sm text-primary tabular-nums">1,284</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text mt-xs whitespace-nowrap">30D period</div>
+            </div>
+          </article>
+
+          <!-- Unreviewed -->
+          <article data-component-id="card-elevated" data-component-type="card" data-component-variant="outlined" class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-sm h-full">
+            <header class="flex items-center justify-between gap-sm">
+              <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Unreviewed</span>
+              <i data-lucide="inbox" class="w-4 h-4 text-primary-action shrink-0" aria-hidden="true"></i>
+            </header>
+            <div>
+              <div data-design-text-token="display-sm" class="font-display text-display-sm text-primary tabular-nums">42</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-primary-action mt-xs whitespace-nowrap">Needs triage</div>
+            </div>
+          </article>
+
+          <!-- Active -->
+          <article data-component-id="card-elevated" data-component-type="card" data-component-variant="outlined" class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-sm h-full">
+            <header class="flex items-center justify-between gap-sm">
+              <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Active</span>
+              <i data-lucide="activity" class="w-4 h-4 text-primary-action shrink-0" aria-hidden="true"></i>
+            </header>
+            <div>
+              <div data-design-text-token="display-sm" class="font-display text-display-sm text-primary tabular-nums">318</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text mt-xs whitespace-nowrap">7 departments</div>
+            </div>
+          </article>
+
+          <!-- Resolved -->
+          <article data-component-id="card-elevated" data-component-type="card" data-component-variant="outlined" class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-sm h-full">
+            <header class="flex items-center justify-between gap-sm">
+              <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Resolved</span>
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-success shrink-0" aria-hidden="true"></i>
+            </header>
+            <div>
+              <div data-design-text-token="display-sm" class="font-display text-display-sm text-success tabular-nums">892</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text mt-xs whitespace-nowrap">69.5% closed</div>
+            </div>
+          </article>
+
+          <!-- Overdue -->
+          <article data-component-id="card-elevated" data-component-type="card" data-component-variant="outlined" class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-sm h-full">
+            <header class="flex items-center justify-between gap-sm">
+              <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Overdue</span>
+              <i data-lucide="clock-alert" class="w-4 h-4 text-on-warning-container shrink-0" aria-hidden="true"></i>
+            </header>
+            <div>
+              <div data-design-text-token="display-sm" class="font-display text-display-sm text-on-warning-container tabular-nums">23</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-on-warning-container mt-xs whitespace-nowrap">Past SLA</div>
+            </div>
+          </article>
+
+          <!-- Critical -->
+          <article data-component-id="card-elevated" data-component-type="card" data-component-variant="outlined" class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-sm h-full">
+            <header class="flex items-center justify-between gap-sm">
+              <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Critical</span>
+              <i data-lucide="alert-octagon" class="w-4 h-4 text-error shrink-0" aria-hidden="true"></i>
+            </header>
+            <div>
+              <div data-design-text-token="display-sm" class="font-display text-display-sm text-error tabular-nums">9</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-error mt-xs whitespace-nowrap">Urgent action</div>
+            </div>
+          </article>
+        </section>
+
+        <!-- C. Main Analytics Row (2-column) -->
+        <section aria-label="Complaint trends and category breakdown" class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-stretch">
+          <!-- Left: Complaint Trend -->
+          <article class="lg:col-span-7 bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-lg h-full">
+            <header class="flex flex-wrap items-center justify-between gap-md">
+              <div>
+                <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Complaint trend</h2>
+                <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Submitted vs. verified resolved complaints</p>
+              </div>
+              <div class="flex items-center gap-xs bg-surface-container p-xs rounded border border-outline-variant" role="group" aria-label="Trend time range">
+                <button type="button" data-range="7d" class="trend-range-btn px-md py-xs rounded-sm font-label text-label-md text-secondary-text hover:text-primary">7D</button>
+                <button type="button" data-range="30d" class="trend-range-btn px-md py-xs rounded-sm font-label text-label-md bg-surface text-primary border border-outline-variant">30D</button>
+                <button type="button" data-range="90d" class="trend-range-btn px-md py-xs rounded-sm font-label text-label-md text-secondary-text hover:text-primary">90D</button>
+              </div>
+            </header>
+
+            <div class="flex items-center gap-xl">
+              <div class="flex items-center gap-sm">
+                <span class="w-md h-1 rounded-full bg-primary-action inline-block"></span>
+                <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">Submitted</span>
+              </div>
+              <div class="flex items-center gap-sm">
+                <span class="w-md h-1 rounded-full bg-success inline-block"></span>
+                <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">Resolved</span>
+              </div>
+            </div>
+
+            <!-- Clean SVG Line/Area Chart -->
+            <div class="w-full overflow-hidden">
+              <svg id="trend-svg" viewBox="0 0 640 220" class="w-full h-56" role="img" aria-label="Complaint trend chart comparing submitted and resolved issues">
+                <g class="stroke-outline-variant" stroke-width="1" stroke-dasharray="3 3">
+                  <line x1="40" y1="20" x2="620" y2="20"></line>
+                  <line x1="40" y1="65" x2="620" y2="65"></line>
+                  <line x1="40" y1="110" x2="620" y2="110"></line>
+                  <line x1="40" y1="155" x2="620" y2="155"></line>
+                  <line x1="40" y1="190" x2="620" y2="190" stroke-dasharray="0"></line>
+                </g>
+                <g class="fill-secondary-text font-mono text-label-sm">
+                  <text x="32" y="24" text-anchor="end">60</text>
+                  <text x="32" y="69" text-anchor="end">45</text>
+                  <text x="32" y="114" text-anchor="end">30</text>
+                  <text x="32" y="159" text-anchor="end">15</text>
+                  <text x="32" y="194" text-anchor="end">0</text>
+                </g>
+                <path id="trend-submitted-area" class="fill-primary-action-container/60" d></path>
+                <path id="trend-submitted-line" class="stroke-primary-action fill-none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d></path>
+                <path id="trend-resolved-line" class="stroke-success fill-none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d></path>
+                <g id="trend-x-labels" class="fill-secondary-text font-mono text-label-sm"></g>
+              </svg>
+            </div>
+          </article>
+
+          <!-- Right: Complaint Categories -->
+          <article class="lg:col-span-5 bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-lg h-full">
+            <header class="flex items-start justify-between gap-md">
+              <div>
+                <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Complaint categories</h2>
+                <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Sorted by volume · Click a category to filter</p>
+              </div>
+              <button id="clear-cat-filter" type="button" class="hidden font-label text-label-md text-primary-action hover:underline">
+                Clear filter
+              </button>
+            </header>
+
+            <div id="category-bars" class="flex flex-col gap-md">
+              <button type="button" data-category="Roads &amp; Pavements" class="category-bar-btn text-left group flex flex-col gap-xs p-xs -mx-xs rounded hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+                <div class="flex items-center justify-between gap-sm">
+                  <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Roads &amp; Pavements</span>
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text tabular-nums">384</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+                  <div class="h-full rounded-full bg-primary-action" style="width: 100%"></div>
+                </div>
+              </button>
+
+              <button type="button" data-category="Water &amp; Sewer" class="category-bar-btn text-left group flex flex-col gap-xs p-xs -mx-xs rounded hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+                <div class="flex items-center justify-between gap-sm">
+                  <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Water &amp; Sewer</span>
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text tabular-nums">276</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+                  <div class="h-full rounded-full bg-primary-action" style="width: 72%"></div>
+                </div>
+              </button>
+
+              <button type="button" data-category="Streetlighting" class="category-bar-btn text-left group flex flex-col gap-xs p-xs -mx-xs rounded hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+                <div class="flex items-center justify-between gap-sm">
+                  <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Streetlighting</span>
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text tabular-nums">214</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+                  <div class="h-full rounded-full bg-primary-action" style="width: 56%"></div>
+                </div>
+              </button>
+
+              <button type="button" data-category="Stormwater Drainage" class="category-bar-btn text-left group flex flex-col gap-xs p-xs -mx-xs rounded hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+                <div class="flex items-center justify-between gap-sm">
+                  <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Stormwater Drainage</span>
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text tabular-nums">182</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+                  <div class="h-full rounded-full bg-primary-action" style="width: 47%"></div>
+                </div>
+              </button>
+
+              <button type="button" data-category="Waste &amp; Sanitation" class="category-bar-btn text-left group flex flex-col gap-xs p-xs -mx-xs rounded hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+                <div class="flex items-center justify-between gap-sm">
+                  <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Waste &amp; Sanitation</span>
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text tabular-nums">138</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+                  <div class="h-full rounded-full bg-primary-action" style="width: 36%"></div>
+                </div>
+              </button>
+
+              <button type="button" data-category="Traffic Signals" class="category-bar-btn text-left group flex flex-col gap-xs p-xs -mx-xs rounded hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+                <div class="flex items-center justify-between gap-sm">
+                  <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Traffic Signals</span>
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text tabular-nums">90</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+                  <div class="h-full rounded-full bg-primary-action" style="width: 23%"></div>
+                </div>
+              </button>
+            </div>
+          </article>
+        </section>
+
+        <!-- D. Geographic Section + E. Operational Attention Queue -->
+        <section id="geographic-map" aria-label="Geographic issue distribution and operational attention queue" class="grid grid-cols-1 xl:grid-cols-12 gap-xl items-stretch">
+          <!-- Geographic Map Panel (7 cols) -->
+          <article class="xl:col-span-7 bg-surface border border-outline-variant rounded-md flex flex-col overflow-hidden h-full">
+            <header class="p-lg border-b border-outline-variant flex flex-wrap items-center justify-between gap-md">
+              <div>
+                <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Geographic issue distribution</h2>
+                <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Active municipal wards · Select a marker to inspect</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-sm">
+                <select id="map-priority-filter" aria-label="Filter map by priority" class="px-md py-xs rounded bg-surface-container-low border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+                  <option value="all">All priorities</option>
+                  <option value="Critical">Critical only</option>
+                  <option value="High">High priority</option>
+                  <option value="Medium">Medium priority</option>
+                </select>
+                <a href="#full-map" class="inline-flex items-center gap-xs px-md py-xs rounded border border-outline bg-surface font-label text-label-md text-primary-action hover:bg-primary-action-container">
+                  <span data-design-text-token="label-md">Open full map</span>
+                  <i data-lucide="external-link" class="w-4 h-4" aria-hidden="true"></i>
+                </a>
+              </div>
+            </header>
+
+            <!-- Interactive GIS Ward Map Canvas -->
+            <div class="relative flex-1 min-h-96 bg-surface-container-low overflow-hidden">
+              <svg id="gis-map-svg" viewBox="0 0 700 380" class="w-full h-full min-h-96" role="img" aria-label="Interactive ward map showing active complaint locations">
+                <g id="map-viewport" transform="translate(0,0) scale(1)">
+                  <path d="M0,260 Q180,235 340,275 T700,245 L700,295 Q520,315 340,310 T0,295 Z" class="fill-primary-action-container/50"></path>
+                  <g class="stroke-outline fill-surface" stroke-width="1.2">
+                    <polygon points="30,25 220,25 235,140 45,155"></polygon>
+                    <polygon points="220,25 445,25 430,150 235,140"></polygon>
+                    <polygon points="445,25 665,30 655,165 430,150"></polygon>
+                    <polygon points="45,155 235,140 255,245 30,250"></polygon>
+                    <polygon points="235,140 430,150 450,255 255,245"></polygon>
+                    <polygon points="430,150 655,165 665,240 450,255"></polygon>
+                    <polygon points="35,305 330,315 320,365 35,365"></polygon>
+                    <polygon points="330,315 665,300 665,365 320,365"></polygon>
+                  </g>
+                  <g class="stroke-outline-variant fill-none" stroke-width="2">
+                    <line x1="140" y1="20" x2="175" y2="365"></line>
+                    <line x1="340" y1="20" x2="355" y2="365"></line>
+                    <line x1="545" y1="25" x2="530" y2="365"></line>
+                    <line x1="25" y1="95" x2="670" y2="105"></line>
+                    <line x1="25" y1="195" x2="670" y2="205"></line>
+                  </g>
+                  <g class="fill-secondary-text font-label text-label-sm pointer-events-none">
+                    <text x="125" y="80">Ward 1 · Northgate</text>
+                    <text x="315" y="80">Ward 2 · Civic Core</text>
+                    <text x="530" y="88">Ward 3 · Eastside</text>
+                    <text x="120" y="205">Ward 4 · Oakridge</text>
+                    <text x="325" y="200">Ward 5 · Midtown</text>
+                    <text x="530" y="205">Ward 6 · Industrial</text>
+                    <text x="155" y="345">Ward 7 · Riverfront</text>
+                    <text x="470" y="340">Ward 8 · South Park</text>
+                  </g>
+
+                  <!-- Issue Markers -->
+                  <g id="map-markers">
+                    <g class="map-marker cursor-pointer" data-id="CMP-2026-04182" data-priority="Critical" data-category="Water &amp; Sewer" data-title="Main water line rupture at Oak &amp; 4th" data-ward="Ward 4 · Oakridge" data-coords="45.5184° N, 122.6812° W" data-status="SLA Breached" transform="translate(168, 182)">
+                      <circle r="13" class="fill-error/20"></circle>
+                      <circle r="7" class="fill-error stroke-surface" stroke-width="2"></circle>
+                    </g>
+                    <g class="map-marker cursor-pointer" data-id="CMP-2026-04179" data-priority="Critical" data-category="Traffic Signals" data-title="4-way signal blackout at Civic Plaza" data-ward="Ward 2 · Civic Core" data-coords="45.5231° N, 122.6765° W" data-status="Escalated" transform="translate(342, 102)">
+                      <circle r="13" class="fill-error/20"></circle>
+                      <circle r="7" class="fill-error stroke-surface" stroke-width="2"></circle>
+                    </g>
+                    <g class="map-marker cursor-pointer" data-id="CMP-2026-04175" data-priority="High" data-category="Roads &amp; Pavements" data-title="Deep sinkhole on E. Burnside lane 2" data-ward="Ward 3 · Eastside" data-coords="45.5228° N, 122.6584° W" data-status="In Progress" transform="translate(538, 118)">
+                      <circle r="7" class="fill-warning stroke-surface" stroke-width="2"></circle>
+                    </g>
+                    <g class="map-marker cursor-pointer" data-id="CMP-2026-04171" data-priority="High" data-category="Stormwater Drainage" data-title="Blocked storm culvert flooding intersection" data-ward="Ward 7 · Riverfront" data-coords="45.5042° N, 122.6791° W" data-status="Assigned" transform="translate(210, 330)">
+                      <circle r="7" class="fill-warning stroke-surface" stroke-width="2"></circle>
+                    </g>
+                    <g class="map-marker cursor-pointer" data-id="CMP-2026-04168" data-priority="Medium" data-category="Streetlighting" data-title="6 streetlights out along Midtown Corridor" data-ward="Ward 5 · Midtown" data-coords="45.5141° N, 122.6710° W" data-status="In Progress" transform="translate(358, 212)">
+                      <circle r="14" class="fill-primary-action stroke-surface" stroke-width="2"></circle>
+                      <text y="4" text-anchor="middle" class="fill-on-primary font-mono text-label-sm">6</text>
+                    </g>
+                    <g class="map-marker cursor-pointer" data-id="CMP-2026-04164" data-priority="Medium" data-category="Waste &amp; Sanitation" data-title="Overflowing commercial bin enclosure" data-ward="Ward 6 · Industrial" data-coords="45.5139° N, 122.6492° W" data-status="New" transform="translate(565, 224)">
+                      <circle r="7" class="fill-primary-action stroke-surface" stroke-width="2"></circle>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+
+              <!-- Map Zoom Controls -->
+              <div class="absolute top-md right-md flex flex-col gap-xs bg-surface border border-outline-variant rounded p-xs">
+                <button id="map-zoom-in" type="button" aria-label="Zoom in map" class="w-7 h-7 rounded-sm flex items-center justify-center text-primary hover:bg-surface-container">
+                  <i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i>
+                </button>
+                <button id="map-zoom-out" type="button" aria-label="Zoom out map" class="w-7 h-7 rounded-sm flex items-center justify-center text-primary hover:bg-surface-container">
+                  <i data-lucide="minus" class="w-4 h-4" aria-hidden="true"></i>
+                </button>
+                <button id="map-zoom-reset" type="button" aria-label="Reset map zoom" class="w-7 h-7 rounded-sm flex items-center justify-center text-secondary-text hover:text-primary hover:bg-surface-container">
+                  <i data-lucide="locate-fixed" class="w-4 h-4" aria-hidden="true"></i>
+                </button>
+              </div>
+
+              <!-- Map Legend -->
+              <div class="absolute bottom-md left-md bg-surface border border-outline-variant rounded px-md py-sm flex flex-wrap items-center gap-md">
+                <span class="flex items-center gap-xs font-label text-label-sm text-primary">
+                  <span class="w-2 h-2 rounded-full bg-error inline-block"></span> Critical
+                </span>
+                <span class="flex items-center gap-xs font-label text-label-sm text-primary">
+                  <span class="w-2 h-2 rounded-full bg-warning inline-block"></span> High
+                </span>
+                <span class="flex items-center gap-xs font-label text-label-sm text-primary">
+                  <span class="w-2 h-2 rounded-full bg-primary-action inline-block"></span> Medium / Cluster
+                </span>
+              </div>
+
+              <!-- Selected Marker Details Card -->
+              <div id="map-selected-card" class="absolute bottom-md right-md max-w-xs bg-surface border border-outline-variant rounded-md p-md">
+                <div class="flex items-center justify-between gap-sm mb-xs">
+                  <span id="sel-id" data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
+                  <span id="sel-status" data-design-text-token="label-sm" class="font-label text-label-sm px-sm py-0.5 rounded-full bg-error-container text-on-error-container">SLA Breached</span>
+                </div>
+                <div id="sel-title" data-design-text-token="label-md" class="font-label text-label-md text-primary">Main water line rupture at Oak &amp; 4th</div>
+                <div id="sel-meta" data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text mt-xs">Ward 4 · Oakridge · 45.5184° N, 122.6812° W</div>
+                <div class="mt-sm pt-sm border-t border-outline-variant flex items-center justify-between">
+                  <span id="sel-cat" data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Water &amp; Sewer</span>
+                  <a href="#complaint-detail" class="font-label text-label-md text-primary-action hover:underline">Inspect issue</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- E. Operational Attention Queue (5 cols) -->
+          <article class="xl:col-span-5 bg-surface border border-outline-variant rounded-md flex flex-col h-full">
+            <header class="p-lg border-b border-outline-variant flex flex-col gap-md">
+              <div class="flex items-center justify-between gap-sm">
+                <div>
+                  <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Requires immediate attention</h2>
+                  <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text text-balance">Critical issues, SLA breaches, and unassigned triage</p>
+                </div>
+                <a href="#escalations" class="font-label text-label-md text-primary-action hover:underline shrink-0">View all</a>
+              </div>
+
+              <!-- Queue Filter Tabs -->
+              <div class="flex flex-wrap items-center gap-xs" role="tablist" aria-label="Attention queue filters">
+                <button type="button" role="tab" aria-selected="true" data-queue="all" class="queue-tab px-md py-xs rounded-sm bg-primary-action-container text-on-primary-action-container font-label text-label-md">All (5)</button>
+                <button type="button" role="tab" aria-selected="false" data-queue="critical" class="queue-tab px-md py-xs rounded-sm text-secondary-text hover:bg-surface-container font-label text-label-md">Critical (2)</button>
+                <button type="button" role="tab" aria-selected="false" data-queue="breached" class="queue-tab px-md py-xs rounded-sm text-secondary-text hover:bg-surface-container font-label text-label-md">SLA Breached (2)</button>
+                <button type="button" role="tab" aria-selected="false" data-queue="unassigned" class="queue-tab px-md py-xs rounded-sm text-secondary-text hover:bg-surface-container font-label text-label-md">Unassigned (1)</button>
+              </div>
+            </header>
+
+            <div id="attention-list" class="divide-y divide-outline-variant flex-1">
+              <a href="#complaint-detail" data-queue-type="critical breached" class="attention-item block p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+                <div class="flex items-center justify-between gap-sm mb-xs">
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
+                  <span data-component-id="badge-error" data-component-type="badge" data-component-variant="error" class="inline-flex items-center gap-xs px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">
+                    <i data-lucide="alert-octagon" class="w-3 h-3" aria-hidden="true"></i>
+                    <span data-design-text-token="label-sm">SLA Breached · +3h 20m</span>
+                  </span>
+                </div>
+                <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Main water line rupture at Oak &amp; 4th</div>
+                <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Water &amp; Sewer · Ward 4 · Crew Alpha dispatched</div>
+              </a>
+
+              <a href="#complaint-detail" data-queue-type="critical" class="attention-item block p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+                <div class="flex items-center justify-between gap-sm mb-xs">
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04179</span>
+                  <span data-component-id="badge-error" data-component-type="badge" data-component-variant="error" class="inline-flex items-center gap-xs px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">
+                    <i data-lucide="alert-octagon" class="w-3 h-3" aria-hidden="true"></i>
+                    <span data-design-text-token="label-sm">Critical · Escalated</span>
+                  </span>
+                </div>
+                <div data-design-text-token="title-md" class="font-title text-title-md text-primary">4-way traffic signal blackout at Civic Plaza</div>
+                <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Traffic Signals · Ward 2 · Supervisor review</div>
+              </a>
+
+              <a href="#complaint-detail" data-queue-type="breached" class="attention-item block p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+                <div class="flex items-center justify-between gap-sm mb-xs">
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04151</span>
+                  <span data-component-id="badge-warning" data-component-type="badge" data-component-variant="warning" class="inline-flex items-center gap-xs px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">
+                    <i data-lucide="alert-triangle" class="w-3 h-3" aria-hidden="true"></i>
+                    <span data-design-text-token="label-sm">SLA Breached · +1d 4h</span>
+                  </span>
+                </div>
+                <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Collapsed retaining curb near Hawthorne Bridge</div>
+                <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Roads &amp; Pavements · Ward 7 · Awaiting parts</div>
+              </a>
+
+              <a href="#complaint-detail" data-queue-type="unassigned" class="attention-item block p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+                <div class="flex items-center justify-between gap-sm mb-xs">
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04185</span>
+                  <span data-component-id="badge-neutral" data-component-type="badge" data-component-variant="status" class="inline-flex items-center gap-xs px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">
+                    <i data-lucide="circle-dashed" class="w-3 h-3" aria-hidden="true"></i>
+                    <span data-design-text-token="label-sm">Unassigned · 48m ago</span>
+                  </span>
+                </div>
+                <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Downed streetlight pole blocking bike lane</div>
+                <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Streetlighting · Ward 1 · Needs dept routing</div>
+              </a>
+
+              <a href="#complaint-detail" data-queue-type="critical" class="attention-item block p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+                <div class="flex items-center justify-between gap-sm mb-xs">
+                  <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04171</span>
+                  <span data-component-id="badge-warning" data-component-type="badge" data-component-variant="warning" class="inline-flex items-center gap-xs px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">
+                    <i data-lucide="clock" class="w-3 h-3" aria-hidden="true"></i>
+                    <span data-design-text-token="label-sm">Due in 45m</span>
+                  </span>
+                </div>
+                <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Blocked storm culvert flooding intersection</div>
+                <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Stormwater Drainage · Ward 7 · Crew B on site</div>
+              </a>
+            </div>
+          </article>
+        </section>
+
+        <!-- F. Department Performance + G. Recent Complaints -->
+        <section aria-label="Department workload and recent complaints" class="grid grid-cols-1 xl:grid-cols-12 gap-xl items-stretch">
+          <!-- F. Department Performance (5 cols) -->
+          <article class="xl:col-span-5 bg-surface border border-outline-variant rounded-md overflow-hidden flex flex-col h-full">
+            <header class="p-lg border-b border-outline-variant flex items-center justify-between gap-sm">
+              <div>
+                <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Department performance</h2>
+                <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Current workload and SLA backlog</p>
+              </div>
+              <a href="#departments" class="font-label text-label-md text-primary-action hover:underline">Manage</a>
+            </header>
+            <div data-component-id="table-standard" data-component-type="table" data-component-variant="standard" class="overflow-x-auto flex-1">
+              <table class="w-full text-left border-collapse">
+                <thead class="bg-surface-container-low border-b border-outline-variant">
+                  <tr>
+                    <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text">Department</th>
+                    <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text text-right">Assigned</th>
+                    <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text text-right">Active</th>
+                    <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text text-right">Overdue</th>
+                    <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text text-right">Resolved</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                  <tr class="hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-label text-label-md text-primary whitespace-nowrap">Roads &amp; Pavements</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">112</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">94</td>
+                    <td class="px-md py-md font-label text-label-md text-error text-right tabular-nums">11</td>
+                    <td class="px-lg py-md font-body text-body-sm text-success text-right tabular-nums">272</td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-label text-label-md text-primary whitespace-nowrap">Water &amp; Sewer</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">78</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">64</td>
+                    <td class="px-md py-md font-label text-label-md text-error text-right tabular-nums">6</td>
+                    <td class="px-lg py-md font-body text-body-sm text-success text-right tabular-nums">198</td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-label text-label-md text-primary whitespace-nowrap">Streetlighting</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">59</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">51</td>
+                    <td class="px-md py-md font-label text-label-md text-on-warning-container text-right tabular-nums">3</td>
+                    <td class="px-lg py-md font-body text-body-sm text-success text-right tabular-nums">155</td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-label text-label-md text-primary whitespace-nowrap">Stormwater Drainage</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">48</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">42</td>
+                    <td class="px-md py-md font-label text-label-md text-on-warning-container text-right tabular-nums">2</td>
+                    <td class="px-lg py-md font-body text-body-sm text-success text-right tabular-nums">134</td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-label text-label-md text-primary whitespace-nowrap">Waste &amp; Sanitation</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">37</td>
+                    <td class="px-md py-md font-body text-body-sm text-on-surface text-right tabular-nums">31</td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text text-right tabular-nums">1</td>
+                    <td class="px-lg py-md font-body text-body-sm text-success text-right tabular-nums">101</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- G. Recent Complaints (7 cols) -->
+          <article class="xl:col-span-7 bg-surface border border-outline-variant rounded-md overflow-hidden flex flex-col h-full">
+            <header class="p-lg border-b border-outline-variant flex items-center justify-between gap-sm">
+              <div>
+                <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Recent complaints</h2>
+                <p id="recent-subtitle" data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Latest submissions across all wards</p>
+              </div>
+              <a href="#complaints" class="font-label text-label-md text-primary-action hover:underline">All complaints</a>
+            </header>
+            <div data-component-id="table-interactive" data-component-type="table" data-component-variant="interactive" class="overflow-x-auto flex-1">
+              <table class="w-full text-left border-collapse">
+                <thead class="bg-surface-container-low border-b border-outline-variant">
+                  <tr>
+                    <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text">Complaint ID</th>
+                    <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Category</th>
+                    <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Location</th>
+                    <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Priority</th>
+                    <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Status</th>
+                    <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text">Reported</th>
+                    <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-complaints-body" class="divide-y divide-outline-variant">
+                  <tr data-category="Streetlighting" class="complaint-row hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04185</td>
+                    <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Streetlighting</td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Lombard St · Ward 1</td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span>
+                    </td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">New</span>
+                    </td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 20, 06:11</td>
+                    <td class="px-lg py-md text-right whitespace-nowrap"><a href="#complaint-detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                  </tr>
+                  <tr data-category="Water &amp; Sewer" class="complaint-row hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04182</td>
+                    <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Water &amp; Sewer</td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Oak &amp; 4th · Ward 4</td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span>
+                    </td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">In Progress</span>
+                    </td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 20, 02:50</td>
+                    <td class="px-lg py-md text-right whitespace-nowrap"><a href="#complaint-detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                  </tr>
+                  <tr data-category="Traffic Signals" class="complaint-row hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04179</td>
+                    <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Traffic Signals</td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Civic Plaza · Ward 2</td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span>
+                    </td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Escalated</span>
+                    </td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 19, 22:15</td>
+                    <td class="px-lg py-md text-right whitespace-nowrap"><a href="#complaint-detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                  </tr>
+                  <tr data-category="Roads &amp; Pavements" class="complaint-row hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04175</td>
+                    <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Roads &amp; Pavements</td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">E. Burnside · Ward 3</td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span>
+                    </td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">Assigned</span>
+                    </td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 19, 17:40</td>
+                    <td class="px-lg py-md text-right whitespace-nowrap"><a href="#complaint-detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                  </tr>
+                  <tr data-category="Waste &amp; Sanitation" class="complaint-row hover:bg-surface-container-low">
+                    <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">CMP-2026-04164</td>
+                    <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Waste &amp; Sanitation</td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Swan Island · Ward 6</td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Medium</span>
+                    </td>
+                    <td class="px-md py-md whitespace-nowrap">
+                      <span class="inline-flex items-center px-sm py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">Resolved</span>
+                    </td>
+                    <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 19, 14:05</td>
+                    <td class="px-lg py-md text-right whitespace-nowrap"><a href="#complaint-detail" class="font-label text-label-md text-primary-action hover:underline">Review</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      // Sidebar collapse toggle
+      const sidebar = document.getElementById('app-sidebar');
+      const toggleBtn = document.getElementById('sidebar-toggle');
+      let collapsed = false;
+      if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', () => {
+          collapsed = !collapsed;
+          sidebar.classList.toggle('lg:w-60', !collapsed);
+          sidebar.classList.toggle('lg:w-16', collapsed);
+          document.querySelectorAll('.sidebar-label').forEach((el) => {
+            el.classList.toggle('hidden', collapsed);
+          });
+        });
+      }
+
+      // Trend chart datasets
+      const trendData = {
+        '7d': {
+          labels: ['Nov 14', 'Nov 15', 'Nov 16', 'Nov 17', 'Nov 18', 'Nov 19', 'Nov 20'],
+          submitted: [34, 41, 38, 49, 44, 52, 46],
+          resolved: [29, 35, 36, 40, 42, 45, 39]
+        },
+        '30d': {
+          labels: ['Oct 22', 'Oct 27', 'Nov 01', 'Nov 06', 'Nov 11', 'Nov 16', 'Nov 20'],
+          submitted: [32, 39, 44, 41, 53, 47, 51],
+          resolved: [26, 31, 38, 36, 44, 43, 46]
+        },
+        '90d': {
+          labels: ['Aug 25', 'Sep 09', 'Sep 24', 'Oct 09', 'Oct 24', 'Nov 08', 'Nov 20'],
+          submitted: [28, 35, 42, 38, 46, 51, 49],
+          resolved: [24, 30, 34, 35, 40, 44, 45]
+        }
+      };
+
+      function renderTrend(range) {
+        const d = trendData[range] || trendData['30d'];
+        const xStart = 48;
+        const xStep = (610 - 48) / (d.labels.length - 1);
+        const yBottom = 190;
+        const yTop = 20;
+        const yScale = (val) => yBottom - (val / 60) * (yBottom - yTop);
+
+        const subPts = d.submitted.map((v, i) => `${xStart + i * xStep},${yScale(v).toFixed(1)}`);
+        const resPts = d.resolved.map((v, i) => `${xStart + i * xStep},${yScale(v).toFixed(1)}`);
+
+        document.getElementById('trend-submitted-line').setAttribute('d', `M${subPts.join(' L')}`);
+        document.getElementById('trend-submitted-area').setAttribute('d', `M${xStart},${yBottom} L${subPts.join(' L')} L${xStart + (d.labels.length - 1) * xStep},${yBottom} Z`);
+        document.getElementById('trend-resolved-line').setAttribute('d', `M${resPts.join(' L')}`);
+
+        const xLabels = document.getElementById('trend-x-labels');
+        xLabels.innerHTML = d.labels.map((lbl, i) => `<text x="${xStart + i * xStep}" y="210" text-anchor="middle">${lbl}</text>`).join('');
+      }
+
+      renderTrend('30d');
+
+      document.querySelectorAll('.trend-range-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.trend-range-btn').forEach((b) => {
+            b.classList.remove('bg-surface', 'text-primary', 'border', 'border-outline-variant');
+            b.classList.add('text-secondary-text');
+          });
+          btn.classList.add('bg-surface', 'text-primary', 'border', 'border-outline-variant');
+          btn.classList.remove('text-secondary-text');
+          renderTrend(btn.dataset.range);
+        });
+      });
+
+      // Category click-to-filter
+      let activeCategory = null;
+      const clearCatBtn = document.getElementById('clear-cat-filter');
+      const recentSubtitle = document.getElementById('recent-subtitle');
+
+      function applyCategoryFilter(cat) {
+        activeCategory = activeCategory === cat ? null : cat;
+        clearCatBtn.classList.toggle('hidden', !activeCategory);
+        recentSubtitle.textContent = activeCategory ? `Filtered by ${activeCategory}` : 'Latest submissions across all wards';
+
+        document.querySelectorAll('.category-bar-btn').forEach((btn) => {
+          btn.classList.toggle('bg-primary-action-container', btn.dataset.category === activeCategory);
+        });
+        document.querySelectorAll('.complaint-row').forEach((row) => {
+          row.classList.toggle('hidden', activeCategory && row.dataset.category !== activeCategory);
+        });
+      }
+
+      document.querySelectorAll('.category-bar-btn').forEach((btn) => {
+        btn.addEventListener('click', () => applyCategoryFilter(btn.dataset.category));
+      });
+      if (clearCatBtn) {
+        clearCatBtn.addEventListener('click', () => applyCategoryFilter(activeCategory));
+      }
+
+      // Map marker selection & zoom
+      let zoom = 1;
+      const viewport = document.getElementById('map-viewport');
+      function updateZoom() {
+        const tx = (700 * (1 - zoom)) / 2;
+        const ty = (380 * (1 - zoom)) / 2;
+        viewport.setAttribute('transform', `translate(${tx},${ty}) scale(${zoom})`);
+      }
+      document.getElementById('map-zoom-in').addEventListener('click', () => { zoom = Math.min(1.8, zoom + 0.2); updateZoom(); });
+      document.getElementById('map-zoom-out').addEventListener('click', () => { zoom = Math.max(0.8, zoom - 0.2); updateZoom(); });
+      document.getElementById('map-zoom-reset').addEventListener('click', () => { zoom = 1; updateZoom(); });
+
+      document.querySelectorAll('.map-marker').forEach((marker) => {
+        marker.addEventListener('click', () => {
+          document.getElementById('sel-id').textContent = marker.dataset.id;
+          document.getElementById('sel-status').textContent = marker.dataset.status;
+          document.getElementById('sel-title').textContent = marker.dataset.title;
+          document.getElementById('sel-meta').textContent = `${marker.dataset.ward} · ${marker.dataset.coords}`;
+          document.getElementById('sel-cat').textContent = marker.dataset.category;
+        });
+      });
+
+      document.getElementById('map-priority-filter').addEventListener('change', (e) => {
+        const val = e.target.value;
+        document.querySelectorAll('.map-marker').forEach((m) => {
+          m.style.display = (val === 'all' || m.dataset.priority === val) ? '' : 'none';
+        });
+      });
+
+      // Attention queue tabs
+      document.querySelectorAll('.queue-tab').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.queue-tab').forEach((t) => {
+            t.setAttribute('aria-selected', 'false');
+            t.classList.remove('bg-primary-action-container', 'text-on-primary-action-container');
+            t.classList.add('text-secondary-text');
+          });
+          tab.setAttribute('aria-selected', 'true');
+          tab.classList.add('bg-primary-action-container', 'text-on-primary-action-container');
+          tab.classList.remove('text-secondary-text');
+
+          const filter = tab.dataset.queue;
+          document.querySelectorAll('.attention-item').forEach((item) => {
+            const types = item.dataset.queueType || '';
+            item.classList.toggle('hidden', filter !== 'all' && !types.includes(filter));
+          });
+        });
+      });
+    });
+  </script>
+
+
+</body></html>

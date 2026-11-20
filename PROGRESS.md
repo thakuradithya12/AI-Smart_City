@@ -1,5 +1,14 @@
 # Progress
 
+## 2026-11-20 — CivicOps UI integration
+
+- Extracted the uploaded `stitch_civic_operations_platform (1).zip` archive into `docs/ui_reference/` (48 design/reference files). Added `docs/UI_DESIGN.md` to map integrated templates and call out designs that remain reference-only because their screens are outside v1 scope or lack live routes.
+- Applied the archive's navy/blue civic palette, compact status badges, responsive layouts, semantic operational colors, keyboard focus states, skip navigation, form controls, empty states and activity timelines to the shared stylesheet and existing Django templates.
+- Integrated live layouts for role overview, citizen report/list/detail, triage queue, department inbox, field task list/detail, registration, sign-in and signed-out states. Kept all workflow actions on existing named Django routes and permission-checked views.
+- Overview metrics are computed from the signed-in user's `Complaint.objects.visible_to(user)` queryset; no static/demo metrics were added.
+- Verification: `git diff --check` completed with only Git's Windows line-ending notices. `python manage.py check` could not run because the host Python is 3.15.0 and Django is not installed (`ModuleNotFoundError: No module named 'django'`). Prior progress records Docker's Linux engine as unavailable; no browser screenshot or app runtime is claimed for this UI change. Tests were not run.
+- Next: run the app in the project Python 3.12/PostGIS container when Docker Desktop's Linux engine is available, review the pages in a browser at mobile and desktop widths, then capture screenshots and any visual follow-up.
+
 ## 2026-11-19 — Day 2 validation recovery and owner verification
 
 - Owner's Docker output confirms the app image builds and `python manage.py check` reports no issues. Direct `pytest` and `ruff` commands in the `web` service failed because that image installs only `requirements/base.txt`.

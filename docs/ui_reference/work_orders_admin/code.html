@@ -1,0 +1,540 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work Orders — CivicOps Administration</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col lg:flex-row" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Persistent Left Sidebar -->
+    <aside id="app-sidebar" class="w-full lg:w-60 shrink-0 bg-primary text-on-primary flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant min-h-0 lg:min-h-[1024px] transition-[width] duration-surface-enter ease-surface-enter" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+      <div class="flex flex-col">
+        <div class="h-14 px-lg flex items-center justify-between border-b border-primary-action/30">
+          <div class="flex items-center gap-md min-w-0">
+            <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="landmark" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+            </div>
+            <div class="sidebar-label min-w-0">
+              <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">CivicOps</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">City Admin</div>
+            </div>
+          </div>
+          <button id="sidebar-toggle" type="button" aria-label="Toggle sidebar" class="hidden lg:inline-flex items-center justify-center w-7 h-7 rounded text-outline hover:text-on-primary hover:bg-primary-action/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-primary">
+            <i data-lucide="panel-left-close" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <nav aria-label="City administration navigation" class="p-md flex flex-col gap-lg">
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Overview</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#city-overview" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">City overview</span>
+                </a>
+              </li>
+              <li>
+                <a href="#geographic-map" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="map" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Geographic map</span>
+                </a>
+              </li>
+              <li>
+                <a href="#analytics" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="bar-chart-3" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Analytics &amp; reports</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Operations</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#complaints" class="flex items-center justify-between gap-sm px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="inbox" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Complaints</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-primary-action/30 text-on-primary font-label text-label-sm tabular-nums">42</span>
+                </a>
+              </li>
+              <li>
+                <a href="#work-orders" aria-current="page" class="flex items-center gap-md px-md py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md">
+                  <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Work orders</span>
+                </a>
+              </li>
+              <li>
+                <a href="#escalations" class="flex items-center justify-between gap-sm px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="alert-octagon" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Escalation center</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">9</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Governance</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#departments" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="building-2" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Departments</span>
+                </a>
+              </li>
+              <li>
+                <a href="#personnel" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="users" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Personnel</span>
+                </a>
+              </li>
+              <li>
+                <a href="#zones" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="map-pinned" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Zones &amp; wards</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sla" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="timer" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">SLA monitoring</span>
+                </a>
+              </li>
+              <li>
+                <a href="#audit" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="shield-check" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Audit logs</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="p-md border-t border-primary-action/30 flex flex-col gap-xs">
+        <a href="#settings" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="settings" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">System settings</span>
+        </a>
+        <a href="#logout" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="log-out" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">Sign out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Top Utility Header -->
+      <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between gap-lg sticky top-0 z-20">
+        <div class="flex items-center gap-sm min-w-0">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text hidden sm:inline">City Administration</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-secondary-text hidden sm:inline" aria-hidden="true"></i>
+          <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Work orders</span>
+          <span data-design-text-token="label-sm" class="ml-sm px-sm py-0.5 rounded-sm bg-surface-container text-secondary-text font-label text-label-sm border border-outline-variant">Sample dataset</span>
+        </div>
+
+        <div class="flex items-center gap-md">
+          <button type="button" aria-label="Notifications (14 unread)" class="relative inline-flex items-center justify-center w-9 h-9 rounded border border-outline-variant bg-surface text-secondary-text hover:text-primary hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+            <i data-lucide="bell" class="w-4 h-4" aria-hidden="true"></i>
+            <span aria-hidden="true" class="absolute -top-xs -right-xs inline-flex items-center justify-center min-w-4 h-4 px-xs rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">14</span>
+          </button>
+          <div class="flex items-center gap-sm">
+            <div class="w-8 h-8 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">EV</div>
+            <div class="hidden xl:block leading-tight">
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Elena Vance</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">City Ops Director</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-xl flex flex-col gap-xl max-w-7xl w-full mx-auto">
+        <!-- Page Header -->
+        <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-lg">
+          <div>
+            <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Work orders</h1>
+            <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">
+              Track field execution, crew assignments, and inspection deadlines across departments.
+            </p>
+          </div>
+          <div class="flex items-center gap-sm">
+            <button id="open-create-wo" data-component-id="button-with-icon" data-component-type="button" data-component-variant="with-icon" type="button" class="inline-flex items-center justify-center gap-sm px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+              <i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i>
+              <span data-design-text-token="label-md">Create work order</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Summary KPI Row -->
+        <section aria-label="Work order summary" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-md items-stretch">
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Total active</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary tabular-nums">194</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Assigned</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary tabular-nums">58</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">In Progress</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary-action tabular-nums">92</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">On Hold</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-on-warning-container tabular-nums">14</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">In Review</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary tabular-nums">19</span>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-md flex flex-col justify-between gap-xs h-full">
+            <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text whitespace-nowrap">Overdue</span>
+            <span data-design-text-token="headline-lg" class="font-headline text-headline-lg text-error tabular-nums">11</span>
+          </article>
+        </section>
+
+        <!-- Filter Toolbar + Table -->
+        <section class="bg-surface border border-outline-variant rounded-md overflow-hidden flex flex-col">
+          <div class="p-lg border-b border-outline-variant bg-surface-container-low flex flex-wrap items-center gap-sm">
+            <div class="relative flex-1 min-w-60">
+              <i data-lucide="search" class="w-4 h-4 text-secondary-text absolute left-md top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true"></i>
+              <input id="wo-search" type="search" placeholder="Search work order ID, complaint ID, or task..." aria-label="Search work orders" class="w-full pl-2xl pr-md py-sm rounded bg-surface border border-outline-variant font-body text-body-sm text-on-surface placeholder:text-secondary-text focus:border-primary-action focus:ring-1 focus:ring-primary-action">
+            </div>
+
+            <select id="wo-status" aria-label="Filter by status" class="px-md py-sm rounded bg-surface border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+              <option value="all">Status: All</option>
+              <option value="Assigned">Assigned</option>
+              <option value="In Progress">In Progress</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Review">Submitted for Review</option>
+              <option value="Completed">Completed</option>
+            </select>
+
+            <select id="wo-dept" aria-label="Filter by department" class="px-md py-sm rounded bg-surface border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+              <option value="all">Department: All</option>
+              <option value="Water &amp; Sewer">Water &amp; Sewer</option>
+              <option value="Roads &amp; Pavements">Roads &amp; Pavements</option>
+              <option value="Traffic Engineering">Traffic Engineering</option>
+              <option value="Stormwater Drainage">Stormwater Drainage</option>
+              <option value="Streetlighting">Streetlighting</option>
+            </select>
+
+            <button id="wo-clear" type="button" class="px-md py-sm rounded font-label text-label-md text-primary-action hover:bg-primary-action-container">
+              Clear filters
+            </button>
+          </div>
+
+          <div data-component-id="table-interactive" data-component-type="table" data-component-variant="interactive" class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-surface-container-low border-b border-outline-variant">
+                <tr>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text whitespace-nowrap">Work Order ID</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Complaint</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap min-w-56">Task</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Department</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Assigned team</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Priority</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Deadline</th>
+                  <th scope="col" class="px-md py-md font-label text-label-md text-secondary-text whitespace-nowrap">Status</th>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text text-right whitespace-nowrap">Action</th>
+                </tr>
+              </thead>
+              <tbody id="wo-tbody" class="divide-y divide-outline-variant">
+                <tr class="wo-row hover:bg-surface-container-low" data-id="WO-2026-0891" data-cmp="CMP-2026-04182" data-task="Emergency main shutoff &amp; clamp repair" data-dept="Water &amp; Sewer" data-status="In Progress">
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">WO-2026-0891</td>
+                  <td class="px-md py-md font-mono text-mono-sm text-secondary-text whitespace-nowrap">CMP-2026-04182</td>
+                  <td class="px-md py-md font-label text-label-md text-primary">Emergency main shutoff &amp; clamp repair</td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Water &amp; Sewer</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Crew Alpha</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-error tabular-nums whitespace-nowrap">Nov 20, 08:00</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">In Progress</span></td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#wo-detail" class="font-label text-label-md text-primary-action hover:underline">View</a></td>
+                </tr>
+
+                <tr class="wo-row hover:bg-surface-container-low" data-id="WO-2026-0894" data-cmp="CMP-2026-04182" data-task="Asphalt trench restoration &amp; lane striping" data-dept="Roads &amp; Pavements" data-status="Assigned">
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">WO-2026-0894</td>
+                  <td class="px-md py-md font-mono text-mono-sm text-secondary-text whitespace-nowrap">CMP-2026-04182</td>
+                  <td class="px-md py-md font-label text-label-md text-primary">Asphalt trench restoration &amp; lane striping</td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Roads &amp; Pavements</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Paving Unit 2</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 21, 17:00</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Assigned</span></td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#wo-detail" class="font-label text-label-md text-primary-action hover:underline">View</a></td>
+                </tr>
+
+                <tr class="wo-row hover:bg-surface-container-low" data-id="WO-2026-0889" data-cmp="CMP-2026-04179" data-task="Replace traffic controller cabinet relay" data-dept="Traffic Engineering" data-status="In Progress">
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">WO-2026-0889</td>
+                  <td class="px-md py-md font-mono text-mono-sm text-secondary-text whitespace-nowrap">CMP-2026-04179</td>
+                  <td class="px-md py-md font-label text-label-md text-primary">Replace traffic controller cabinet relay</td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Traffic Engineering</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Signals Squad 1</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-error tabular-nums whitespace-nowrap">Nov 20, 06:00</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">In Progress</span></td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#wo-detail" class="font-label text-label-md text-primary-action hover:underline">View</a></td>
+                </tr>
+
+                <tr class="wo-row hover:bg-surface-container-low" data-id="WO-2026-0882" data-cmp="CMP-2026-04151" data-task="Retaining curb formwork &amp; concrete pour" data-dept="Roads &amp; Pavements" data-status="On Hold">
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">WO-2026-0882</td>
+                  <td class="px-md py-md font-mono text-mono-sm text-secondary-text whitespace-nowrap">CMP-2026-04151</td>
+                  <td class="px-md py-md font-label text-label-md text-primary">Retaining curb formwork &amp; concrete pour</td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Roads &amp; Pavements</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Civil Crew 4</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-on-warning-container tabular-nums whitespace-nowrap">Nov 19, 18:00</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">On Hold</span></td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#wo-detail" class="font-label text-label-md text-primary-action hover:underline">View</a></td>
+                </tr>
+
+                <tr class="wo-row hover:bg-surface-container-low" data-id="WO-2026-0876" data-cmp="CMP-2026-04168" data-task="Midtown Corridor LED ballast replacement" data-dept="Streetlighting" data-status="Review">
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary-action whitespace-nowrap">WO-2026-0876</td>
+                  <td class="px-md py-md font-mono text-mono-sm text-secondary-text whitespace-nowrap">CMP-2026-04168</td>
+                  <td class="px-md py-md font-label text-label-md text-primary">Midtown Corridor LED ballast replacement</td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text whitespace-nowrap">Streetlighting</td>
+                  <td class="px-md py-md font-body text-body-sm text-primary whitespace-nowrap">Electrical Unit 3</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Medium</span></td>
+                  <td class="px-md py-md font-body text-body-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 20, 18:00</td>
+                  <td class="px-md py-md whitespace-nowrap"><span class="px-sm py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">In Review</span></td>
+                  <td class="px-lg py-md text-right whitespace-nowrap"><a href="#wo-detail" class="font-label text-label-md text-primary-action hover:underline">View</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Create Work Order Modal (with progressive disclosure) -->
+  <div id="create-wo-modal" class="hidden fixed inset-0 z-50 bg-primary/60 items-center justify-center p-xl" role="dialog" aria-modal="true" aria-labelledby="wo-modal-title">
+    <div class="bg-surface border border-outline-variant rounded-lg max-w-xl w-full overflow-hidden">
+      <header class="px-xl py-lg border-b border-outline-variant flex items-center justify-between">
+        <h2 id="wo-modal-title" data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Create work order</h2>
+        <button id="close-wo-modal" type="button" aria-label="Close modal" class="w-8 h-8 rounded flex items-center justify-center text-secondary-text hover:text-primary hover:bg-surface-container">
+          <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+        </button>
+      </header>
+      <form id="create-wo-form" class="p-xl flex flex-col gap-lg">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+          <div>
+            <label for="wo-cmp" class="block font-label text-label-md text-primary mb-xs">Related complaint *</label>
+            <input id="wo-cmp" type="text" value="CMP-2026-04185" required class="w-full rounded border border-outline-variant bg-surface-container-low px-md py-sm font-mono text-mono-sm text-primary">
+          </div>
+          <div>
+            <label for="wo-dept-select" class="block font-label text-label-md text-primary mb-xs">Department *</label>
+            <select id="wo-dept-select" class="w-full rounded border border-outline-variant bg-surface-container-low px-md py-sm font-body text-body-sm text-primary">
+              <option>Streetlighting</option>
+              <option>Water &amp; Sewer</option>
+              <option>Roads &amp; Pavements</option>
+              <option>Traffic Engineering</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="wo-title-input" class="block font-label text-label-md text-primary mb-xs">Work title *</label>
+          <input id="wo-title-input" type="text" placeholder="e.g., Clear downed pole and secure electrical feed" required class="w-full rounded border border-outline-variant bg-surface-container-low px-md py-sm font-body text-body-sm text-on-surface">
+        </div>
+        <div>
+          <label for="wo-instructions" class="block font-label text-label-md text-primary mb-xs">Field instructions</label>
+          <textarea id="wo-instructions" rows="2" placeholder="Safety perimeter, shutoff steps, or required tools..." class="w-full rounded border border-outline-variant bg-surface-container-low px-md py-sm font-body text-body-sm text-on-surface"></textarea>
+        </div>
+        <!-- Progressive disclosure for inspection & evidence rules -->
+        <details class="border border-outline-variant rounded p-md bg-surface-container-low">
+          <summary class="font-label text-label-md text-primary cursor-pointer">Inspection &amp; completion evidence requirements</summary>
+          <div class="mt-md flex flex-col gap-sm">
+            <label class="flex items-center gap-sm font-body text-body-sm text-on-surface">
+              <input type="checkbox" checked class="rounded-sm border-outline text-primary-action">
+              <span>Require pre-work site inspection form</span>
+            </label>
+            <label class="flex items-center gap-sm font-body text-body-sm text-on-surface">
+              <input type="checkbox" checked class="rounded-sm border-outline text-primary-action">
+              <span>Require before &amp; after completion photos</span>
+            </label>
+          </div>
+        </details>
+        <div class="flex items-center justify-end gap-sm pt-md border-t border-outline-variant">
+          <button id="cancel-wo-modal" type="button" class="px-lg py-sm rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">Cancel</button>
+          <button type="submit" class="px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">Dispatch work order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      const sidebar = document.getElementById('app-sidebar');
+      const toggleBtn = document.getElementById('sidebar-toggle');
+      let collapsed = false;
+      if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', () => {
+          collapsed = !collapsed;
+          sidebar.classList.toggle('lg:w-60', !collapsed);
+          sidebar.classList.toggle('lg:w-16', collapsed);
+          document.querySelectorAll('.sidebar-label').forEach((el) => el.classList.toggle('hidden', collapsed));
+        });
+      }
+
+      // Modal controls
+      const modal = document.getElementById('create-wo-modal');
+      document.getElementById('open-create-wo').addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+      const closeModal = () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      };
+      document.getElementById('close-wo-modal').addEventListener('click', closeModal);
+      document.getElementById('cancel-wo-modal').addEventListener('click', closeModal);
+      document.getElementById('create-wo-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        closeModal();
+      });
+
+      // Filters
+      const searchEl = document.getElementById('wo-search');
+      const statusEl = document.getElementById('wo-status');
+      const deptEl = document.getElementById('wo-dept');
+      const rows = Array.from(document.querySelectorAll('.wo-row'));
+
+      function filterWo() {
+        const q = searchEl.value.trim().toLowerCase();
+        const s = statusEl.value;
+        const d = deptEl.value;
+        rows.forEach((r) => {
+          const show = (!q || r.dataset.id.toLowerCase().includes(q) || r.dataset.cmp.toLowerCase().includes(q) || r.dataset.task.toLowerCase().includes(q)) &&
+                       (s === 'all' || r.dataset.status === s) &&
+                       (d === 'all' || r.dataset.dept === d);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      [searchEl, statusEl, deptEl].forEach((el) => {
+        el.addEventListener('input', filterWo);
+        el.addEventListener('change', filterWo);
+      });
+      document.getElementById('wo-clear').addEventListener('click', () => {
+        searchEl.value = '';
+        statusEl.value = 'all';
+        deptEl.value = 'all';
+        filterWo();
+      });
+    });
+  </script>
+
+
+</body></html>

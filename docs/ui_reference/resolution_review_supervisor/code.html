@@ -1,0 +1,365 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resolution Review CMP-2026-04182 — CivicOps Supervisor</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col lg:flex-row" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Role-Aware Supervisor Sidebar -->
+    <aside id="app-sidebar" class="w-full lg:w-60 shrink-0 bg-primary text-on-primary flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant min-h-0 lg:min-h-[1024px]" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+      <div class="flex flex-col">
+        <div class="h-14 px-lg flex items-center justify-between border-b border-primary-action/30">
+          <div class="flex items-center gap-md min-w-0">
+            <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="shield-check" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+            </div>
+            <div class="min-w-0">
+              <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">CivicOps</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">Supervisor</div>
+            </div>
+          </div>
+        </div>
+
+        <nav aria-label="Supervisor navigation" class="p-md flex flex-col gap-lg">
+          <div>
+            <div class="px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">Quality &amp; Oversight</div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#sup-dashboard" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Supervisor overview</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sup-review" aria-current="page" class="flex items-center justify-between gap-sm px-md py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="check-square" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span data-design-text-token="label-md">Resolution review</span>
+                  </span>
+                  <span class="px-sm py-0.5 rounded-full bg-primary/40 text-on-primary font-label text-label-sm tabular-nums">12</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sup-escalations" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="alert-octagon" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Escalation review</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sup-sla" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="timer" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">SLA oversight</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sup-audit" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="file-search" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Audit workspace</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sup-reports" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="bar-chart-2" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Performance reports</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="p-md border-t border-primary-action/30 flex flex-col gap-xs">
+        <a href="#logout" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+          <i data-lucide="log-out" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span data-design-text-token="label-md">Sign out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Contextual Topbar -->
+      <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between gap-lg sticky top-0 z-20">
+        <div class="flex items-center gap-sm min-w-0">
+          <a href="#back-queue" class="inline-flex items-center gap-xs font-label text-label-md text-primary-action hover:underline">
+            <i data-lucide="arrow-left" class="w-4 h-4" aria-hidden="true"></i>
+            <span>Back to review queue</span>
+          </a>
+          <span class="text-secondary-text hidden sm:inline" aria-hidden="true">/</span>
+          <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary hidden sm:inline">CMP-2026-04182</span>
+        </div>
+
+        <div class="flex items-center gap-sm">
+          <div class="w-8 h-8 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">RN</div>
+          <div class="hidden xl:block leading-tight">
+            <div data-design-text-token="label-md" class="font-label text-label-md text-primary">R. Nair</div>
+            <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Quality Auditor</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-xl flex flex-col gap-xl max-w-7xl w-full mx-auto">
+        <!-- Header -->
+        <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-lg">
+          <div>
+            <div class="flex flex-wrap items-center gap-sm mb-xs">
+              <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
+              <span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">Pending verification</span>
+            </div>
+            <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Resolution review: Main water line rupture at Oak &amp; 4th</h1>
+          </div>
+        </section>
+
+        <!-- 3-Column Supervisor Review Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
+          <!-- Left Column (3 cols): Original Complaint & Location -->
+          <section class="lg:col-span-3 bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+            <header class="border-b border-outline-variant pb-md">
+              <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Original complaint</h2>
+            </header>
+            <div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Location</div>
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Oak St &amp; 4th Ave · Ward 4</div>
+              <div data-design-text-token="mono-sm" class="font-mono text-mono-sm text-secondary-text mt-xs tabular-nums">45.5184° N, 122.6812° W</div>
+            </div>
+            <div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Reported issue</div>
+              <p data-design-text-token="body-sm" class="font-body text-body-sm text-on-surface mt-xs">
+                Pressurized water erupting through fractured asphalt seam on northeast corner, flooding eastbound curb lane.
+              </p>
+            </div>
+            <div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text mb-xs">Citizen evidence</div>
+              <img src="https://lh3.googleusercontent.com/aida/ALJJyrCHN5rJNSVO8BXr1u4M4KMdXLC5BmyWYQ28pnU-HCE08T2GSUTyov-p_-iAa6mdWWHL7plsepR-q9yNHJeSSZccdTpAxOUjwj_TTzWhSXGgo30KIHN-i4rhBlbBI3inGjOENWOX-5dPSKJFhXvGQet30KKUmSxn94gZXhyQl9sOq2eJtck9cwIg5Yem9UIvzwawYBZH7FglwtgkwkFLV3wHeVO1L7qpY-G5t4R0qxKB0gmEI9ursTwy2ATkmnIPjIYZnnc" alt="Original citizen photo of water leak at Oak and 4th" class="w-full h-36 object-cover rounded border border-outline-variant">
+            </div>
+          </section>
+
+          <!-- Center Column (5 cols): Completion Report & Before/After Evidence -->
+          <section class="lg:col-span-5 bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-lg">
+            <header class="border-b border-outline-variant pb-md flex items-center justify-between">
+              <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Completion report</h2>
+              <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text tabular-nums">Submitted Nov 20, 07:05</span>
+            </header>
+
+            <div>
+              <h3 data-design-text-token="label-md" class="font-label text-label-md text-primary mb-xs">Field work summary</h3>
+              <p data-design-text-token="body-md" class="font-body text-body-md text-on-surface">
+                Isolated 8-inch cast iron main, excavated 4x4 ft trench, installed stainless steel full-circle repair clamp, pressure-tested at 65 PSI with zero leakage, backfilled and compacted temporary cold-mix asphalt patch.
+              </p>
+            </div>
+
+            <div>
+              <h3 data-design-text-token="label-md" class="font-label text-label-md text-primary mb-sm">Before &amp; after evidence</h3>
+              <div class="grid grid-cols-2 gap-md">
+                <figure class="border border-outline-variant rounded overflow-hidden bg-surface-container-low">
+                  <img src="https://lh3.googleusercontent.com/aida/ALJJyrCIfS8OyU-XjpY9ESW0njb4wjPyA8ZK83jayaYpNMpisEZTuOlT5wBzhjUBkJkwGCrVkSkUhN77AzbqmjAMTYTxaiuWS9ZCddTA7pJ0TBWn3tDGA5ufCjAQXuTY0FZVXzFx2vPXG0hZaz7eTKa6V5AtEN89xrJv5Lk4fC_NC2Ur2kBC1bPX6hjSAZD80NbybhKZnOJl3kSOAhHAMYMWL6BvpjvqdptCGDZqoG9wvHAGR5t8KwPcJMYHQrIKJ_EKY6FpEyg" alt="Before repair: water seeping from cracked asphalt near valve cover" class="w-full h-36 object-cover">
+                  <figcaption class="p-sm font-label text-label-sm text-secondary-text">Before · 03:40</figcaption>
+                </figure>
+                <figure class="border border-outline-variant rounded overflow-hidden bg-surface-container-low">
+                  <img src="https://lh3.googleusercontent.com/aida/ALJJyrDXGZHdp4ilvqYhbsDynSgpLSu1mOVMEp7hCeqW4VD2CuaezDoNiDdO2ckkVH4vvuxj23niYS3riFn06MJ9qawwUyYlFhrEwsnildujYv-rHGiBbq8klU7fNHt094T7US2xln1q_TQdeAoZWq-p81_4rpY2GVTXAWwKQx0uBOcypaA4gm-mPGS20oIZCaJhQVecXwTU3Wscn5L0Mq8vqSXWD8V-4JgF9mwwbMgpTHrCUfqYqFPoShpQ-9Kisme-QHuV" alt="After repair: clean dry asphalt patch beside curb and valve cover" class="w-full h-36 object-cover">
+                  <figcaption class="p-sm font-label text-label-sm text-success">After · 07:02</figcaption>
+                </figure>
+              </div>
+            </div>
+
+            <div class="p-md rounded bg-surface-container-low border border-outline-variant">
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Follow-up work order</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-primary mt-xs">WO-2026-0894 scheduled with Roads &amp; Pavements for hot-mix surface restoration.</div>
+            </div>
+          </section>
+
+          <!-- Right Panel (4 cols): Work Order Metadata, Review Checklist & Decision Actions -->
+          <section class="lg:col-span-4 bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-lg">
+            <header class="border-b border-outline-variant pb-md">
+              <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Verification checklist</h2>
+            </header>
+
+            <dl class="grid grid-cols-2 gap-md text-left">
+              <div>
+                <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Work order</dt>
+                <dd data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action mt-xs">WO-2026-0891</dd>
+              </div>
+              <div>
+                <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Department</dt>
+                <dd data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Water &amp; Sewer</dd>
+              </div>
+              <div>
+                <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Completed by</dt>
+                <dd data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">D. Kowalski</dd>
+              </div>
+              <div>
+                <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">GPS match</dt>
+                <dd data-design-text-token="label-md" class="font-label text-label-md text-success mt-xs">Verified (12m)</dd>
+              </div>
+            </dl>
+
+            <div class="flex flex-col gap-sm pt-md border-t border-outline-variant">
+              <label class="flex items-center gap-sm font-body text-body-sm text-on-surface">
+                <input type="checkbox" checked class="rounded-sm border-outline text-primary-action">
+                <span>Correct issue addressed?</span>
+              </label>
+              <label class="flex items-center gap-sm font-body text-body-sm text-on-surface">
+                <input type="checkbox" checked class="rounded-sm border-outline text-primary-action">
+                <span>Before &amp; after evidence sufficient?</span>
+              </label>
+              <label class="flex items-center gap-sm font-body text-body-sm text-on-surface">
+                <input type="checkbox" checked class="rounded-sm border-outline text-primary-action">
+                <span>Photo location matches complaint?</span>
+              </label>
+              <label class="flex items-center gap-sm font-body text-body-sm text-on-surface">
+                <input type="checkbox" checked class="rounded-sm border-outline text-primary-action">
+                <span>Work quality acceptable?</span>
+              </label>
+            </div>
+
+            <div>
+              <label for="review-notes" class="block font-label text-label-md text-primary mb-xs">Review notes</label>
+              <textarea id="review-notes" rows="2" placeholder="Optional approval notes, or required reason if rejecting..." class="w-full rounded border border-outline-variant bg-surface-container-low p-md font-body text-body-sm text-on-surface"></textarea>
+            </div>
+
+            <div id="review-status-banner" class="hidden p-md rounded bg-success-container text-on-success-container font-label text-label-md">
+              Resolution approved and sent for citizen verification.
+            </div>
+
+            <div class="flex flex-col gap-sm pt-md border-t border-outline-variant">
+              <button id="approve-btn" type="button" class="w-full py-sm px-lg rounded bg-success text-on-success font-label text-label-md hover:opacity-90">
+                Approve resolution
+              </button>
+              <div class="grid grid-cols-2 gap-sm">
+                <button id="reject-btn" type="button" class="py-sm px-md rounded border border-error text-error bg-surface font-label text-label-md hover:bg-error-container">
+                  Return for rework
+                </button>
+                <button type="button" class="py-sm px-md rounded border border-outline bg-surface text-primary font-label text-label-md hover:bg-surface-container-low">
+                  Escalate
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+      const banner = document.getElementById('review-status-banner');
+      const notes = document.getElementById('review-notes');
+      document.getElementById('approve-btn').addEventListener('click', () => {
+        banner.textContent = 'Resolution approved and sent for citizen verification.';
+        banner.className = 'p-md rounded bg-success-container text-on-success-container font-label text-label-md';
+      });
+      document.getElementById('reject-btn').addEventListener('click', () => {
+        if (!notes.value.trim()) {
+          banner.textContent = 'Please enter a rejection reason in Review notes before returning for rework.';
+          banner.className = 'p-md rounded bg-error-container text-on-error-container font-label text-label-md';
+          notes.focus();
+          return;
+        }
+        banner.textContent = 'Returned to Water & Sewer department for rework.';
+        banner.className = 'p-md rounded bg-warning-container text-on-warning-container font-label text-label-md';
+      });
+    });
+  </script>
+
+
+</body></html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Settings — CivicOps Administration</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col lg:flex-row" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Persistent Left Sidebar (Admin Shell) -->
+    <aside id="app-sidebar" class="w-full lg:w-60 shrink-0 bg-primary text-on-primary flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant min-h-0 lg:min-h-[1024px]" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+      <div class="flex flex-col">
+        <div class="h-14 px-lg flex items-center justify-between border-b border-primary-action/30">
+          <div class="flex items-center gap-md min-w-0">
+            <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="landmark" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+            </div>
+            <div class="min-w-0">
+              <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">CivicOps</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">City Admin</div>
+            </div>
+          </div>
+        </div>
+
+        <nav aria-label="City administration navigation" class="p-md flex flex-col gap-lg">
+          <div>
+            <div class="px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">Governance</div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#sla" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="timer" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">SLA monitoring</span>
+                </a>
+              </li>
+              <li>
+                <a href="#audit" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="shield-check" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Audit logs</span>
+                </a>
+              </li>
+              <li>
+                <a href="#settings" aria-current="page" class="flex items-center gap-md px-md py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md">
+                  <i data-lucide="settings" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">System settings</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="p-md border-t border-primary-action/30 flex flex-col gap-xs">
+        <a href="#logout" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+          <i data-lucide="log-out" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span data-design-text-token="label-md">Sign out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between gap-lg sticky top-0 z-20">
+        <div class="flex items-center gap-sm min-w-0">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text hidden sm:inline">City Administration</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-secondary-text hidden sm:inline" aria-hidden="true"></i>
+          <span data-design-text-token="label-md" class="font-label text-label-md text-primary">System settings</span>
+          <span data-design-text-token="label-sm" class="ml-sm px-sm py-0.5 rounded-sm bg-surface-container text-secondary-text font-label text-label-sm border border-outline-variant">Sample config</span>
+        </div>
+
+        <div class="flex items-center gap-sm">
+          <div class="w-8 h-8 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">EV</div>
+          <div class="hidden xl:block leading-tight">
+            <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Elena Vance</div>
+            <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">City Ops Director</div>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 p-xl flex flex-col gap-xl max-w-5xl w-full mx-auto">
+        <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-lg">
+          <div>
+            <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">System &amp; governance settings</h1>
+            <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">
+              Configure municipal portal identity, citizen verification windows, and escalation policies.
+            </p>
+          </div>
+          <button type="button" class="px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary whitespace-nowrap">Save configuration</button>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-xl items-start">
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+            <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Municipality profile</h2>
+            <div>
+              <label for="sys-city" class="block font-label text-label-md text-primary mb-xs">Portal title</label>
+              <input id="sys-city" type="text" value="CivicOps Municipal Services" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+            </div>
+            <div>
+              <label for="sys-tz" class="block font-label text-label-md text-primary mb-xs">Operational time zone</label>
+              <select id="sys-tz" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+                <option>America/Los_Angeles (PST/PDT)</option>
+                <option>America/New_York (EST/EDT)</option>
+              </select>
+            </div>
+          </article>
+
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+            <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Workflow &amp; QA rules</h2>
+            <label class="flex items-center justify-between gap-md">
+              <div>
+                <div class="font-label text-label-md text-primary">Require completion evidence</div>
+                <div class="font-body text-body-sm text-secondary-text">Field crews must attach after-repair photo</div>
+              </div>
+              <input type="checkbox" checked class="w-5 h-5 rounded border-outline text-primary-action">
+            </label>
+            <label class="flex items-center justify-between gap-md pt-sm border-t border-outline-variant">
+              <div>
+                <div class="font-label text-label-md text-primary">Citizen verification window</div>
+                <div class="font-body text-body-sm text-secondary-text">Auto-close unconfirmed issues after 7 days</div>
+              </div>
+              <input type="checkbox" checked class="w-5 h-5 rounded border-outline text-primary-action">
+            </label>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

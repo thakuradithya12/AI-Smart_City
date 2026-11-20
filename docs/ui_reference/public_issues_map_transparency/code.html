@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Public Issues Map — CivicOps Transparency</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Public Top Navigation -->
+    <header class="bg-surface border-b border-outline-variant sticky top-0 z-20">
+      <div class="max-w-7xl mx-auto px-xl h-16 flex items-center justify-between gap-lg">
+        <a href="#top" class="flex items-center gap-sm">
+          <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+            <i data-lucide="landmark" class="w-4 h-4 text-on-primary-action" aria-hidden="true"></i>
+          </div>
+          <span data-design-text-token="title-md" class="font-title text-title-md text-primary">CivicOps</span>
+        </a>
+
+        <nav aria-label="Public navigation" class="hidden md:flex items-center gap-xl">
+          <a href="#public-issues" aria-current="page" class="font-label text-label-md text-primary-action">Public issues map</a>
+          <a href="#how-it-works" class="font-label text-label-md text-secondary-text hover:text-primary">How it works</a>
+          <a href="#help" class="font-label text-label-md text-secondary-text hover:text-primary">Help &amp; FAQ</a>
+          <a href="#contact" class="font-label text-label-md text-secondary-text hover:text-primary">Contact</a>
+        </nav>
+
+        <div class="flex items-center gap-sm">
+          <a href="#login" class="px-md py-sm rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">Sign in</a>
+          <a href="#report" class="px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">Report an issue</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Filter Bar -->
+    <section aria-label="Public map filters" class="bg-surface border-b border-outline-variant px-xl py-md">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-md">
+        <div class="flex flex-wrap items-center gap-sm">
+          <h1 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary mr-md">Public issues map</h1>
+          <select id="pub-cat" aria-label="Filter by category" class="px-md py-xs rounded bg-surface-container-low border border-outline-variant font-label text-label-md text-primary">
+            <option value="all">Category: All</option>
+            <option value="Water &amp; Sewer">Water &amp; Sewer</option>
+            <option value="Roads &amp; Pavements">Roads &amp; Pavements</option>
+            <option value="Streetlighting">Streetlighting</option>
+            <option value="Stormwater Drainage">Stormwater Drainage</option>
+          </select>
+          <select id="pub-status" aria-label="Filter by status" class="px-md py-xs rounded bg-surface-container-low border border-outline-variant font-label text-label-md text-primary">
+            <option value="all">Status: All</option>
+            <option value="Work in progress">Work in progress</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </div>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Private reporter details are hidden for privacy · Sample data</span>
+      </div>
+    </section>
+
+    <!-- Public Split Map + List -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 max-w-7xl w-full mx-auto bg-surface border-x border-outline-variant">
+      <!-- Map (8 cols) -->
+      <section class="lg:col-span-8 relative bg-surface-container-low min-h-96 border-b lg:border-b-0 lg:border-r border-outline-variant">
+        <svg viewBox="0 0 800 520" class="w-full h-full min-h-96" role="img" aria-label="Public city map of reported infrastructure issues">
+          <path d="M0,360 Q210,325 400,375 T800,340 L800,405 Q590,430 400,420 T0,405 Z" class="fill-primary-action-container/50"></path>
+          <g class="stroke-outline fill-surface" stroke-width="1.2">
+            <polygon points="35,30 250,30 265,185 50,200"></polygon>
+            <polygon points="250,30 510,30 495,195 265,185"></polygon>
+            <polygon points="510,30 765,35 750,210 495,195"></polygon>
+            <polygon points="50,200 265,185 285,335 35,345"></polygon>
+            <polygon points="265,185 495,195 515,345 285,335"></polygon>
+            <polygon points="495,195 750,210 765,330 515,345"></polygon>
+          </g>
+          <g class="fill-secondary-text font-label text-label-sm pointer-events-none">
+            <text x="140" y="105">Northgate</text>
+            <text x="365" y="105">Civic Core</text>
+            <text x="605" y="115">Eastside</text>
+            <text x="135" y="275">Oakridge</text>
+            <text x="370" y="270">Midtown</text>
+            <text x="605" y="275">Industrial</text>
+          </g>
+          <circle cx="192" cy="250" r="9" class="fill-primary-action stroke-surface" stroke-width="2.5"></circle>
+          <circle cx="618" cy="155" r="9" class="fill-primary-action stroke-surface" stroke-width="2.5"></circle>
+          <circle cx="408" cy="285" r="9" class="fill-success stroke-surface" stroke-width="2.5"></circle>
+        </svg>
+
+        <div class="absolute bottom-md left-md bg-surface border border-outline-variant rounded px-md py-sm flex items-center gap-md">
+          <span class="flex items-center gap-xs font-label text-label-sm text-primary">
+            <span class="w-2 h-2 rounded-full bg-primary-action inline-block"></span> Active repair
+          </span>
+          <span class="flex items-center gap-xs font-label text-label-sm text-primary">
+            <span class="w-2 h-2 rounded-full bg-success inline-block"></span> Recently resolved
+          </span>
+        </div>
+      </section>
+
+      <!-- Public Issue Feed (4 cols) -->
+      <aside class="lg:col-span-4 divide-y divide-outline-variant">
+        <div class="p-lg flex flex-col gap-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
+            <span class="px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">Work in progress</span>
+          </div>
+          <div class="font-title text-title-md text-primary">Water leak at Oak St &amp; 4th Ave</div>
+          <div class="font-body text-body-sm text-secondary-text">Water &amp; Sewer · Oakridge · Reported Nov 20</div>
+        </div>
+
+        <div class="p-lg flex flex-col gap-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-mono-sm text-primary-action">CMP-2026-04175</span>
+            <span class="px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Scheduled</span>
+          </div>
+          <div class="font-title text-title-md text-primary">Road surface repair on E. Burnside</div>
+          <div class="font-body text-body-sm text-secondary-text">Roads &amp; Pavements · Eastside · Reported Nov 19</div>
+        </div>
+
+        <div class="p-lg flex flex-col gap-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-mono-sm text-primary-action">CMP-2026-04168</span>
+            <span class="px-sm py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">Resolved</span>
+          </div>
+          <div class="font-title text-title-md text-primary">Streetlight restoration on Midtown Corridor</div>
+          <div class="font-body text-body-sm text-secondary-text">Streetlighting · Midtown · Verified Nov 20</div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    });
+  </script>
+
+
+</body></html>

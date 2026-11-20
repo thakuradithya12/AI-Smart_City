@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help &amp; Platform Support — CivicOps</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Public Top Header -->
+    <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between sticky top-0 z-20">
+      <div class="flex items-center gap-lg">
+        <a href="#landing" class="flex items-center gap-sm">
+          <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+            <i data-lucide="landmark" class="w-4 h-4 text-on-primary-action" aria-hidden="true"></i>
+          </div>
+          <span data-design-text-token="title-md" class="font-title text-title-md text-primary">CivicOps</span>
+        </a>
+        <nav aria-label="Public navigation" class="hidden md:flex items-center gap-lg">
+          <a href="#public-issues" class="font-label text-label-md text-secondary-text hover:text-primary">Public issues map</a>
+          <a href="#help" aria-current="page" class="font-label text-label-md text-primary-action">Help &amp; support</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-sm">
+        <a href="#login" class="px-md py-xs rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">Sign in</a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-xl max-w-6xl w-full mx-auto flex flex-col gap-xl">
+      <section class="flex flex-col gap-sm">
+        <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Help center &amp; platform support</h1>
+        <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text max-w-prose">
+          Find answers about tracking civic complaints, or contact technical support for account and platform issues.
+        </p>
+      </section>
+
+      <!-- Clear Workflow Separation Callout -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-lg items-stretch">
+        <article class="bg-surface border border-primary-action rounded-md p-lg flex flex-col justify-between gap-md h-full">
+          <div>
+            <div class="flex items-center gap-sm text-primary-action">
+              <i data-lucide="map-pin" class="w-5 h-5" aria-hidden="true"></i>
+              <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Reporting a street or utility issue?</h2>
+            </div>
+            <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">
+              Water leaks, potholes, streetlights, and drainage problems go directly to municipal dispatch through the issue reporter.
+            </p>
+          </div>
+          <a href="#report-issue" class="inline-flex items-center justify-center gap-xs px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary w-fit">
+            <span>Report a civic issue</span>
+            <i data-lucide="arrow-right" class="w-4 h-4" aria-hidden="true"></i>
+          </a>
+        </article>
+
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col justify-between gap-md h-full">
+          <div>
+            <div class="flex items-center gap-sm text-primary">
+              <i data-lucide="life-buoy" class="w-5 h-5" aria-hidden="true"></i>
+              <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Account or technical problem?</h2>
+            </div>
+            <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">
+              Use the support form below for login recovery, verification codes, accessibility assistance, or portal bugs.
+            </p>
+          </div>
+          <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Response target: 1 business day</span>
+        </article>
+      </section>
+
+      <!-- Two-Column FAQ + Support Form -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
+        <div class="lg:col-span-7 flex flex-col gap-md">
+          <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Frequently asked questions</h2>
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-xs">
+            <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">How do I verify if a city repair is actually fixed?</h3>
+            <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">
+              Once a supervisor approves field completion photos, your report moves to Ready to verify. Open the report in your Citizen Portal to accept the resolution or reopen it with notes.
+            </p>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-xs">
+            <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">What do the complaint status badges mean?</h3>
+            <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">
+              Submitted means received by intake; Under review means city triage; Assigned / In progress means a department crew has an active work order; Verified closed means confirmed resolved.
+            </p>
+          </article>
+          <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-xs">
+            <h3 data-design-text-token="title-md" class="font-title text-title-md text-primary">Can I submit a report without creating an account?</h3>
+            <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">
+              Public transparency maps are open to everyone, while creating a resident account lets you receive status notifications and verify completed repairs.
+            </p>
+          </article>
+        </div>
+
+        <article class="lg:col-span-5 bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-md">
+          <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Contact platform support</h2>
+          <form class="flex flex-col gap-md">
+            <div>
+              <label for="sup-topic" class="block font-label text-label-md text-primary mb-xs">Topic</label>
+              <select id="sup-topic" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+                <option>Account &amp; sign-in assistance</option>
+                <option>Report a portal bug</option>
+                <option>Accessibility request</option>
+              </select>
+            </div>
+            <div>
+              <label for="sup-email" class="block font-label text-label-md text-primary mb-xs">Your email</label>
+              <input id="sup-email" type="email" placeholder="resident@example.org" class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-md text-primary">
+            </div>
+            <div>
+              <label for="sup-msg" class="block font-label text-label-md text-primary mb-xs">Message</label>
+              <textarea id="sup-msg" rows="3" placeholder="Describe the issue you encountered with the portal..." class="w-full px-md py-sm rounded border border-outline-variant bg-surface font-body text-body-sm text-primary"></textarea>
+            </div>
+            <button type="submit" class="w-full py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">Send support message</button>
+          </form>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

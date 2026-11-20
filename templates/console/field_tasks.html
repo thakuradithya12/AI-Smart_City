@@ -1,4 +1,7 @@
-{% extends "base.html" %}{% block title %}My field tasks · AI Smart City{% endblock %}{% block content %}
-<h1>My field tasks</h1>
-{% for complaint in complaints %}<article class="card"><h2><a href="{% url 'field_task_detail' complaint.pk %}">{{ complaint.public_id }}</a></h2><p>{{ complaint.category.name }} · {{ complaint.get_status_display }} · {{ complaint.ward.name }}</p><p>Due: {{ complaint.due_at }}{% if complaint.is_overdue %} <strong class="badge">Overdue</strong>{% endif %}</p></article>{% empty %}<p>No assigned field tasks.</p>{% endfor %}
+{% extends "base.html" %}
+{% block title %}My field tasks · AI Smart City{% endblock %}
+{% block content %}
+<header class="page-heading"><div><p class="eyebrow">Field operations</p><h1>My assigned tasks</h1><p>Open a task to review its location, add work photos, and record completion notes.</p></div><span class="badge">{{ complaints|length }} assigned</span></header>
+{% for complaint in complaints %}<article class="card"><div class="card-head"><h2><a class="mono" href="{% url 'field_task_detail' complaint.pk %}">{{ complaint.public_id }}</a></h2><span class="badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></div><div class="card-meta"><span>{{ complaint.category.name }}</span><span>{{ complaint.ward.name|default:"Ward pending" }}</span><span>Due {{ complaint.due_at|date:"M j, Y"|default:"Not set" }}{% if complaint.is_overdue %} · <strong class="overdue">Overdue</strong>{% endif %}</span></div><div class="card-actions"><a class="button" href="{% url 'field_task_detail' complaint.pk %}">Open task</a></div></article>
+{% empty %}<div class="empty-state"><h2>No assigned tasks</h2><p>New tasks assigned to you by your department will appear here.</p></div>{% endfor %}
 {% endblock %}

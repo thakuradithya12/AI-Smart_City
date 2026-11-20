@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blocked Tasks — Water &amp; Sewer — CivicOps</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col lg:flex-row" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Role-Aware Department Sidebar -->
+    <aside id="app-sidebar" class="w-full lg:w-60 shrink-0 bg-primary text-on-primary flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant min-h-0 lg:min-h-[1024px]" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+      <div class="flex flex-col">
+        <div class="h-14 px-lg flex items-center justify-between border-b border-primary-action/30">
+          <div class="flex items-center gap-md min-w-0">
+            <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="droplets" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+            </div>
+            <div class="min-w-0">
+              <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">CivicOps</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">Water &amp; Sewer</div>
+            </div>
+          </div>
+        </div>
+
+        <nav aria-label="Department navigation" class="p-md flex flex-col gap-lg">
+          <div>
+            <div class="px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">Queue &amp; Work</div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#dept-dashboard" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Department dashboard</span>
+                </a>
+              </li>
+              <li>
+                <a href="#dept-complaints" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="inbox" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Complaint queue</span>
+                </a>
+              </li>
+              <li>
+                <a href="#dept-work-orders" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Work orders</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">Execution</div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#dept-active" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="wrench" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Active work</span>
+                </a>
+              </li>
+              <li>
+                <a href="#dept-hold" aria-current="page" class="flex items-center justify-between gap-sm px-md py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="pause-circle" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span data-design-text-token="label-md">Blocked tasks</span>
+                  </span>
+                  <span class="px-sm py-0.5 rounded-full bg-surface text-primary font-label text-label-sm tabular-nums">2</span>
+                </a>
+              </li>
+              <li>
+                <a href="#dept-completed" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span data-design-text-token="label-md">Completed work</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="p-md border-t border-primary-action/30 flex flex-col gap-xs">
+        <a href="#logout" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md">
+          <i data-lucide="log-out" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span data-design-text-token="label-md">Sign out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between gap-lg sticky top-0 z-20">
+        <div class="flex items-center gap-sm min-w-0">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text hidden sm:inline">Water &amp; Sewer Dept</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-secondary-text hidden sm:inline" aria-hidden="true"></i>
+          <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Blocked tasks</span>
+          <span data-design-text-token="label-sm" class="ml-sm px-sm py-0.5 rounded-sm bg-surface-container text-secondary-text font-label text-label-sm border border-outline-variant">Sample dataset</span>
+        </div>
+
+        <div class="flex items-center gap-sm">
+          <div class="w-8 h-8 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">HL</div>
+          <div class="hidden xl:block leading-tight">
+            <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Hannah Lin</div>
+            <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Dept Duty Officer</div>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 p-xl flex flex-col gap-xl max-w-7xl w-full mx-auto">
+        <section>
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Blocked &amp; on-hold tasks</h1>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">
+            Resolve material shortages, utility clearances, and access blockers delaying field execution.
+          </p>
+        </section>
+
+        <section class="bg-surface border border-outline-variant rounded-md overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-surface-container-low border-b border-outline-variant">
+                <tr>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text">Work order</th>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text">Mandatory hold reason</th>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text">Responsible officer</th>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text">Hold date</th>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text">Expected resume</th>
+                  <th scope="col" class="px-lg py-md font-label text-label-md text-secondary-text text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-outline-variant">
+                <tr class="hover:bg-surface-container-low">
+                  <td class="px-lg py-md">
+                    <div class="font-mono text-mono-sm text-primary-action whitespace-nowrap">WO-2026-0884</div>
+                    <div class="font-body text-body-sm text-primary whitespace-nowrap">Hydrant valve replacement</div>
+                  </td>
+                  <td class="px-lg py-md">
+                    <span class="px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm whitespace-nowrap">Awaiting 6-inch gate valve</span>
+                  </td>
+                  <td class="px-lg py-md font-body text-body-sm text-primary whitespace-nowrap">M. Silva (Crew Charlie)</td>
+                  <td class="px-lg py-md font-mono text-mono-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 19, 14:20</td>
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary tabular-nums whitespace-nowrap">Nov 21, 08:00</td>
+                  <td class="px-lg py-md text-right">
+                    <button type="button" class="px-md py-xs rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary whitespace-nowrap">Resume work</button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-surface-container-low">
+                  <td class="px-lg py-md">
+                    <div class="font-mono text-mono-sm text-primary-action whitespace-nowrap">WO-2026-0872</div>
+                    <div class="font-body text-body-sm text-primary whitespace-nowrap">Sub-surface lateral excavation</div>
+                  </td>
+                  <td class="px-lg py-md">
+                    <span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm whitespace-nowrap">Utility locate clearance</span>
+                  </td>
+                  <td class="px-lg py-md font-body text-body-sm text-primary whitespace-nowrap">D. Kowalski (Crew Alpha)</td>
+                  <td class="px-lg py-md font-mono text-mono-sm text-secondary-text tabular-nums whitespace-nowrap">Nov 18, 11:00</td>
+                  <td class="px-lg py-md font-mono text-mono-sm text-primary tabular-nums whitespace-nowrap">Nov 20, 15:00</td>
+                  <td class="px-lg py-md text-right">
+                    <button type="button" class="px-md py-xs rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low whitespace-nowrap">Update note</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>

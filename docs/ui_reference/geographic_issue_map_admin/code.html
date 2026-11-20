@@ -1,0 +1,598 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geographic Issue Map — CivicOps Administration</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col lg:flex-row" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Persistent Left Sidebar -->
+    <aside id="app-sidebar" class="w-full lg:w-60 shrink-0 bg-primary text-on-primary flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant min-h-0 lg:min-h-[1024px] transition-[width] duration-surface-enter ease-surface-enter" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+      <div class="flex flex-col">
+        <div class="h-14 px-lg flex items-center justify-between border-b border-primary-action/30">
+          <div class="flex items-center gap-md min-w-0">
+            <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="landmark" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+            </div>
+            <div class="sidebar-label min-w-0">
+              <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">CivicOps</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">City Admin</div>
+            </div>
+          </div>
+          <button id="sidebar-toggle" type="button" aria-label="Toggle sidebar" class="hidden lg:inline-flex items-center justify-center w-7 h-7 rounded text-outline hover:text-on-primary hover:bg-primary-action/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-primary">
+            <i data-lucide="panel-left-close" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <nav aria-label="City administration navigation" class="p-md flex flex-col gap-lg">
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Overview</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#city-overview" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">City overview</span>
+                </a>
+              </li>
+              <li>
+                <a href="#geographic-map" aria-current="page" class="flex items-center gap-md px-md py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md">
+                  <i data-lucide="map" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Geographic map</span>
+                </a>
+              </li>
+              <li>
+                <a href="#analytics" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="bar-chart-3" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Analytics &amp; reports</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Operations</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#complaints" class="flex items-center justify-between gap-sm px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="inbox" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Complaints</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-primary-action/30 text-on-primary font-label text-label-sm tabular-nums">42</span>
+                </a>
+              </li>
+              <li>
+                <a href="#work-orders" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Work orders</span>
+                </a>
+              </li>
+              <li>
+                <a href="#escalations" class="flex items-center justify-between gap-sm px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="alert-octagon" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Escalation center</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">9</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Governance</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#departments" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="building-2" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Departments</span>
+                </a>
+              </li>
+              <li>
+                <a href="#personnel" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="users" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Personnel</span>
+                </a>
+              </li>
+              <li>
+                <a href="#zones" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="map-pinned" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Zones &amp; wards</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sla" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="timer" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">SLA monitoring</span>
+                </a>
+              </li>
+              <li>
+                <a href="#audit" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="shield-check" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Audit logs</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="p-md border-t border-primary-action/30 flex flex-col gap-xs">
+        <a href="#settings" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="settings" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">System settings</span>
+        </a>
+        <a href="#logout" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="log-out" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">Sign out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Top Utility Header -->
+      <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between gap-lg sticky top-0 z-20">
+        <div class="flex items-center gap-sm min-w-0">
+          <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text hidden sm:inline">City Administration</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-secondary-text hidden sm:inline" aria-hidden="true"></i>
+          <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Geographic map</span>
+          <span data-design-text-token="label-sm" class="ml-sm px-sm py-0.5 rounded-sm bg-surface-container text-secondary-text font-label text-label-sm border border-outline-variant">Sample dataset</span>
+        </div>
+
+        <div class="flex items-center gap-md">
+          <button type="button" aria-label="Notifications (14 unread)" class="relative inline-flex items-center justify-center w-9 h-9 rounded border border-outline-variant bg-surface text-secondary-text hover:text-primary hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+            <i data-lucide="bell" class="w-4 h-4" aria-hidden="true"></i>
+            <span aria-hidden="true" class="absolute -top-xs -right-xs inline-flex items-center justify-center min-w-4 h-4 px-xs rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">14</span>
+          </button>
+          <div class="flex items-center gap-sm">
+            <div class="w-8 h-8 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">EV</div>
+            <div class="hidden xl:block leading-tight">
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Elena Vance</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">City Ops Director</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Top Filter Toolbar -->
+      <section aria-label="Map filters" class="bg-surface border-b border-outline-variant px-xl py-md flex flex-wrap items-center justify-between gap-md">
+        <div class="flex flex-wrap items-center gap-sm">
+          <select id="map-filter-cat" aria-label="Filter by category" class="px-md py-xs rounded bg-surface-container-low border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+            <option value="all">Category: All</option>
+            <option value="Water &amp; Sewer">Water &amp; Sewer</option>
+            <option value="Traffic Signals">Traffic Signals</option>
+            <option value="Roads &amp; Pavements">Roads &amp; Pavements</option>
+            <option value="Stormwater Drainage">Stormwater Drainage</option>
+            <option value="Streetlighting">Streetlighting</option>
+            <option value="Waste &amp; Sanitation">Waste &amp; Sanitation</option>
+          </select>
+
+          <select id="map-filter-prio" aria-label="Filter by priority" class="px-md py-xs rounded bg-surface-container-low border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+            <option value="all">Priority: All</option>
+            <option value="Critical">Critical</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+          </select>
+
+          <select id="map-filter-status" aria-label="Filter by status" class="px-md py-xs rounded bg-surface-container-low border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+            <option value="all">Status: All</option>
+            <option value="New">New</option>
+            <option value="Assigned">Assigned</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Escalated">Escalated</option>
+          </select>
+
+          <select id="map-filter-ward" aria-label="Filter by ward" class="px-md py-xs rounded bg-surface-container-low border border-outline-variant font-label text-label-md text-primary focus:border-primary-action focus:ring-0">
+            <option value="all">Ward: All (1–8)</option>
+            <option value="Ward 1">Ward 1 · Northgate</option>
+            <option value="Ward 2">Ward 2 · Civic Core</option>
+            <option value="Ward 3">Ward 3 · Eastside</option>
+            <option value="Ward 4">Ward 4 · Oakridge</option>
+            <option value="Ward 5">Ward 5 · Midtown</option>
+            <option value="Ward 6">Ward 6 · Industrial</option>
+            <option value="Ward 7">Ward 7 · Riverfront</option>
+          </select>
+
+          <button id="map-clear-btn" type="button" class="px-md py-xs rounded font-label text-label-md text-primary-action hover:bg-primary-action-container">
+            Clear filters
+          </button>
+        </div>
+
+        <div class="flex items-center gap-sm">
+          <button id="heatmap-toggle" type="button" aria-pressed="false" class="inline-flex items-center gap-xs px-md py-xs rounded border border-outline-variant bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">
+            <i data-lucide="flame" class="w-4 h-4 text-secondary-text" aria-hidden="true"></i>
+            <span>Density heatmap</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Desktop Split View (70% Map / 30% Synchronized List) -->
+      <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-0">
+        <!-- Left: Interactive GIS Map (8 cols ~ 67%) -->
+        <section class="lg:col-span-8 relative bg-surface-container-low min-h-96 border-b lg:border-b-0 lg:border-r border-outline-variant overflow-hidden">
+          <svg id="full-gis-svg" viewBox="0 0 800 560" class="w-full h-full min-h-96" role="img" aria-label="Municipal geographic complaint map">
+            <g id="full-map-viewport" transform="translate(0,0) scale(1)">
+              <!-- River -->
+              <path d="M0,380 Q210,345 400,395 T800,360 L800,425 Q590,450 400,440 T0,425 Z" class="fill-primary-action-container/50"></path>
+              <!-- Ward Polygons -->
+              <g class="stroke-outline fill-surface" stroke-width="1.2">
+                <polygon points="35,30 250,30 265,195 50,210"></polygon>
+                <polygon points="250,30 510,30 495,205 265,195"></polygon>
+                <polygon points="510,30 765,35 750,220 495,205"></polygon>
+                <polygon points="50,210 265,195 285,355 35,365"></polygon>
+                <polygon points="265,195 495,205 515,365 285,355"></polygon>
+                <polygon points="495,205 750,220 765,350 515,365"></polygon>
+                <polygon points="40,440 385,455 375,535 40,535"></polygon>
+                <polygon points="385,455 765,435 765,535 375,535"></polygon>
+              </g>
+              <!-- Arterial Roads -->
+              <g class="stroke-outline-variant fill-none" stroke-width="2">
+                <line x1="155" y1="25" x2="195" y2="540"></line>
+                <line x1="385" y1="25" x2="405" y2="540"></line>
+                <line x1="625" y1="30" x2="605" y2="540"></line>
+                <line x1="30" y1="130" x2="770" y2="145"></line>
+                <line x1="30" y1="280" x2="770" y2="295"></line>
+              </g>
+              <!-- Optional Heatmap Overlay -->
+              <g id="heatmap-layer" class="hidden pointer-events-none">
+                <circle cx="195" cy="260" r="65" class="fill-error/15"></circle>
+                <circle cx="390" cy="145" r="55" class="fill-error/15"></circle>
+                <circle cx="408" cy="300" r="70" class="fill-warning/15"></circle>
+              </g>
+              <!-- Ward Labels -->
+              <g class="fill-secondary-text font-label text-label-sm pointer-events-none">
+                <text x="140" y="105">Ward 1 · Northgate</text>
+                <text x="365" y="105">Ward 2 · Civic Core</text>
+                <text x="605" y="115">Ward 3 · Eastside</text>
+                <text x="135" y="295">Ward 4 · Oakridge</text>
+                <text x="370" y="290">Ward 5 · Midtown</text>
+                <text x="605" y="295">Ward 6 · Industrial</text>
+                <text x="180" y="505">Ward 7 · Riverfront</text>
+                <text x="540" y="500">Ward 8 · South Park</text>
+              </g>
+
+              <!-- Issue Markers -->
+              <g id="full-map-markers">
+                <g class="gis-marker cursor-pointer" data-id="CMP-2026-04182" data-cat="Water &amp; Sewer" data-prio="Critical" data-status="In Progress" data-ward="Ward 4" transform="translate(192, 260)">
+                  <circle r="16" class="marker-ring fill-error/25"></circle>
+                  <circle r="8" class="fill-error stroke-surface" stroke-width="2.5"></circle>
+                </g>
+                <g class="gis-marker cursor-pointer" data-id="CMP-2026-04179" data-cat="Traffic Signals" data-prio="Critical" data-status="Escalated" data-ward="Ward 2" transform="translate(390, 145)">
+                  <circle r="14" class="marker-ring fill-error/15 hidden"></circle>
+                  <circle r="8" class="fill-error stroke-surface" stroke-width="2.5"></circle>
+                </g>
+                <g class="gis-marker cursor-pointer" data-id="CMP-2026-04185" data-cat="Streetlighting" data-prio="High" data-status="New" data-ward="Ward 1" transform="translate(155, 118)">
+                  <circle r="14" class="marker-ring fill-warning/20 hidden"></circle>
+                  <circle r="8" class="fill-warning stroke-surface" stroke-width="2.5"></circle>
+                </g>
+                <g class="gis-marker cursor-pointer" data-id="CMP-2026-04175" data-cat="Roads &amp; Pavements" data-prio="High" data-status="Assigned" data-ward="Ward 3" transform="translate(618, 165)">
+                  <circle r="14" class="marker-ring fill-warning/20 hidden"></circle>
+                  <circle r="8" class="fill-warning stroke-surface" stroke-width="2.5"></circle>
+                </g>
+                <g class="gis-marker cursor-pointer" data-id="CMP-2026-04171" data-cat="Stormwater Drainage" data-prio="High" data-status="In Progress" data-ward="Ward 7" transform="translate(245, 485)">
+                  <circle r="14" class="marker-ring fill-warning/20 hidden"></circle>
+                  <circle r="8" class="fill-warning stroke-surface" stroke-width="2.5"></circle>
+                </g>
+                <g class="gis-marker cursor-pointer" data-id="CMP-2026-04168" data-cat="Streetlighting" data-prio="Medium" data-status="In Progress" data-ward="Ward 5" transform="translate(408, 305)">
+                  <circle r="15" class="fill-primary-action stroke-surface" stroke-width="2.5"></circle>
+                  <text y="4" text-anchor="middle" class="fill-on-primary font-mono text-label-sm">6</text>
+                </g>
+                <g class="gis-marker cursor-pointer" data-id="CMP-2026-04164" data-cat="Waste &amp; Sanitation" data-prio="Medium" data-status="New" data-ward="Ward 6" transform="translate(645, 315)">
+                  <circle r="14" class="marker-ring fill-primary-action/20 hidden"></circle>
+                  <circle r="8" class="fill-primary-action stroke-surface" stroke-width="2.5"></circle>
+                </g>
+              </g>
+            </g>
+          </svg>
+
+          <!-- Zoom Controls -->
+          <div class="absolute top-md right-md flex flex-col gap-xs bg-surface border border-outline-variant rounded p-xs">
+            <button id="full-zoom-in" type="button" aria-label="Zoom in" class="w-8 h-8 rounded-sm flex items-center justify-center text-primary hover:bg-surface-container">
+              <i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i>
+            </button>
+            <button id="full-zoom-out" type="button" aria-label="Zoom out" class="w-8 h-8 rounded-sm flex items-center justify-center text-primary hover:bg-surface-container">
+              <i data-lucide="minus" class="w-4 h-4" aria-hidden="true"></i>
+            </button>
+            <button id="full-zoom-reset" type="button" aria-label="Reset zoom" class="w-8 h-8 rounded-sm flex items-center justify-center text-secondary-text hover:text-primary hover:bg-surface-container">
+              <i data-lucide="locate-fixed" class="w-4 h-4" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <!-- Legend -->
+          <div class="absolute bottom-md left-md bg-surface border border-outline-variant rounded px-md py-sm flex flex-wrap items-center gap-md">
+            <span class="flex items-center gap-xs font-label text-label-sm text-primary">
+              <span class="w-2 h-2 rounded-full bg-error inline-block"></span> Critical
+            </span>
+            <span class="flex items-center gap-xs font-label text-label-sm text-primary">
+              <span class="w-2 h-2 rounded-full bg-warning inline-block"></span> High
+            </span>
+            <span class="flex items-center gap-xs font-label text-label-sm text-primary">
+              <span class="w-2 h-2 rounded-full bg-primary-action inline-block"></span> Medium / Cluster
+            </span>
+          </div>
+        </section>
+
+        <!-- Right: Synchronized Issue List (4 cols ~ 33%) -->
+        <aside aria-label="Filtered issues list" class="lg:col-span-4 bg-surface flex flex-col">
+          <header class="px-lg py-md border-b border-outline-variant flex items-center justify-between">
+            <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Visible issues</h2>
+            <span id="visible-issue-count" data-design-text-token="label-md" class="font-label text-label-md text-secondary-text tabular-nums">7 issues</span>
+          </header>
+
+          <div id="map-issue-list" class="divide-y divide-outline-variant overflow-y-auto flex-1">
+            <button type="button" data-id="CMP-2026-04182" data-cat="Water &amp; Sewer" data-prio="Critical" data-status="In Progress" data-ward="Ward 4" class="map-list-item w-full text-left p-lg bg-primary-action-container/50 hover:bg-surface-container-low transition-colors duration-state-change">
+              <div class="flex items-center justify-between gap-sm mb-xs">
+                <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
+                <span class="px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span>
+              </div>
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Main water line rupture at Oak &amp; 4th</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Water &amp; Sewer · Ward 4 · In Progress</div>
+            </button>
+
+            <button type="button" data-id="CMP-2026-04179" data-cat="Traffic Signals" data-prio="Critical" data-status="Escalated" data-ward="Ward 2" class="map-list-item w-full text-left p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+              <div class="flex items-center justify-between gap-sm mb-xs">
+                <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04179</span>
+                <span class="px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">Critical</span>
+              </div>
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">4-way traffic signal blackout at Civic Plaza</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Traffic Signals · Ward 2 · Escalated</div>
+            </button>
+
+            <button type="button" data-id="CMP-2026-04185" data-cat="Streetlighting" data-prio="High" data-status="New" data-ward="Ward 1" class="map-list-item w-full text-left p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+              <div class="flex items-center justify-between gap-sm mb-xs">
+                <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04185</span>
+                <span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span>
+              </div>
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Downed streetlight pole blocking bike lane</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Streetlighting · Ward 1 · New</div>
+            </button>
+
+            <button type="button" data-id="CMP-2026-04175" data-cat="Roads &amp; Pavements" data-prio="High" data-status="Assigned" data-ward="Ward 3" class="map-list-item w-full text-left p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+              <div class="flex items-center justify-between gap-sm mb-xs">
+                <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04175</span>
+                <span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span>
+              </div>
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Deep sinkhole on E. Burnside lane 2</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Roads &amp; Pavements · Ward 3 · Assigned</div>
+            </button>
+
+            <button type="button" data-id="CMP-2026-04171" data-cat="Stormwater Drainage" data-prio="High" data-status="In Progress" data-ward="Ward 7" class="map-list-item w-full text-left p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+              <div class="flex items-center justify-between gap-sm mb-xs">
+                <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04171</span>
+                <span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">High</span>
+              </div>
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Blocked storm culvert flooding intersection</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Stormwater Drainage · Ward 7 · In Progress</div>
+            </button>
+
+            <button type="button" data-id="CMP-2026-04168" data-cat="Streetlighting" data-prio="Medium" data-status="In Progress" data-ward="Ward 5" class="map-list-item w-full text-left p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+              <div class="flex items-center justify-between gap-sm mb-xs">
+                <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04168</span>
+                <span class="px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Medium</span>
+              </div>
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">6 streetlights out along Midtown Corridor</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Streetlighting · Ward 5 · In Progress</div>
+            </button>
+
+            <button type="button" data-id="CMP-2026-04164" data-cat="Waste &amp; Sanitation" data-prio="Medium" data-status="New" data-ward="Ward 6" class="map-list-item w-full text-left p-lg hover:bg-surface-container-low transition-colors duration-state-change">
+              <div class="flex items-center justify-between gap-sm mb-xs">
+                <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04164</span>
+                <span class="px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Medium</span>
+              </div>
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Overflowing commercial bin enclosure</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Waste &amp; Sanitation · Ward 6 · New</div>
+            </button>
+          </div>
+        </aside>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      // Sidebar collapse
+      const sidebar = document.getElementById('app-sidebar');
+      const toggleBtn = document.getElementById('sidebar-toggle');
+      let collapsed = false;
+      if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', () => {
+          collapsed = !collapsed;
+          sidebar.classList.toggle('lg:w-60', !collapsed);
+          sidebar.classList.toggle('lg:w-16', collapsed);
+          document.querySelectorAll('.sidebar-label').forEach((el) => el.classList.toggle('hidden', collapsed));
+        });
+      }
+
+      // Zoom controls
+      let zoom = 1;
+      const vp = document.getElementById('full-map-viewport');
+      function updateZoom() {
+        const tx = (800 * (1 - zoom)) / 2;
+        const ty = (560 * (1 - zoom)) / 2;
+        vp.setAttribute('transform', `translate(${tx},${ty}) scale(${zoom})`);
+      }
+      document.getElementById('full-zoom-in').addEventListener('click', () => { zoom = Math.min(1.8, zoom + 0.2); updateZoom(); });
+      document.getElementById('full-zoom-out').addEventListener('click', () => { zoom = Math.max(0.8, zoom - 0.2); updateZoom(); });
+      document.getElementById('full-zoom-reset').addEventListener('click', () => { zoom = 1; updateZoom(); });
+
+      // Heatmap toggle
+      const heatBtn = document.getElementById('heatmap-toggle');
+      const heatLayer = document.getElementById('heatmap-layer');
+      heatBtn.addEventListener('click', () => {
+        const active = heatBtn.getAttribute('aria-pressed') === 'true';
+        heatBtn.setAttribute('aria-pressed', String(!active));
+        heatBtn.classList.toggle('bg-primary-action-container', !active);
+        heatLayer.classList.toggle('hidden', active);
+      });
+
+      // Synchronized map + list selection
+      function selectIssue(id) {
+        document.querySelectorAll('.map-list-item').forEach((item) => {
+          item.classList.toggle('bg-primary-action-container/50', item.dataset.id === id);
+        });
+        document.querySelectorAll('.gis-marker').forEach((m) => {
+          const ring = m.querySelector('.marker-ring');
+          if (ring) ring.classList.toggle('hidden', m.dataset.id !== id);
+        });
+      }
+
+      document.querySelectorAll('.map-list-item').forEach((item) => {
+        item.addEventListener('click', () => selectIssue(item.dataset.id));
+      });
+      document.querySelectorAll('.gis-marker').forEach((m) => {
+        m.addEventListener('click', () => selectIssue(m.dataset.id));
+      });
+
+      // Synchronized filtering
+      const catEl = document.getElementById('map-filter-cat');
+      const prioEl = document.getElementById('map-filter-prio');
+      const statusEl = document.getElementById('map-filter-status');
+      const wardEl = document.getElementById('map-filter-ward');
+      const countEl = document.getElementById('visible-issue-count');
+
+      function applyMapFilters() {
+        const c = catEl.value;
+        const p = prioEl.value;
+        const s = statusEl.value;
+        const w = wardEl.value;
+        let count = 0;
+
+        document.querySelectorAll('.map-list-item').forEach((item) => {
+          const show = (c === 'all' || item.dataset.cat === c) &&
+                       (p === 'all' || item.dataset.prio === p) &&
+                       (s === 'all' || item.dataset.status === s) &&
+                       (w === 'all' || item.dataset.ward === w);
+          item.classList.toggle('hidden', !show);
+          if (show) count++;
+        });
+
+        document.querySelectorAll('.gis-marker').forEach((m) => {
+          const show = (c === 'all' || m.dataset.cat === c) &&
+                       (p === 'all' || m.dataset.prio === p) &&
+                       (s === 'all' || m.dataset.status === s) &&
+                       (w === 'all' || m.dataset.ward === w);
+          m.style.display = show ? '' : 'none';
+        });
+
+        countEl.textContent = `${count} issues`;
+      }
+
+      [catEl, prioEl, statusEl, wardEl].forEach((el) => el.addEventListener('change', applyMapFilters));
+      document.getElementById('map-clear-btn').addEventListener('click', () => {
+        catEl.value = 'all';
+        prioEl.value = 'all';
+        statusEl.value = 'all';
+        wardEl.value = 'all';
+        applyMapFilters();
+      });
+    });
+  </script>
+
+
+</body></html>

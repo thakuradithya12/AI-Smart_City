@@ -1,0 +1,407 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report an Issue — CivicOps Citizen Portal</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[884px] flex flex-col max-w-md mx-auto bg-app-background" data-stitch-vh="min-h-[884px]===min-h-screen">
+    <!-- Task Flow Header (Back button, no root tabs) -->
+    <header class="bg-surface border-b border-outline-variant px-lg py-md flex items-center justify-between sticky top-0 z-20">
+      <a href="#back" class="min-h-11 inline-flex items-center gap-xs font-label text-label-md text-primary-action hover:underline">
+        <i data-lucide="arrow-left" class="w-4 h-4" aria-hidden="true"></i>
+        <span data-design-text-token="label-md">Back</span>
+      </a>
+      <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Report an issue</div>
+      <span id="step-indicator-label" data-design-text-token="label-md" class="font-label text-label-md text-secondary-text tabular-nums">Step 1 of 5</span>
+    </header>
+
+    <!-- Stepper Bar -->
+    <div class="bg-surface px-lg py-sm border-b border-outline-variant">
+      <div class="grid grid-cols-5 gap-xs" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1" id="stepper-bar">
+        <div class="step-seg h-1.5 rounded-full bg-primary-action"></div>
+        <div class="step-seg h-1.5 rounded-full bg-surface-container-high"></div>
+        <div class="step-seg h-1.5 rounded-full bg-surface-container-high"></div>
+        <div class="step-seg h-1.5 rounded-full bg-surface-container-high"></div>
+        <div class="step-seg h-1.5 rounded-full bg-surface-container-high"></div>
+      </div>
+    </div>
+
+    <!-- Guided Multi-Step Form -->
+    <main class="flex-1 p-lg flex flex-col justify-between gap-xl">
+      <!-- Step 1: Category Selection -->
+      <section id="step-1" class="step-panel flex flex-col gap-lg">
+        <div>
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">What type of issue is it?</h1>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">Select the category that best matches the problem.</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-md">
+          <button type="button" data-cat="Roads &amp; Pavements" data-suggest="Pothole or pavement damage" class="cat-card min-h-16 text-left bg-surface border-2 border-primary-action rounded-md p-lg flex items-center gap-md">
+            <div class="w-10 h-10 rounded bg-primary-action-container text-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="construction" class="w-5 h-5" aria-hidden="true"></i>
+            </div>
+            <div>
+              <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Roads &amp; Pavements</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Potholes, sinkholes, damaged curbs or sidewalks</div>
+            </div>
+          </button>
+
+          <button type="button" data-cat="Water &amp; Sewer" data-suggest="Water main or pipe leak" class="cat-card min-h-16 text-left bg-surface border border-outline-variant rounded-md p-lg flex items-center gap-md hover:border-primary-action">
+            <div class="w-10 h-10 rounded bg-surface-container text-primary flex items-center justify-center shrink-0">
+              <i data-lucide="droplets" class="w-5 h-5" aria-hidden="true"></i>
+            </div>
+            <div>
+              <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Water &amp; Sewer</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Leaking mains, hydrant issues, sewer backups</div>
+            </div>
+          </button>
+
+          <button type="button" data-cat="Streetlighting" data-suggest="Streetlight outage or pole damage" class="cat-card min-h-16 text-left bg-surface border border-outline-variant rounded-md p-lg flex items-center gap-md hover:border-primary-action">
+            <div class="w-10 h-10 rounded bg-surface-container text-primary flex items-center justify-center shrink-0">
+              <i data-lucide="lightbulb" class="w-5 h-5" aria-hidden="true"></i>
+            </div>
+            <div>
+              <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Streetlighting</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Outages, flickering lights, or downed poles</div>
+            </div>
+          </button>
+
+          <button type="button" data-cat="Stormwater Drainage" data-suggest="Blocked storm drain or flooding" class="cat-card min-h-16 text-left bg-surface border border-outline-variant rounded-md p-lg flex items-center gap-md hover:border-primary-action">
+            <div class="w-10 h-10 rounded bg-surface-container text-primary flex items-center justify-center shrink-0">
+              <i data-lucide="cloud-rain" class="w-5 h-5" aria-hidden="true"></i>
+            </div>
+            <div>
+              <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Stormwater Drainage</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Clogged catch basins or street flooding</div>
+            </div>
+          </button>
+
+          <button type="button" data-cat="Waste &amp; Sanitation" data-suggest="Missed pickup or illegal dumping" class="cat-card min-h-16 text-left bg-surface border border-outline-variant rounded-md p-lg flex items-center gap-md hover:border-primary-action">
+            <div class="w-10 h-10 rounded bg-surface-container text-primary flex items-center justify-center shrink-0">
+              <i data-lucide="trash-2" class="w-5 h-5" aria-hidden="true"></i>
+            </div>
+            <div>
+              <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Waste &amp; Sanitation</div>
+              <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Overflowing public bins or debris on roadway</div>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 2: Problem Details -->
+      <section id="step-2" class="step-panel hidden flex-col gap-lg">
+        <div>
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Describe the problem</h1>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">Share enough detail so a crew knows what to expect.</p>
+        </div>
+        <div class="flex flex-col gap-md">
+          <div>
+            <label for="issue-title" class="block font-label text-label-md text-primary mb-xs">Issue title *</label>
+            <input id="issue-title" type="text" value="Pothole or pavement damage" class="w-full min-h-11 rounded border border-outline-variant bg-surface px-md py-sm font-body text-body-md text-on-surface focus:border-primary-action focus:ring-1 focus:ring-primary-action">
+          </div>
+          <div>
+            <label for="issue-desc" class="block font-label text-label-md text-primary mb-xs">Description *</label>
+            <textarea id="issue-desc" rows="4" placeholder="Describe size, safety hazard, or how long it has been present..." class="w-full rounded border border-outline-variant bg-surface p-md font-body text-body-md text-on-surface focus:border-primary-action focus:ring-1 focus:ring-primary-action"></textarea>
+          </div>
+          <div>
+            <label for="issue-impact" class="block font-label text-label-md text-primary mb-xs">Safety impact</label>
+            <select id="issue-impact" class="w-full min-h-11 rounded border border-outline-variant bg-surface px-md py-sm font-body text-body-md text-on-surface focus:border-primary-action focus:ring-0">
+              <option>Blocks lane or pedestrian path</option>
+              <option>Minor inconvenience</option>
+              <option>Urgent safety hazard</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3: Location -->
+      <section id="step-3" class="step-panel hidden flex-col gap-lg">
+        <div>
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Where is the issue?</h1>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">Use your current location or adjust the pin on the map.</p>
+        </div>
+        <button type="button" class="w-full min-h-11 inline-flex items-center justify-center gap-sm rounded border border-primary-action bg-primary-action-container text-primary font-label text-label-md">
+          <i data-lucide="locate-fixed" class="w-4 h-4 text-primary-action" aria-hidden="true"></i>
+          <span>Use current GPS location</span>
+        </button>
+        <div class="border border-outline-variant rounded-md overflow-hidden bg-surface">
+          <svg viewBox="0 0 360 180" class="w-full h-44 bg-surface-container-low" role="img" aria-label="Location pin at Oak Street and 4th Avenue">
+            <g class="stroke-outline-variant fill-none" stroke-width="2">
+              <line x1="0" y1="90" x2="360" y2="90"></line>
+              <line x1="180" y1="0" x2="180" y2="180"></line>
+            </g>
+            <circle cx="180" cy="90" r="18" class="fill-primary-action/20"></circle>
+            <circle cx="180" cy="90" r="7" class="fill-primary-action stroke-surface" stroke-width="2"></circle>
+          </svg>
+          <div class="p-md border-t border-outline-variant flex items-center gap-sm">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-success shrink-0" aria-hidden="true"></i>
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-primary">Oak St &amp; 4th Ave · Ward 4 (Confirmed)</span>
+          </div>
+        </div>
+        <div>
+          <label for="issue-landmark" class="block font-label text-label-md text-primary mb-xs">Nearby landmark (optional)</label>
+          <input id="issue-landmark" type="text" placeholder="e.g., Across from Oakridge Clinic" class="w-full min-h-11 rounded border border-outline-variant bg-surface px-md py-sm font-body text-body-md text-on-surface">
+        </div>
+      </section>
+
+      <!-- Step 4: Evidence -->
+      <section id="step-4" class="step-panel hidden flex-col gap-lg">
+        <div>
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Add a photo</h1>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">Photos help field crews bring the right equipment.</p>
+        </div>
+        <div class="border-2 border-dashed border-outline rounded-md bg-surface p-xl flex flex-col items-center justify-center text-center gap-md">
+          <div class="w-12 h-12 rounded-full bg-primary-action-container text-primary-action flex items-center justify-center">
+            <i data-lucide="camera" class="w-6 h-6" aria-hidden="true"></i>
+          </div>
+          <div>
+            <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Take a photo or upload from device</div>
+            <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">JPG or PNG up to 10 MB</div>
+          </div>
+          <label class="min-h-11 inline-flex items-center px-lg py-sm rounded bg-surface border border-outline font-label text-label-md text-primary cursor-pointer hover:bg-surface-container-low">
+            <span>Choose photo</span>
+            <input type="file" accept="image/*" class="sr-only">
+          </label>
+        </div>
+      </section>
+
+      <!-- Step 5: Review & Submit -->
+      <section id="step-5" class="step-panel hidden flex-col gap-lg">
+        <div>
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Review your report</h1>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">Confirm the details below before submitting.</p>
+        </div>
+        <div class="bg-surface border border-outline-variant rounded-md divide-y divide-outline-variant">
+          <div class="p-lg flex items-center justify-between gap-sm">
+            <div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Category</div>
+              <div id="rev-cat" data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Roads &amp; Pavements</div>
+            </div>
+            <button type="button" data-goto="1" class="goto-btn font-label text-label-md text-primary-action hover:underline">Edit</button>
+          </div>
+          <div class="p-lg flex items-center justify-between gap-sm">
+            <div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Issue</div>
+              <div id="rev-title" data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Pothole or pavement damage</div>
+            </div>
+            <button type="button" data-goto="2" class="goto-btn font-label text-label-md text-primary-action hover:underline">Edit</button>
+          </div>
+          <div class="p-lg flex items-center justify-between gap-sm">
+            <div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Location</div>
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Oak St &amp; 4th Ave · Ward 4</div>
+            </div>
+            <button type="button" data-goto="3" class="goto-btn font-label text-label-md text-primary-action hover:underline">Edit</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submission Confirmation State -->
+      <section id="step-success" class="step-panel hidden flex-col items-center text-center gap-lg py-xl">
+        <div class="w-16 h-16 rounded-full bg-success-container text-success flex items-center justify-center">
+          <i data-lucide="check-circle-2" class="w-8 h-8" aria-hidden="true"></i>
+        </div>
+        <div>
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Report submitted</h1>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-secondary-text mt-xs">Your issue has been logged and queued for review.</p>
+        </div>
+        <div class="w-full bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-sm text-left">
+          <div class="flex justify-between">
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Reference ID</span>
+            <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04189</span>
+          </div>
+          <div class="flex justify-between">
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Current status</span>
+            <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Submitted</span>
+          </div>
+        </div>
+        <a href="#dashboard" class="w-full min-h-12 inline-flex items-center justify-center rounded bg-primary-action text-on-primary-action font-label text-title-md">
+          Return to dashboard
+        </a>
+      </section>
+
+      <!-- Step Navigation Footer -->
+      <footer id="step-footer" class="flex items-center justify-between gap-md pt-md border-t border-outline-variant">
+        <button id="prev-step-btn" type="button" class="hidden min-h-11 px-lg py-sm rounded border border-outline bg-surface font-label text-label-md text-primary">
+          Previous
+        </button>
+        <button id="next-step-btn" type="button" class="flex-1 min-h-12 px-xl py-md rounded bg-primary-action text-on-primary-action font-label text-title-md hover:bg-primary">
+          Next: Problem details
+        </button>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      let currentStep = 1;
+      let selectedCategory = 'Roads & Pavements';
+      const nextLabels = {
+        1: 'Next: Problem details',
+        2: 'Next: Pin location',
+        3: 'Next: Add photo',
+        4: 'Next: Review report',
+        5: 'Submit report'
+      };
+
+      const stepLabel = document.getElementById('step-indicator-label');
+      const prevBtn = document.getElementById('prev-step-btn');
+      const nextBtn = document.getElementById('next-step-btn');
+      const footer = document.getElementById('step-footer');
+      const segs = document.querySelectorAll('.step-seg');
+
+      function showStep(n) {
+        currentStep = n;
+        document.querySelectorAll('.step-panel').forEach((p) => p.classList.add('hidden'));
+        if (n === 6) {
+          document.getElementById('step-success').classList.remove('hidden');
+          document.getElementById('step-success').classList.add('flex');
+          footer.classList.add('hidden');
+          stepLabel.textContent = 'Completed';
+          return;
+        }
+        const active = document.getElementById(`step-${n}`);
+        active.classList.remove('hidden');
+        active.classList.add('flex');
+        footer.classList.remove('hidden');
+        stepLabel.textContent = `Step ${n} of 5`;
+        prevBtn.classList.toggle('hidden', n === 1);
+        nextBtn.textContent = nextLabels[n];
+        segs.forEach((s, idx) => {
+          s.classList.toggle('bg-primary-action', idx < n);
+          s.classList.toggle('bg-surface-container-high', idx >= n);
+        });
+        if (n === 5) {
+          document.getElementById('rev-cat').textContent = selectedCategory;
+          document.getElementById('rev-title').textContent = document.getElementById('issue-title').value;
+        }
+      }
+
+      document.querySelectorAll('.cat-card').forEach((card) => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.cat-card').forEach((c) => {
+            c.classList.remove('border-2', 'border-primary-action');
+            c.classList.add('border', 'border-outline-variant');
+          });
+          card.classList.remove('border', 'border-outline-variant');
+          card.classList.add('border-2', 'border-primary-action');
+          selectedCategory = card.dataset.cat;
+          document.getElementById('issue-title').value = card.dataset.suggest;
+        });
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentStep < 5) showStep(currentStep + 1);
+        else showStep(6);
+      });
+      prevBtn.addEventListener('click', () => {
+        if (currentStep > 1) showStep(currentStep - 1);
+      });
+      document.querySelectorAll('.goto-btn').forEach((btn) => {
+        btn.addEventListener('click', () => showStep(Number(btn.dataset.goto)));
+      });
+    });
+  </script>
+
+
+</body></html>

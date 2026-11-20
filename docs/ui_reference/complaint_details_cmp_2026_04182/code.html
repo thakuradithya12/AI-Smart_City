@@ -1,0 +1,648 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complaint Details CMP-2026-04182 — CivicOps Administration</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col lg:flex-row" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Persistent Left Sidebar (verbatim shell) -->
+    <aside id="app-sidebar" class="w-full lg:w-60 shrink-0 bg-primary text-on-primary flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant min-h-0 lg:min-h-[1024px] transition-[width] duration-surface-enter ease-surface-enter" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+      <div class="flex flex-col">
+        <div class="h-14 px-lg flex items-center justify-between border-b border-primary-action/30">
+          <div class="flex items-center gap-md min-w-0">
+            <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
+              <i data-lucide="landmark" class="w-4 h-4 text-on-primary" aria-hidden="true"></i>
+            </div>
+            <div class="sidebar-label min-w-0">
+              <div data-design-text-token="title-md" class="font-title text-title-md text-on-primary leading-tight">CivicOps</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-outline">City Admin</div>
+            </div>
+          </div>
+          <button id="sidebar-toggle" type="button" aria-label="Toggle sidebar" class="hidden lg:inline-flex items-center justify-center w-7 h-7 rounded text-outline hover:text-on-primary hover:bg-primary-action/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-primary">
+            <i data-lucide="panel-left-close" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <nav aria-label="City administration navigation" class="p-md flex flex-col gap-lg">
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Overview</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#city-overview" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">City overview</span>
+                </a>
+              </li>
+              <li>
+                <a href="#geographic-map" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="map" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Geographic map</span>
+                </a>
+              </li>
+              <li>
+                <a href="#analytics" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="bar-chart-3" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Analytics &amp; reports</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Operations</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#complaints" aria-current="page" class="flex items-center justify-between gap-sm px-md py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="inbox" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Complaints</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-primary/40 text-on-primary font-label text-label-sm tabular-nums">42</span>
+                </a>
+              </li>
+              <li>
+                <a href="#work-orders" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Work orders</span>
+                </a>
+              </li>
+              <li>
+                <a href="#escalations" class="flex items-center justify-between gap-sm px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <span class="flex items-center gap-md min-w-0">
+                    <i data-lucide="alert-octagon" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                    <span class="sidebar-label" data-design-text-token="label-md">Escalation center</span>
+                  </span>
+                  <span class="sidebar-label px-sm py-0.5 rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">9</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="sidebar-label px-sm mb-xs font-label text-label-sm uppercase tracking-wider text-outline">
+              <span data-design-text-token="label-sm">Governance</span>
+            </div>
+            <ul class="flex flex-col gap-xs">
+              <li>
+                <a href="#departments" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="building-2" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Departments</span>
+                </a>
+              </li>
+              <li>
+                <a href="#personnel" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="users" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Personnel</span>
+                </a>
+              </li>
+              <li>
+                <a href="#zones" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="map-pinned" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Zones &amp; wards</span>
+                </a>
+              </li>
+              <li>
+                <a href="#sla" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="timer" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">SLA monitoring</span>
+                </a>
+              </li>
+              <li>
+                <a href="#audit" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+                  <i data-lucide="shield-check" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+                  <span class="sidebar-label" data-design-text-token="label-md">Audit logs</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="p-md border-t border-primary-action/30 flex flex-col gap-xs">
+        <a href="#settings" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="settings" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">System settings</span>
+        </a>
+        <a href="#logout" class="flex items-center gap-md px-md py-sm rounded text-outline hover:text-on-primary hover:bg-primary-action/20 font-label text-label-md transition-colors duration-state-change">
+          <i data-lucide="log-out" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+          <span class="sidebar-label" data-design-text-token="label-md">Sign out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Contextual Topbar -->
+      <header class="h-14 bg-surface border-b border-outline-variant px-xl flex items-center justify-between gap-lg sticky top-0 z-20">
+        <div class="flex items-center gap-sm min-w-0">
+          <a href="#back" class="inline-flex items-center gap-xs font-label text-label-md text-primary-action hover:underline">
+            <i data-lucide="arrow-left" class="w-4 h-4" aria-hidden="true"></i>
+            <span data-design-text-token="label-md">Back to complaints</span>
+          </a>
+          <span class="text-secondary-text hidden sm:inline" aria-hidden="true">/</span>
+          <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary hidden sm:inline">CMP-2026-04182</span>
+        </div>
+
+        <div class="flex items-center gap-md">
+          <button type="button" aria-label="Notifications (14 unread)" class="relative inline-flex items-center justify-center w-9 h-9 rounded border border-outline-variant bg-surface text-secondary-text hover:text-primary hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+            <i data-lucide="bell" class="w-4 h-4" aria-hidden="true"></i>
+            <span aria-hidden="true" class="absolute -top-xs -right-xs inline-flex items-center justify-center min-w-4 h-4 px-xs rounded-full bg-error text-on-error font-label text-label-sm tabular-nums">14</span>
+          </button>
+          <div class="flex items-center gap-sm">
+            <div class="w-8 h-8 rounded-full bg-primary-action-container text-on-primary-action-container flex items-center justify-center font-label text-label-md">EV</div>
+            <div class="hidden xl:block leading-tight">
+              <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Elena Vance</div>
+              <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">City Ops Director</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Detail Content -->
+      <main class="flex-1 p-xl flex flex-col gap-xl max-w-7xl w-full mx-auto">
+        <!-- A. Complaint Identity Header -->
+        <section class="bg-surface border border-outline-variant rounded-md p-xl flex flex-col lg:flex-row lg:items-center lg:justify-between gap-lg">
+          <div class="flex flex-col gap-sm">
+            <div class="flex flex-wrap items-center gap-sm">
+              <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
+              <span data-component-id="badge-status" data-component-type="badge" data-component-variant="status" class="inline-flex items-center gap-xs px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">
+                <i data-lucide="clock" class="w-3 h-3" aria-hidden="true"></i>
+                <span data-design-text-token="label-sm">In Progress</span>
+              </span>
+              <span data-component-id="badge-error" data-component-type="badge" data-component-variant="error" class="inline-flex items-center gap-xs px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">
+                <i data-lucide="alert-octagon" class="w-3 h-3" aria-hidden="true"></i>
+                <span data-design-text-token="label-sm">Critical</span>
+              </span>
+              <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Reported Nov 20, 2026 · 02:50</span>
+            </div>
+            <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-primary">Main water line rupture at Oak &amp; 4th</h1>
+          </div>
+
+          <!-- Status-aware operational actions -->
+          <div class="flex flex-wrap items-center gap-sm shrink-0">
+            <button type="button" class="px-md py-sm rounded bg-surface border border-outline text-primary font-label text-label-md hover:bg-surface-container-low">
+              Escalate
+            </button>
+            <button type="button" class="px-md py-sm rounded bg-surface border border-outline text-primary font-label text-label-md hover:bg-surface-container-low">
+              Reassign
+            </button>
+            <button data-component-id="button-with-icon" data-component-type="button" data-component-variant="with-icon" type="button" class="inline-flex items-center gap-sm px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-action">
+              <i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i>
+              <span data-design-text-token="label-md">Create work order</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Two-Column Detail Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
+          <!-- Left Column (8 cols): Summary, Evidence, Location, Work Orders, Timeline -->
+          <div class="lg:col-span-8 flex flex-col gap-xl">
+            <!-- B. Complaint Summary -->
+            <article class="bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-lg">
+              <header class="flex items-center justify-between border-b border-outline-variant pb-md">
+                <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Complaint summary</h2>
+                <span data-design-text-token="label-md" class="font-label text-label-md text-secondary-text">Source: Citizen Mobile App</span>
+              </header>
+              <p data-design-text-token="body-md" class="font-body text-body-md text-on-surface text-pretty">
+                Pressurized water is erupting through a fractured asphalt seam on the northeast corner of Oak Street and 4th Avenue. Standing water is flooding the eastbound curb lane and approaching the Oakridge Community Clinic driveway. Traffic cones have been placed by a resident.
+              </p>
+              <dl class="grid grid-cols-2 sm:grid-cols-4 gap-lg pt-md border-t border-outline-variant">
+                <div>
+                  <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Category</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Water &amp; Sewer</dd>
+                </div>
+                <div>
+                  <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Impact level</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-error mt-xs">Arterial lane + utility</dd>
+                </div>
+                <div>
+                  <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Ward / Zone</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Ward 4 · Oakridge</dd>
+                </div>
+                <div>
+                  <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Attachments</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs tabular-nums">2 photos</dd>
+                </div>
+              </dl>
+            </article>
+
+            <!-- C. Evidence Gallery -->
+            <article class="bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-lg">
+              <header class="flex items-center justify-between">
+                <div>
+                  <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Evidence gallery</h2>
+                  <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Citizen submission and initial field inspection photos</p>
+                </div>
+              </header>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-lg">
+                <figure class="border border-outline-variant rounded-md overflow-hidden bg-surface-container-low">
+                  <img src="https://lh3.googleusercontent.com/aida/ALJJyrCHN5rJNSVO8BXr1u4M4KMdXLC5BmyWYQ28pnU-HCE08T2GSUTyov-p_-iAa6mdWWHL7plsepR-q9yNHJeSSZccdTpAxOUjwj_TTzWhSXGgo30KIHN-i4rhBlbBI3inGjOENWOX-5dPSKJFhXvGQet30KKUmSxn94gZXhyQl9sOq2eJtck9cwIg5Yem9UIvzwawYBZH7FglwtgkwkFLV3wHeVO1L7qpY-G5t4R0qxKB0gmEI9ursTwy2ATkmnIPjIYZnnc" alt="Water pooling across Oak and 4th intersection beside safety cones" class="w-full h-48 object-cover">
+                  <figcaption class="p-md flex items-center justify-between gap-sm">
+                    <div>
+                      <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Citizen report photo</div>
+                      <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text tabular-nums">Nov 20, 02:51 · 45.5184° N</div>
+                    </div>
+                    <button type="button" data-img="../../images/evidence_water_rupture_1.jpg" class="preview-img-btn font-label text-label-md text-primary-action hover:underline">Expand</button>
+                  </figcaption>
+                </figure>
+                <figure class="border border-outline-variant rounded-md overflow-hidden bg-surface-container-low">
+                  <img src="https://lh3.googleusercontent.com/aida/ALJJyrCIfS8OyU-XjpY9ESW0njb4wjPyA8ZK83jayaYpNMpisEZTuOlT5wBzhjUBkJkwGCrVkSkUhN77AzbqmjAMTYTxaiuWS9ZCddTA7pJ0TBWn3tDGA5ufCjAQXuTY0FZVXzFx2vPXG0hZaz7eTKa6V5AtEN89xrJv5Lk4fC_NC2Ur2kBC1bPX6hjSAZD80NbybhKZnOJl3kSOAhHAMYMWL6BvpjvqdptCGDZqoG9wvHAGR5t8KwPcJMYHQrIKJ_EKY6FpEyg" alt="Close-up of fractured asphalt seam with water seeping near valve cover" class="w-full h-48 object-cover">
+                  <figcaption class="p-md flex items-center justify-between gap-sm">
+                    <div>
+                      <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Field inspection photo</div>
+                      <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text tabular-nums">Nov 20, 03:40 · Crew Alpha</div>
+                    </div>
+                    <button type="button" data-img="../../images/evidence_water_rupture_2.jpg" class="preview-img-btn font-label text-label-md text-primary-action hover:underline">Expand</button>
+                  </figcaption>
+                </figure>
+              </div>
+            </article>
+
+            <!-- D. Location -->
+            <article class="bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-lg">
+              <header class="flex items-center justify-between">
+                <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Location</h2>
+                <a href="#open-map" class="inline-flex items-center gap-xs font-label text-label-md text-primary-action hover:underline">
+                  <span>Open in city map</span>
+                  <i data-lucide="external-link" class="w-4 h-4" aria-hidden="true"></i>
+                </a>
+              </header>
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-lg items-center">
+                <div class="md:col-span-7 border border-outline-variant rounded overflow-hidden bg-surface-container-low">
+                  <svg viewBox="0 0 420 200" class="w-full h-44" role="img" aria-label="Pin location at Oak Street and 4th Avenue in Ward 4">
+                    <rect width="420" height="200" class="fill-surface"></rect>
+                    <g class="stroke-outline-variant fill-none" stroke-width="2">
+                      <line x1="0" y1="95" x2="420" y2="95"></line>
+                      <line x1="210" y1="0" x2="210" y2="200"></line>
+                      <line x1="0" y1="40" x2="420" y2="40" stroke-width="1"></line>
+                      <line x1="90" y1="0" x2="90" y2="200" stroke-width="1"></line>
+                      <line x1="330" y1="0" x2="330" y2="200" stroke-width="1"></line>
+                    </g>
+                    <g class="fill-secondary-text font-label text-label-sm">
+                      <text x="20" y="88">Oak St</text>
+                      <text x="218" y="24">4th Ave</text>
+                    </g>
+                    <circle cx="210" cy="95" r="22" class="fill-error/20"></circle>
+                    <circle cx="210" cy="95" r="8" class="fill-error stroke-surface" stroke-width="2.5"></circle>
+                  </svg>
+                </div>
+                <dl class="md:col-span-5 flex flex-col gap-md">
+                  <div>
+                    <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Street address</dt>
+                    <dd data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Oak St &amp; 4th Ave (NE Corner)</dd>
+                  </div>
+                  <div>
+                    <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Coordinates</dt>
+                    <dd data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary mt-xs tabular-nums">45.5184° N, 122.6812° W</dd>
+                  </div>
+                  <div>
+                    <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Landmark</dt>
+                    <dd data-design-text-token="body-sm" class="font-body text-body-sm text-on-surface mt-xs">Across from Oakridge Community Clinic</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+
+            <!-- G. Linked Work Orders (supports 1-to-many) -->
+            <article class="bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-lg">
+              <header class="flex items-center justify-between">
+                <div>
+                  <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Linked work orders (2)</h2>
+                  <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Operational tasks dispatched from this complaint</p>
+                </div>
+              </header>
+              <div class="flex flex-col gap-md">
+                <div class="border border-outline-variant rounded-md p-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-md">
+                  <div class="flex flex-col gap-xs">
+                    <div class="flex items-center gap-sm">
+                      <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">WO-2026-0891</span>
+                      <span class="px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">In Progress</span>
+                    </div>
+                    <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Emergency main shutoff, trench excavation &amp; clamp repair</div>
+                    <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Crew Alpha · Due Nov 20, 08:00 · 65% complete</div>
+                  </div>
+                  <a href="#wo-detail" class="font-label text-label-md text-primary-action hover:underline shrink-0">View work order</a>
+                </div>
+
+                <div class="border border-outline-variant rounded-md p-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-md">
+                  <div class="flex flex-col gap-xs">
+                    <div class="flex items-center gap-sm">
+                      <span data-design-text-token="mono-sm" class="font-mono text-mono-sm text-primary-action">WO-2026-0894</span>
+                      <span class="px-sm py-0.5 rounded-full bg-surface-container text-secondary-text font-label text-label-sm">Assigned</span>
+                    </div>
+                    <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Asphalt trench restoration &amp; lane striping</div>
+                    <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Roads &amp; Pavements · Due Nov 21, 17:00</div>
+                  </div>
+                  <a href="#wo-detail" class="font-label text-label-md text-primary-action hover:underline shrink-0">View work order</a>
+                </div>
+              </div>
+            </article>
+
+            <!-- H. Activity Timeline -->
+            <article class="bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-lg">
+              <header>
+                <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Activity timeline</h2>
+                <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Traceable audit history · Internal notes are hidden from citizens</p>
+              </header>
+              <ol id="timeline-list" class="flex flex-col gap-lg border-l border-outline-variant pl-lg ml-sm">
+                <li class="relative">
+                  <span class="absolute -left-xl top-1 w-3 h-3 rounded-full bg-primary-action border-2 border-surface"></span>
+                  <div class="flex flex-wrap items-center justify-between gap-sm">
+                    <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Field inspection photo uploaded</span>
+                    <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text tabular-nums">Nov 20, 03:40</span>
+                  </div>
+                  <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">D. Kowalski (Crew Alpha) confirmed 8-inch cast iron main split; isolation valve closed.</p>
+                </li>
+                <li class="relative bg-warning-container/40 border border-outline-variant rounded p-md">
+                  <span class="absolute -left-xl top-4 w-3 h-3 rounded-full bg-warning border-2 border-surface"></span>
+                  <div class="flex flex-wrap items-center justify-between gap-sm">
+                    <div class="flex items-center gap-sm">
+                      <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Internal note added</span>
+                      <span class="px-sm py-0.5 rounded-sm bg-warning-container text-on-warning-container font-label text-label-sm">Internal only</span>
+                    </div>
+                    <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text tabular-nums">Nov 20, 03:18</span>
+                  </div>
+                  <p data-design-text-token="body-sm" class="font-body text-body-sm text-on-surface mt-xs">Elena Vance: Coordinated with Oakridge Clinic facilities manager regarding temporary driveway detour.</p>
+                </li>
+                <li class="relative">
+                  <span class="absolute -left-xl top-1 w-3 h-3 rounded-full bg-primary-action border-2 border-surface"></span>
+                  <div class="flex flex-wrap items-center justify-between gap-sm">
+                    <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Work order WO-2026-0891 created</span>
+                    <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text tabular-nums">Nov 20, 03:05</span>
+                  </div>
+                  <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Routed to Water &amp; Sewer · Crew Alpha assigned by Elena Vance.</p>
+                </li>
+                <li class="relative">
+                  <span class="absolute -left-xl top-1 w-3 h-3 rounded-full bg-outline border-2 border-surface"></span>
+                  <div class="flex flex-wrap items-center justify-between gap-sm">
+                    <span data-design-text-token="label-md" class="font-label text-label-md text-primary">Complaint submitted</span>
+                    <span data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text tabular-nums">Nov 20, 02:50</span>
+                  </div>
+                  <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Submitted by Marcus Chen via Citizen Mobile App with 1 photo.</p>
+                </li>
+              </ol>
+
+              <!-- Add Internal Note -->
+              <form id="note-form" class="pt-md border-t border-outline-variant flex flex-col gap-sm">
+                <label for="internal-note-input" data-design-text-token="label-md" class="font-label text-label-md text-primary">Add internal operational note</label>
+                <textarea id="internal-note-input" rows="2" placeholder="Record coordination notes or escalation context (not visible to citizen)..." class="w-full rounded border border-outline-variant bg-surface-container-low p-md font-body text-body-sm text-on-surface placeholder:text-secondary-text focus:border-primary-action focus:ring-1 focus:ring-primary-action"></textarea>
+                <div class="flex justify-end">
+                  <button type="submit" class="px-lg py-sm rounded bg-surface border border-outline text-primary font-label text-label-md hover:bg-surface-container-low">
+                    Save internal note
+                  </button>
+                </div>
+              </form>
+            </article>
+          </div>
+
+          <!-- Right Column (4 cols): Reporter, Assignment, Priority & SLA -->
+          <div class="lg:col-span-4 flex flex-col gap-xl">
+            <!-- F. Priority & SLA -->
+            <article class="bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-md">
+              <header class="flex items-center justify-between">
+                <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Priority &amp; SLA</h2>
+                <span class="px-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">SLA Breached</span>
+              </header>
+              <dl class="flex flex-col gap-md pt-sm border-t border-outline-variant">
+                <div class="flex items-center justify-between">
+                  <dt data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Priority</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-error">Critical (P1)</dd>
+                </div>
+                <div class="flex items-center justify-between">
+                  <dt data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">SLA target</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-primary tabular-nums">4h resolution</dd>
+                </div>
+                <div class="flex items-center justify-between">
+                  <dt data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Target deadline</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-primary tabular-nums">Nov 20, 06:50</dd>
+                </div>
+                <div class="flex items-center justify-between">
+                  <dt data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">Time overdue</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-error tabular-nums">+3h 20m</dd>
+                </div>
+              </dl>
+            </article>
+
+            <!-- E. Assignment Panel -->
+            <article class="bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-md">
+              <header class="flex items-center justify-between">
+                <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Assignment</h2>
+                <button type="button" class="font-label text-label-md text-primary-action hover:underline">Change</button>
+              </header>
+              <dl class="flex flex-col gap-md pt-sm border-t border-outline-variant">
+                <div>
+                  <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Department</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Water &amp; Sewer</dd>
+                </div>
+                <div>
+                  <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Assigned team</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">Crew Alpha — Emergency Main</dd>
+                </div>
+                <div>
+                  <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Lead field officer</dt>
+                  <dd data-design-text-token="label-md" class="font-label text-label-md text-primary mt-xs">D. Kowalski (#EMP-412)</dd>
+                </div>
+                <div>
+                  <dt data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Assigned by</dt>
+                  <dd data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs tabular-nums">Elena Vance · Nov 20, 03:05</dd>
+                </div>
+              </dl>
+            </article>
+
+            <!-- Reporter Panel -->
+            <article class="bg-surface border border-outline-variant rounded-md p-xl flex flex-col gap-md">
+              <header>
+                <h2 data-design-text-token="title-md" class="font-title text-title-md text-primary">Reporter</h2>
+              </header>
+              <div class="flex items-center gap-md pt-sm border-t border-outline-variant">
+                <div class="w-9 h-9 rounded-full bg-surface-container text-primary flex items-center justify-center font-label text-label-md">MC</div>
+                <div>
+                  <div data-design-text-token="label-md" class="font-label text-label-md text-primary">Marcus Chen</div>
+                  <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Verified resident · Ward 4</div>
+                </div>
+              </div>
+              <button type="button" class="w-full px-md py-sm rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">
+                Request additional info
+              </button>
+            </article>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Image Preview Modal -->
+  <div id="img-modal" class="hidden fixed inset-0 z-50 bg-primary/70 items-center justify-center p-xl" role="dialog" aria-modal="true" aria-label="Evidence image preview">
+    <div class="bg-surface rounded-lg border border-outline-variant max-w-2xl w-full overflow-hidden">
+      <div class="px-lg py-md border-b border-outline-variant flex items-center justify-between">
+        <span data-design-text-token="title-md" class="font-title text-title-md text-primary">Evidence preview</span>
+        <button id="close-img-modal" type="button" aria-label="Close preview" class="w-8 h-8 rounded flex items-center justify-center text-secondary-text hover:text-primary hover:bg-surface-container">
+          <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+        </button>
+      </div>
+      <img id="modal-img-el" src alt="Expanded evidence photo" class="w-full max-h-96 object-contain bg-surface-container-low">
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      // Sidebar toggle
+      const sidebar = document.getElementById('app-sidebar');
+      const toggleBtn = document.getElementById('sidebar-toggle');
+      let collapsed = false;
+      if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', () => {
+          collapsed = !collapsed;
+          sidebar.classList.toggle('lg:w-60', !collapsed);
+          sidebar.classList.toggle('lg:w-16', collapsed);
+          document.querySelectorAll('.sidebar-label').forEach((el) => el.classList.toggle('hidden', collapsed));
+        });
+      }
+
+      // Image preview modal
+      const modal = document.getElementById('img-modal');
+      const modalImg = document.getElementById('modal-img-el');
+      document.querySelectorAll('.preview-img-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          modalImg.src = btn.dataset.img;
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        });
+      });
+      document.getElementById('close-img-modal').addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      });
+
+      // Add internal note
+      const noteForm = document.getElementById('note-form');
+      const noteInput = document.getElementById('internal-note-input');
+      const timeline = document.getElementById('timeline-list');
+      noteForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const txt = noteInput.value.trim();
+        if (!txt) return;
+        const li = document.createElement('li');
+        li.className = 'relative bg-warning-container/40 border border-outline-variant rounded p-md';
+        li.innerHTML = `<span class="absolute -left-xl top-4 w-3 h-3 rounded-full bg-warning border-2 border-surface"></span>
+          <div class="flex flex-wrap items-center justify-between gap-sm">
+            <div class="flex items-center gap-sm">
+              <span class="font-label text-label-md text-primary">Internal note added</span>
+              <span class="px-sm py-0.5 rounded-sm bg-warning-container text-on-warning-container font-label text-label-sm">Internal only</span>
+            </div>
+            <span class="font-label text-label-sm text-secondary-text tabular-nums">Just now</span>
+          </div>
+          <p class="font-body text-body-sm text-on-surface mt-xs"></p>`;
+        li.querySelector('p').textContent = `Elena Vance: ${txt}`;
+        timeline.prepend(li);
+        noteInput.value = '';
+      });
+    });
+  </script>
+
+
+</body></html>

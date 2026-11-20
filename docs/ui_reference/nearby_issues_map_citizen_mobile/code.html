@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nearby Issues Map — CivicOps Citizen Portal</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#172B4D',
+        'on-primary': '#FFFFFF',
+        'primary-action': '#3D6FB6',
+        'on-primary-action': '#FFFFFF',
+        'primary-action-container': '#E8F0FB',
+        'on-primary-action-container': '#172B4D',
+        'app-background': '#F5F7FA',
+        'surface': '#FFFFFF',
+        'on-surface': '#0F172A',
+        'surface-container-low': '#F8FAFC',
+        'surface-container': '#F1F5F9',
+        'surface-container-high': '#E2E8F0',
+        'on-surface-variant': '#475569',
+        'secondary-text': '#475569',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#15803D',
+        'on-success': '#FFFFFF',
+        'success-container': '#DCFCE7',
+        'on-success-container': '#14532D',
+        'warning': '#D97706',
+        'on-warning': '#0F172A',
+        'warning-container': '#FEF3C7',
+        'on-warning-container': '#78350F',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEE2E2',
+        'on-error-container': '#7F1D1D',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-sm': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '32px', letterSpacing: '-0.4px', fontWeight: '600' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '140ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-app-background text-on-surface font-body antialiased">
+
+  <div class="min-h-[884px] flex flex-col max-w-md mx-auto bg-app-background pb-24" data-stitch-vh="min-h-[884px]===min-h-screen">
+    <!-- Citizen Header -->
+    <header class="bg-surface border-b border-outline-variant px-lg py-md flex items-center justify-between sticky top-0 z-20">
+      <div>
+        <h1 data-design-text-token="title-md" class="font-title text-title-md text-primary leading-tight">Nearby city issues</h1>
+        <div data-design-text-token="label-sm" class="font-label text-label-sm text-secondary-text">Ward 4 · Oakridge · Sample data</div>
+      </div>
+      <a href="#report" class="px-md py-xs rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary whitespace-nowrap">Report issue</a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-lg flex flex-col gap-md">
+      <!-- Category Filter Chips -->
+      <div class="flex items-center gap-xs overflow-x-auto pb-xs">
+        <button type="button" class="px-md py-xs rounded-full bg-primary text-on-primary font-label text-label-sm whitespace-nowrap">All (8)</button>
+        <button type="button" class="px-md py-xs rounded-full bg-surface border border-outline-variant text-secondary-text font-label text-label-sm whitespace-nowrap">Water (3)</button>
+        <button type="button" class="px-md py-xs rounded-full bg-surface border border-outline-variant text-secondary-text font-label text-label-sm whitespace-nowrap">Roads (3)</button>
+        <button type="button" class="px-md py-xs rounded-full bg-surface border border-outline-variant text-secondary-text font-label text-label-sm whitespace-nowrap">Lighting (2)</button>
+      </div>
+
+      <!-- Coordinate Grid Map Panel -->
+      <section aria-label="Neighborhood issue map" class="relative bg-surface-container-low border border-outline-variant rounded-md h-64 overflow-hidden">
+        <svg viewBox="0 0 360 240" class="w-full h-full" role="img" aria-label="Ward 4 street grid with active civic issue markers">
+          <rect width="360" height="240" fill="#F8FAFC"></rect>
+          <path d="M0 60 H360 M0 120 H360 M0 180 H360 M90 0 V240 M180 0 V240 M270 0 V240" stroke="#E2E8F0" stroke-width="2"></path>
+          <path d="M0 120 H360 M180 0 V240" stroke="#CBD5E1" stroke-width="4"></path>
+          <circle cx="180" cy="120" r="10" fill="#DC2626" stroke="#FFFFFF" stroke-width="2.5"></circle>
+          <circle cx="270" cy="60" r="8" fill="#D97706" stroke="#FFFFFF" stroke-width="2"></circle>
+          <circle cx="90" cy="180" r="8" fill="#3D6FB6" stroke="#FFFFFF" stroke-width="2"></circle>
+        </svg>
+        <div class="absolute bottom-sm left-sm right-sm bg-surface border border-outline-variant rounded px-md py-xs flex items-center justify-between">
+          <span class="font-mono text-mono-sm text-secondary-text tabular-nums">45.5231° N, 122.6765° W</span>
+          <span class="font-label text-label-sm text-primary-action">3 pins in view</span>
+        </div>
+      </section>
+
+      <!-- Accessible Issue List -->
+      <section aria-label="Issues near you" class="flex flex-col gap-sm">
+        <article class="bg-surface border border-primary-action rounded-md p-lg flex flex-col gap-xs">
+          <div class="flex items-center justify-between gap-sm">
+            <span class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
+            <span class="px-sm py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">Repaired · Verifying</span>
+          </div>
+          <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Water leak at Oak St &amp; 4th Ave</div>
+          <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">0.2 mi away · Water &amp; Sewer</div>
+        </article>
+
+        <article class="bg-surface border border-outline-variant rounded-md p-lg flex flex-col gap-xs">
+          <div class="flex items-center justify-between gap-sm">
+            <span class="font-mono text-mono-sm text-primary-action">CMP-2026-04204</span>
+            <span class="px-sm py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">Assigned</span>
+          </div>
+          <div data-design-text-token="title-md" class="font-title text-title-md text-primary">Storm drain backup at Elm Ave</div>
+          <div data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">0.5 mi away · Water &amp; Sewer</div>
+        </article>
+      </section>
+    </main>
+
+    <!-- Fixed Mobile Bottom Navigation -->
+    <nav aria-label="Citizen bottom navigation" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface border-t border-outline-variant px-md py-xs grid grid-cols-4 gap-xs z-30">
+      <a href="#home" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="home" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Home</span>
+      </a>
+      <a href="#report" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="plus-circle" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Report</span>
+      </a>
+      <a href="#complaints" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-secondary-text hover:text-primary">
+        <i data-lucide="file-text" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">My reports</span>
+      </a>
+      <a href="#map" aria-current="page" class="min-h-11 flex flex-col items-center justify-center gap-xs rounded text-primary-action">
+        <i data-lucide="map-pin" class="w-5 h-5" aria-hidden="true"></i>
+        <span data-design-text-token="label-sm" class="font-label text-label-sm">Nearby</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+
+
+</body></html>
