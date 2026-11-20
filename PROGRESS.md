@@ -1,5 +1,21 @@
 # Progress
 
+## 2026-11-21 — Backend roadmap Phase 0 attempt
+
+- Reviewed current worktree and recent commits. Preserved the existing uncommitted `/` UI showcase and `ml/DATASETS.md` owner changes; did not reset, stage, or overwrite them.
+- Current source inspection confirms the core Django workflow modules, transition service, private evidence service, PostGIS models, existing tests and CI files are present. Existing test counts in older progress entries refer to earlier commits and are not treated as current-HEAD verification.
+- Phase 0 runtime gate is blocked: `docker version` reaches the Docker CLI but fails to connect to `npipe:////./pipe/dockerDesktopLinuxEngine` (`permission denied`); `docker compose config --quiet` completes without configuration output. Host `python` previously had no Django installed. Therefore no current-HEAD container build, test suite, `check --deploy`, migration check, or browser smoke is claimed.
+- Source review found the uncommitted UI route exposed `/workspace/` without authentication while reading `request.user.role`. Restored `login_required` on that view. The UI landing and screen-gallery routes remain intentionally public and backend-independent.
+- Next: make Docker Desktop's Linux engine reachable, then rebuild exact worktree and complete Phase 0 commands. After baseline passes, proceed to Phase 1's transactional lifecycle and data-integrity audit. No pilot geography or production deployment values were invented.
+
+## 2026-11-21 — Backend completion roadmap
+
+- Reviewed the frozen `AGENTS.md`, current project files, recent commits, existing workflow implementation, CI/Compose and deployment runbook. Recorded the distinction between historical owner-confirmed/runtime evidence and verification still needed on current HEAD.
+- Added [`docs/BACKEND_ROADMAP.md`](docs/BACKEND_ROADMAP.md): baseline audit, workflow/data integrity, access/evidence security, real ward/routing data, gated optional AI, production operations, and final acceptance; includes gates, test evidence, stop/cut rules and unresolved owner inputs.
+- Linked the roadmap from README and recorded the planning decision in `docs/DECISIONS.md`.
+- No backend implementation or tests were run in this planning step. Current workspace contains earlier pending `apps/console/urls.py` UI-showcase changes and a pre-existing `ml/DATASETS.md` modification; preserve and review them during Phase 0.
+- Next: Phase 0—enable/reach Docker Desktop's Linux engine, inspect and preserve current changes, rebuild exact current source, run checks and smoke the app. Do not proceed based on older test logs alone.
+
 ## 2026-11-20 — CivicOps UI integration
 
 - Extracted the uploaded `stitch_civic_operations_platform (1).zip` archive into `docs/ui_reference/` (48 design/reference files). Added `docs/UI_DESIGN.md` to map integrated templates and call out designs that remain reference-only because their screens are outside v1 scope or lack live routes.

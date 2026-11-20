@@ -43,6 +43,8 @@
 | 2026-11-19 | Keep the existing `day-2-local` tag target, and tag `day-4` at the Day 4 implementation endpoint `dadb26f`, based on the owner's 2026-11-19 browser confirmation | Tags refer to their day-specific gate records. GitHub CI remains unconfirmed. | Moving the Day 2 tag to a later unrelated commit or inferring CI status. |
 | 2026-11-20 | Integrate the uploaded CivicOps mockups as Django-template styling and preserve the full extracted archive under `docs/ui_reference/` | The navy/blue palette, compact status labels and responsive operations layouts fit the existing server-rendered workflows; retaining source mockups keeps the design provenance reviewable. | Serving standalone static mockups or introducing a JavaScript frontend that duplicates Django workflow logic. |
 | 2026-11-20 | Compute overview counts from `Complaint.objects.visible_to(request.user)` | Dashboard metrics must reflect role visibility and actual records. | Showing example/demo counts or querying complaints without role scoping. |
+| 2026-11-21 | Complete backend work in gated phases beginning with a current-HEAD baseline audit | Historical test results must not be presented as proof for later code; backend priorities and stop conditions are mapped to the frozen project scope in `docs/BACKEND_ROADMAP.md`. | Restarting completed work blindly or declaring overall completion from stale test evidence. |
+| 2026-11-21 | Keep the public UI landing/gallery unauthenticated, but require login for `/workspace/` | The workspace reads role-scoped complaint data and dereferences the authenticated user's role; the UI-only landing/gallery does not access private records. | Applying login to the showcase or leaving the data dashboard accessible anonymously. |
 
 ## Verification sources
 
