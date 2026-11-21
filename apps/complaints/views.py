@@ -59,7 +59,7 @@ def report(request):
         latitude = float(form.cleaned_data["latitude"])
         point = Point(longitude, latitude, srid=4326)
         # Only locally supplied ward polygons decide jurisdiction; no ward means fail closed.
-        ward = Ward.objects.filter(boundary__covers=point).first()
+        ward = Ward.objects.active_on().filter(boundary__covers=point).first()
         if ward is None:
             form.add_error(None, "That pin is outside the supported area. Please choose a location inside a supported ward.")
         else:

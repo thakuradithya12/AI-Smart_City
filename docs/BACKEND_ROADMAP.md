@@ -2,7 +2,7 @@
 
 **Status:** planning baseline, 2026-11-21. This roadmap follows the frozen v1 requirements in [`../AGENTS.md`](../AGENTS.md). It is an execution plan, not evidence that a gate has passed. Work one phase at a time; do not begin a later phase until its entry conditions are met.
 
-**Latest execution update:** Phase 0 passed locally on 2026-11-21. Phase 1 passed locally on 2026-11-21 with routing policy moved into a single atomic workflow service and queryset mutation guards added for append-only logs; current evidence is in [`../docs/TEST_REPORT.md`](TEST_REPORT.md). Phase 2 is next. The production check retains only the documented HSTS subdomain/preload warnings; see [`../PROGRESS.md`](../PROGRESS.md).
+**Latest execution update:** Phases 0 and 1 passed locally on 2026-11-21. Phase 2 security and Phase 3 generic geography/routing logic pass local Docker checks recorded in [`../docs/TEST_REPORT.md`](TEST_REPORT.md). Phase 4 has only the secure intake preflight prepared; training/inference remain gated on actual owner photos plus the Phase 3 pilot inputs. Production `check --deploy` retains only the documented HSTS subdomain/preload warnings; see [`../PROGRESS.md`](../PROGRESS.md).
 
 ## Target
 
@@ -10,9 +10,7 @@ Complete and prove the existing Django/PostGIS service from complaint submission
 
 ## Repository baseline
 
-The repository already contains Django models and migrations, email login and citizen registration, report submission with ward containment and private image storage, role-aware complaint query scoping, triage/routing, department assignment, field evidence, work claims, separate verification/dispute, status/audit events, a seeded demo command, Docker Compose, CI configuration, and deployment/backup scripts.
-
-Earlier progress entries record successful local container checks through the core workflow (up to 37 tests, lint and dependency audit) and an owner-confirmed four-role browser lifecycle. These are historical results for the code at that time; they do **not** verify the current HEAD or all current deliverables. The current worktree also has uncommitted UI-route changes and an unrelated pre-existing dataset-document change. Review and isolate those before starting backend implementation. The latest recorded attempt in this environment could not reach Docker's Linux engine; current runtime and CI status are unknown.
+The repository contains Django models and migrations, email login and citizen registration, report submission with ward containment and private image storage, role-aware complaint query scoping, triage/routing, department assignment, field evidence, work claims, separate verification/dispute, status/audit events, a seeded demo command, Docker Compose, CI configuration, and deployment/backup scripts. Phases 0 and 1 have current local Docker evidence; Phase 2 and generic effective-date geography checks were rerun on the current worktree and are recorded in the test report. This does not prove GitHub CI, a production deployment, real pilot ward data, backups/restore, or full acceptance.
 
 ## Phase 0 — Establish a trustworthy starting point
 
@@ -40,6 +38,8 @@ Earlier progress entries record successful local container checks through the co
 
 ## Phase 2 — Close authorization and evidence security
 
+**Status: local checks pass (2026-11-21).** The current focused scope includes active-account visibility, serialized field evidence writes, rollback cleanup, stale-state protection, and Bandit in local checks/CI. See the dated results in `docs/TEST_REPORT.md`; continue broader production review in Phase 5.
+
 **Work**
 
 1. Audit every detail, evidence and action URL against `Complaint.objects.visible_to(user)` and default-deny permission helpers. Unauthorized objects return 404. Verify field workers only see their assigned tasks and staff cannot cross departments.
@@ -51,6 +51,8 @@ Earlier progress entries record successful local container checks through the co
 
 ## Phase 3 — Complete geography and routing setup
 
+**Status: generic logic and local checks pass; real pilot setup is blocked on owner data.** `Ward.objects.active_on()` filters the point-in-ward lookup by effective dates, and a database constraint rejects invalid ward date windows. Routing tests prove ward-specific precedence, future-rule exclusion, rule-version audit, and visible safety-critical notices. These use test fixtures; they do not establish any real service area.
+
 **Work**
 
 1. Obtain pilot centre coordinates and authoritative ward boundary/source/effective dates from the project owner. The repository clarification explicitly says these are unresolved and must not be guessed.
@@ -61,6 +63,10 @@ Earlier progress entries record successful local container checks through the co
 **Gate:** source-documented ward data and tests for inside/outside/routing precedence. If coordinates or authoritative boundary source remain unavailable, keep location-specific reporting blocked and record that limit; never create fictitious pilot geography.
 
 ## Phase 4 — Optional AI slice (only after Phases 1–3 core gates)
+
+**Status: model work not started; secure data-intake preflight only.** The user selected `ml/data/<category>/` as the photo location, and empty category folders are ready. The read-only preflight is covered by tests. Its real-data run exits 1 because no photos or `manifest.csv` are present. Do not train, export ONNX, or claim metrics until actual files arrive, groups are verified, and the Phase 3 core gate is satisfied.
+
+The model slice is not being marked complete by the preflight work. `other` remains evaluation-only, and no public dataset was downloaded.
 
 **Work**
 
@@ -74,6 +80,8 @@ Earlier progress entries record successful local container checks through the co
 
 ## Phase 5 — Production readiness and operations
 
+**Status: local checks and disposable restore rehearsal pass; production deployment remains blocked.** See the dated restore log at [`restore-test-2026-11-21.log`](restore-test-2026-11-21.log). One local private-media volume contains six files with no matching current Evidence records; these were preserved pending ownership/retention review.
+
 **Work**
 
 1. Run current-HEAD `check --deploy`, dependency audit, Bandit, CI and OWASP ZAP baseline against a permitted staging target; review findings, do not merely save raw reports.
@@ -85,6 +93,8 @@ Earlier progress entries record successful local container checks through the co
 **Gate:** production `check --deploy` output, scan/audit review, successful disposable restore log and documented deploy/rollback/restore instructions. Public HTTPS is a separate gate and needs real owner-provided domain/server access.
 
 ## Phase 6 — End-to-end acceptance and handoff
+
+**Status: local regression and documentation gates pass; release acceptance remains incomplete.** Current evidence and the item-by-item remaining checklist are in [`PHASE6_ACCEPTANCE.md`](PHASE6_ACCEPTANCE.md). The local worktree has no remote and is based on `ada8fa5813d98b962a6f09f8b7361983661bfe9d`; it is not a clean, committed release.
 
 1. Run the complete test suite, lint, dependency audit, production checks and CI on the exact final commit. Record counts/results with commit SHA in `docs/TEST_REPORT.md`.
 2. Exercise fresh demo accounts for citizen → triage → official → field worker → supervisor/citizen verification; also dispute/reopen/reassign and cancellation. Demo passwords are random, printed once, and must not be committed or posted in chat.

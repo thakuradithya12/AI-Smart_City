@@ -3,7 +3,8 @@ from django.db import transaction
 from django.utils import timezone
 
 from apps.audit.models import AuditEvent
-from apps.complaints.models import Complaint, ComplaintMessage, Resolution, StatusEvent
+from apps.complaints.models import Complaint, ComplaintMessage, Evidence, Resolution, StatusEvent
+from apps.complaints.services import delete_private_files, store_citizen_image
 from apps.geography.models import RoutingRule
 
 # One table controls every valid status transition; later days add console actions through this service.
@@ -75,6 +76,42 @@ def route_complaint(complaint, actor, department_override=None, reason=None):
         reason=reason if overridden or actor.role == "admin" else "",
     )
     return locked
+
+
+def add_field_evidence(complaint, actor, upload, kind):
+    paths = []
+    try:
+        with transaction.atomic():
+            locked = Complaint.objects.select_for_update().get(pk=complaint.pk)
+            if actor.role != "field_worker" or locked.assignee_id != actor.pk:
+                raise ValidationError("Only the assigned field worker can add work evidence.")
+            if locked.status != Complaint.Status.IN_PROGRESS:
+                raise ValidationError("Work evidence can only be added while work is in progress.")
+            if kind not in {Evidence.Kind.FIELD_BEFORE, Evidence.Kind.FIELD_AFTER}:
+                raise ValidationError("Choose a before or after work photo.")
+
+            original_path, display_path, digest = store_citizen_image(upload)
+            paths.extend((original_path, display_path))
+            evidence = Evidence.objects.create(
+                complaint=locked,
+                kind=kind,
+                original_path=original_path,
+                display_path=display_path,
+                sha256=digest,
+                uploaded_by=actor,
+            )
+            AuditEvent.objects.create(
+                actor=actor,
+                role=actor.role,
+                action="evidence_uploaded",
+                object_type="Evidence",
+                object_id=str(evidence.pk),
+                after={"complaint_id": locked.pk, "kind": kind, "sha256": digest},
+            )
+        return evidence
+    except Exception:
+        delete_private_files(paths)
+        raise
 
 
 @transaction.atomic

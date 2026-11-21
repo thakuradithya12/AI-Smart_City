@@ -7,6 +7,9 @@ def test_login_page_renders(client):
     assert response.status_code == 200
     assert b"Sign in" in response.content
     assert b"type=\"email\"" in response.content
+    assert response["Permissions-Policy"] == "camera=(), microphone=(), geolocation=(self)"
+    assert response["Cross-Origin-Resource-Policy"] == "same-origin"
+    assert response["Cache-Control"] == "no-store"
 
 @pytest.mark.django_db
 def test_public_home_renders_landing_page(client):

@@ -1,0 +1,5 @@
+Local disposable restore test passed.
+ai_smart_city_restore migrations=35 users=6 complaints=0
+Media restore extracted 6 files into disposable volume
+Database SHA256: 3E1DADE9B4513C298FC301882E3DD2FA1D4585A2A94DF78E823ACE7F4F7E2CF9
+Media SHA256: 0217CF98C21EC168CEB89E4E741D2F6997BC02003C98C4580DD893080E1A55EB

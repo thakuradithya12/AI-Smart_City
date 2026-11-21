@@ -1,5 +1,76 @@
 # Progress
 
+## 2026-11-21 — Phase 6 local acceptance and handoff
+
+- Reran the integrated Docker gate after accessibility fixes on the dirty worktree based on `ada8fa5813d98b962a6f09f8b7361983661bfe9d`: migrations consistent; 58 tests passed in 62.03s; Ruff clean; Bandit 0 findings across 1,453 lines; pip-audit clean. Production Django check exited 0 with the two documented short-HSTS warnings. Five local routes were smoke-tested; workspace redirected to login.
+- Browser review showed the landing, 47-screen showcase listing and citizen dashboard design. This in-app viewport is narrow, and no phone, full desktop keyboard/contrast or live fresh-account demo evidence is claimed.
+- Accessibility review found the old focus outline was only 2.13:1 against the page canvas. Replaced it with #1d4ed8 (6.24:1 against the canvas), added visible focus to native disclosure summaries and moved keyboard focus to an announced, field-linked report validation summary. Four regression tests now cover the report and triage template controls and contrast ratio. The final ZAP rerun against 128 URLs found 0 FAIL, 5 reviewed WARN categories and 57 PASS.
+- Added [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md), and [`docs/PHASE6_ACCEPTANCE.md`](docs/PHASE6_ACCEPTANCE.md); linked them from README and wrote the currently applicable no-auto-deletion retention rule without inventing a retention duration.
+- Phase 6 release gate remains open for owner domain/server and pilot geography, remote CI, live demo rehearsal, two-phone/accessibility checks, production operations, strict showcase CSP/SRI work, and a clean committed release. Git has no configured remote; `.git` is read-only here, so no commit or tag was made.
+
+## 2026-11-21 — Phase 5 local security gate
+
+- Integrated Compose suite passed after final middleware change: `No changes detected`, `54 passed in 64.78s`, Ruff clean, Bandit 0 findings/1,453 lines, and pip-audit clean. Production check using the actual Compose key exited 0 with only the two short-HSTS warnings. Caddy config validated and the internal HTTPS proxy check stripped upstream `Server`; local HTML routes include `Cache-Control: no-store`, Permissions-Policy, and same-origin CORP.
+- Final ZAP passive baseline against the isolated local HTTP target: 128 URLs, 0 FAIL, 5 WARN categories, 57 PASS. Reports are saved under `docs/`; cacheable HTML and COEP warnings are gone. `.env` key was rotated to a random 64-byte value without displaying it; ACL remains limited to current user, SYSTEM, and Administrators. `git diff --check` passed.
+- The local disposable backup/restore rehearsal is recorded in `docs/restore-test-2026-11-21.log`. Production HTTPS, production-edge scan, CSP/SRI/COEP cleanup, remote CI, pilot geography, and owner photo/model inputs remain outstanding. The repository has no configured remote.
+
+## 2026-11-21 — Phase 2 security checks and Phase 3 geography groundwork
+
+- Field evidence creation now locks the current complaint row, validates the actor and current status inside the transaction, and writes evidence/audit together. If storage or audit work fails, DB writes roll back and newly written private files are removed. Added regression coverage for stale model state and audit failure cleanup.
+- Complaint scoping now rejects inactive accounts. Ward containment uses only boundaries effective on the report date; future and expired ward cases now have regression tests.
+- Added Bandit to the local Compose checks and GitHub Actions CI.
+- Docker Compose verification on this worktree: `No changes detected`; `45 passed in 77.18s`; Ruff passed; Bandit reported no findings across 1,431 lines. The preceding Phase 2 run reported no known vulnerable dependencies; pins did not change after that audit.
+- Rebuilding/rechecking `web` for the changed worktree was attempted but the environment's automatic approval service refused further Docker approval due to its usage limit. No workaround was attempted. Prior production check results are historical, not claimed for this worktree.
+- Real pilot ward data remains unavailable; no centre coordinates or authoritative polygon source was invented. GitHub CI and public deployment remain unverified.
+- Next: once Docker approval is available, rebuild `web`, rerun `check --deploy` and HTTP smoke; then obtain owner-provided geography inputs before loading actual wards. Continue production backup/restore and final acceptance gates afterward.
+- Detailed results: [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md).
+
+## 2026-11-21 — Integrated Phase 2 regression rerun
+
+- On request, reran the full Compose check suite against the Phase 2 worktree and all prior phases: migrations `No changes detected`; `45 passed in 49.17s`; Ruff passed; Bandit zero findings / 1,431 lines; pip-audit `No known vulnerabilities found`.
+- Rebuilt/restarted the local web service from the current worktree. `check --deploy` exited 0 with only HSTS subdomain/preload warnings. Container-local HTTP smoke: `/`, `/ui-showcase/`, `/accounts/login/`, `/workspace/` all returned HTTP 200 (workspace followed the login redirect).
+- Current local Phase 2 integration gate passes. GitHub CI and public production remain unverified. Real pilot boundary data remains unavailable.
+- Detailed results: [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md).
+
+## 2026-11-21 — Phase 3 geography and routing groundwork
+
+- Added a ward effective-date check in both model validation and the database, preventing end dates before start dates. Generated and applied `geography.0002_ward_ward_effective_window_valid` to the local database.
+- Added routing tests for ward-specific precedence over a newer global rule, ignoring future ward rules and recording the rule version in the audit, plus a reviewer-visible safety-critical warning assertion.
+- Full Compose gate: `No changes detected`; `49 passed in 69.33s`; Ruff clean; Bandit zero findings across 1,453 lines; pip-audit `No known vulnerabilities found`.
+- Rebuilt/restarted `web`; migration applied; production `check --deploy` exit 0 with only documented HSTS warnings; container-local landing, showcase, login and workspace smoke requests all returned HTTP 200.
+- One initial routing test had an incorrect expectation because its fixture contained an active ward rule. The fixture was corrected and the full suite rerun successfully; the implementation behavior was correct.
+- Phase 3 generic logic is verified. Real ward setup remains blocked on the previously recorded absence of centre coordinates and authoritative boundary data; no pilot geography has been fabricated.
+- Detailed results: [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md).
+
+## 2026-11-21 — Independent Phase 3 regression rerun
+
+- Reran the integrated Compose suite after the Phase 3 changes: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit zero findings in 1,453 lines; pip-audit no known vulnerabilities.
+- `migrate --check` exited 0; rebuilt-container `check --deploy` exited 0 with only documented HSTS warnings; landing, showcase, login, and workspace HTTP requests all returned 200 inside the web container.
+- This verifies the local integration of Phases 0–3, including workflow/lifecycle regressions. It does not unblock real pilot geography, deployment, or GitHub CI.
+
+## 2026-11-21 — Phase 4 secure data-intake preparation
+
+- The owner selected `ml/data/<category>/` for the five photo folders. Created the local category paths and a tracked manifest template. Added `.gitignore` and `.dockerignore` exclusions so private photos and local secrets cannot enter Git or the app image.
+- Added read-only `ml/dataset_preflight.py` to validate allowed image formats, decodability/pixel limit, relative paths, group IDs, manifest/file parity, and exact duplicate grouping. It prints only category counts/errors and does not modify images. `other` is evaluation-only.
+- Added five synthetic-fixture tests. Full Compose gate passed: `No changes detected`; `54 passed in 57.91s`; Ruff passed; Bandit no findings; pip-audit no known vulnerabilities.
+- Real intake preflight exited 1 as expected: folders are empty and `manifest.csv` is absent. No training/evaluation/model work was run. Bare image inspection confirmed `.env`, Git metadata, photo folder, private media, backups and uploaded ZIP were excluded from the image.
+- Phase 4 model work remains blocked on the actual photo files and group manifest; real pilot geography also remains unresolved. Details in [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) and `ml/DATA_INTAKE.md`.
+
+## 2026-11-21 — Phase 5 local operations rehearsal
+
+- Syntax-checked `scripts/backup.sh`, `scripts/restore_test.sh`, and `scripts/deploy.sh` with Bash in the project image.
+- Created a restricted temporary database dump and private-media archive, restored the database into a disposable PostGIS container, and extracted media into a disposable volume. Sanity query: 35 migrations, 6 users, 0 complaints; media restore: 6 files. SHA-256 checksums and counts are in [`docs/restore-test-2026-11-21.log`](docs/restore-test-2026-11-21.log). Disposable resources and temporary backup files were removed.
+- Rebuilt/restarted local web image; confirmed `.env`, `.git`, `ml/data`, private media, backups, and the UI ZIP are absent from the bare image. Production `check --deploy` exited 0 with only documented HSTS warnings; migration check and four HTTP smoke routes passed.
+- Finding: the development media volume has six files without matching current Evidence records. Preserved them because their ownership is unclear; recorded in [`docs/LIMITS.md`](docs/LIMITS.md).
+- This is local disposable evidence only, not an off-host production backup or public deployment.
+
+## 2026-11-21 — Phase 4 integrated regression rerun
+
+- Reran Compose checks with all prior phases: `No changes detected`; `54 passed in 60.80s`; Ruff passed; Bandit zero findings across 1,453 lines; pip-audit no known vulnerabilities.
+- The real-data preflight still exits 1 as designed: all five owner-selected folders contain zero images and `manifest.csv` is absent. No training/evaluation was run.
+- Migration check and production `check --deploy` exited 0 (only the two documented HSTS warnings); all four container-local HTTP smoke requests returned 200.
+- This is a verified pass for preflight tooling and previous backend phases only. Model, ONNX, worker, and real-data metrics remain undelivered pending data and Phase 3 pilot inputs.
+
 ## 2026-11-21 — Independent Phase 1 test rerun
 
 - Independently rebuilt `HEAD=fac743d` with Docker Desktop's Linux engine, DB reported healthy, then ran `docker compose run --rm checks`.

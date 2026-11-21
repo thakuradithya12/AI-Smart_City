@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 from django.contrib.gis.geos import MultiPolygon, Point, Polygon
@@ -69,6 +69,75 @@ def test_triage_routes_from_ward_category_rule_and_audits(client, console_setup)
     status_event = StatusEvent.objects.get(complaint=complaint)
     assert status_event.from_status == Complaint.Status.IN_TRIAGE
     assert status_event.to_status == Complaint.Status.ROUTED
+
+
+@pytest.mark.django_db
+def test_routing_prefers_active_ward_rule_over_newer_global_rule_and_audits_version(client, console_setup):
+    setup = console_setup
+    global_rule = RoutingRule.objects.create(
+        category=setup["category"],
+        ward=None,
+        department=setup["department_b"],
+        version=9,
+        effective_from=timezone.now(),
+    )
+    complaint = make_complaint(setup, public_id="CON-WARD-PRECEDENCE")
+    client.force_login(setup["reviewer"])
+
+    response = client.post(reverse("route_complaint", args=[complaint.pk]), {})
+
+    assert response.status_code == 302
+    complaint.refresh_from_db()
+    assert complaint.department == setup["department_a"]
+    event = AuditEvent.objects.get(action="complaint_routed", object_id=str(complaint.pk))
+    assert event.after["routing_rule_version"] == setup["rule"].version
+    assert event.after["routing_rule_version"] != global_rule.version
+
+
+@pytest.mark.django_db
+def test_future_ward_rule_is_ignored_in_favor_of_active_global_rule(client, console_setup):
+    setup = console_setup
+    setup["rule"].effective_from = timezone.now() + timedelta(days=1)
+    setup["rule"].save(update_fields=["effective_from"])
+    RoutingRule.objects.create(
+        category=setup["category"],
+        ward=setup["ward"],
+        department=setup["department_b"],
+        version=2,
+        effective_from=timezone.now() + timedelta(days=2),
+    )
+    global_rule = RoutingRule.objects.create(
+        category=setup["category"],
+        ward=None,
+        department=setup["department_b"],
+        version=1,
+        effective_from=timezone.now() - timedelta(days=2),
+    )
+    complaint = make_complaint(setup, public_id="CON-FUTURE-RULE")
+    client.force_login(setup["reviewer"])
+
+    response = client.post(reverse("route_complaint", args=[complaint.pk]), {})
+
+    assert response.status_code == 302
+    complaint.refresh_from_db()
+    assert complaint.department == global_rule.department
+    event = AuditEvent.objects.get(action="complaint_routed", object_id=str(complaint.pk))
+    assert event.after["routing_rule_version"] == global_rule.version
+
+
+@pytest.mark.django_db
+def test_safety_critical_category_is_warned_in_triage_queue(client, console_setup):
+    setup = console_setup
+    setup["category"].is_safety_critical = True
+    setup["category"].save(update_fields=["is_safety_critical"])
+    complaint = make_complaint(setup, public_id="CON-SAFETY-WARNING")
+    client.force_login(setup["reviewer"])
+
+    response = client.get(reverse("triage_queue"))
+
+    assert response.status_code == 200
+    assert b"Safety critical" in response.content
+    assert complaint.public_id.encode() in response.content
 
 
 @pytest.mark.django_db

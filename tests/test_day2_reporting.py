@@ -8,6 +8,7 @@ from django.contrib.gis.geos import MultiPolygon, Point, Polygon
 from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError, transaction
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
@@ -156,6 +157,50 @@ def test_outside_ward_fails_without_complaint(client, citizen, ward, category):
     assert response.status_code == 200
     assert "outside the supported area" in response.content.decode()
     assert not Complaint.objects.exists()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("effective_from,effective_to", [("2027-01-01", None), ("2020-01-01", "2020-12-31")])
+def test_report_rejects_pin_in_ward_outside_effective_dates(client, citizen, category, effective_from, effective_to):
+    polygon = Polygon(((-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)))
+    Ward.objects.create(
+        name="Inactive Test Ward",
+        boundary=MultiPolygon(polygon, srid=4326),
+        source="test-only polygon with inactive effective dates",
+        effective_from=effective_from,
+        effective_to=effective_to,
+    )
+    client.force_login(citizen)
+    response = client.post(reverse("report"), {
+        "category": category.pk,
+        "latitude": "0",
+        "longitude": "0",
+        "consent": "on",
+        "pin_confirmed": "on",
+        "photo": SimpleUploadedFile("inactive-ward.jpg", make_image(), content_type="image/jpeg"),
+    })
+    assert response.status_code == 200
+    assert "outside the supported area" in response.content.decode()
+    assert not Complaint.objects.exists()
+
+
+@pytest.mark.django_db
+def test_ward_effective_end_cannot_precede_start_in_model_or_database():
+    polygon = Polygon(((-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)))
+    ward = Ward(
+        name="Invalid Effective Window",
+        boundary=MultiPolygon(polygon, srid=4326),
+        source="test-only polygon",
+        effective_from="2026-12-01",
+        effective_to="2026-11-30",
+    )
+    with pytest.raises(ValidationError, match="on or after the start date"):
+        ward.full_clean()
+
+    # Bulk writes can skip model validation; the database constraint still rejects invalid ranges.
+    with pytest.raises(IntegrityError):
+        with transaction.atomic():
+            ward.save(force_insert=True)
 
 
 @pytest.mark.django_db

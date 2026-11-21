@@ -1,17 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
-from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.models import User
-from apps.audit.models import AuditEvent
-from apps.complaints.models import Complaint, Evidence
-from apps.complaints.services import delete_private_files, store_citizen_image
+from apps.complaints.models import Complaint
 from apps.geography.models import Department, Ward
 from apps.workflow.permissions import can_transition
-from apps.workflow.services import route_complaint as route_complaint_service, transition
+from apps.workflow.services import add_field_evidence, route_complaint as route_complaint_service, transition
 
 from .forms import (AssignComplaintForm, FieldEvidenceForm, MessageForm, ReasonForm, RejectComplaintForm,
                     RouteComplaintForm, TransferComplaintForm, VerifyForm, WorkDoneForm)
@@ -179,22 +176,11 @@ def upload_field_evidence(request, pk):
     if not form.is_valid():
         messages.error(request, "Choose a valid before or after photo.")
         return redirect("field_task_detail", pk=pk)
-    paths = []
     try:
-        original, display, digest = store_citizen_image(form.cleaned_data["photo"])
-        paths.extend((original, display))
-        with transaction.atomic():
-            evidence = Evidence.objects.create(complaint=complaint, kind=form.cleaned_data["kind"], original_path=original,
-                display_path=display, sha256=digest, uploaded_by=request.user)
-            AuditEvent.objects.create(actor=request.user, role=request.user.role, action="evidence_uploaded", object_type="Evidence",
-                object_id=str(evidence.pk), after={"complaint_id": complaint.pk, "kind": evidence.kind, "sha256": digest})
+        add_field_evidence(complaint, request.user, form.cleaned_data["photo"], form.cleaned_data["kind"])
     except ValidationError as exc:
-        delete_private_files(paths)
         messages.error(request, " ".join(exc.messages))
         return redirect("field_task_detail", pk=pk)
-    except Exception:
-        delete_private_files(paths)
-        raise
     messages.success(request, "Photo added to the complaint timeline.")
     return redirect("field_task_detail", pk=pk)
 

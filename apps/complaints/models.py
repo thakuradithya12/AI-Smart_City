@@ -14,7 +14,7 @@ class AppendOnlyQuerySet(models.QuerySet):
 class ComplaintQuerySet(models.QuerySet):
     def visible_to(self, user):
         # Every complaint lookup must be scoped by role before a view returns data.
-        if not user.is_authenticated:
+        if not user.is_authenticated or not user.is_active:
             return self.none()
         if user.is_superuser or user.role == "admin" or user.role == "triage_reviewer":
             return self

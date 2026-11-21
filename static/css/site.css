@@ -30,9 +30,14 @@ a { color: var(--blue); text-decoration: none; }
 a:hover { color: var(--navy); text-decoration: underline; }
 button, input, select, textarea { font: inherit; }
 button, .button { min-height: 42px; }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #84aee8; outline-offset: 2px; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
 .skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; padding: .75rem 1rem; background: white; }
-.skip-link:focus { left: .75rem; top: .75rem; }
+.skip-link:focus-visible { left: .75rem; top: .75rem; }
+.form-error-summary { margin: 0 0 1rem; padding: .9rem 1rem; border: 1px solid #fecaca; border-radius: 8px; background: #fef2f2; color: #991b1b; }
+.form-error-summary h2 { margin: 0; color: #7f1d1d; font-size: 1rem; }
+.form-error-summary ul { margin: .5rem 0 0; padding-left: 1.25rem; }
+.form-error-summary a { color: #7f1d1d; text-decoration: underline; }
+.form-error-summary:focus { outline: 3px solid #1d4ed8; outline-offset: 2px; }
 
 .site-header { position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
 .header-inner { max-width: 1440px; min-height: 64px; margin: auto; padding: .65rem clamp(1rem, 3vw, 2.5rem); display: flex; align-items: center; gap: 1.5rem; }

@@ -8,6 +8,7 @@ __pycache__/
 staticfiles/
 private_media/
 backups/
+ml/data/
 .pytest_cache/
 .ruff_cache/
 coverage.xml

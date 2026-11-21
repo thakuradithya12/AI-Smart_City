@@ -16,9 +16,17 @@ Initial migrations for the model-bearing apps are included. The public HTTPS dep
 
 The local citizen and staff complaint lifecycle is implemented through report submission, triage/routing, department assignment, field evidence and work claims, and separate verification/reopen actions. The CivicOps UI archive integration is documented in [`docs/UI_DESIGN.md`](docs/UI_DESIGN.md), with the extracted screens in [`docs/ui_reference/`](docs/ui_reference/).
 
+The sequenced plan for finishing and proving the backend is [`docs/BACKEND_ROADMAP.md`](docs/BACKEND_ROADMAP.md). It distinguishes existing implementation from gates that still require current evidence.
+
+The component map is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md); role-based operating steps are in [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md). Phase 6 acceptance evidence and remaining release gates are in [`docs/PHASE6_ACCEPTANCE.md`](docs/PHASE6_ACCEPTANCE.md).
+
 The public HTTPS deployment remains unconfigured because no domain or server has been supplied. Pilot centre coordinates and authoritative ward boundaries are pending. AI training and inference were not delivered; the candidate dataset research is documented in [`ml/DATASETS.md`](ml/DATASETS.md). Latest deployment and verification limits are recorded in [`PROGRESS.md`](PROGRESS.md) and [`docs/LIMITS.md`](docs/LIMITS.md).
 
 Day 2 local routes, demo seeding and the vendor asset download/check command are documented in [`docs/README.md`](docs/README.md).
+
+## Privacy and retention
+
+The site stores account email and name, complaint descriptions, map pins and evidence photos. The report form records consent. Do not submit emergency requests; this platform is not an emergency service. Evidence is served only to users authorized for the associated complaint. No automatic complaint or photo deletion is configured. Before public deployment, the project owner must approve and publish a retention period and deletion process; until then, production data collection is not authorized.
 
 ## Production operations
 

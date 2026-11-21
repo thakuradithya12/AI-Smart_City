@@ -1,6 +1,6 @@
-# AI dataset research — candidate, not downloaded
+# AI dataset research — set aside, not downloaded
 
-Checked **2026-11-19**. This is a research shortlist only. No dataset has been downloaded, unpacked, or used for training. Keep all six product categories. The provisional candidate model covers `pothole`, `garbage`, and `water_leakage`; the other product categories show **no suggestion** until an image dataset with clear rights and a usable held-out group split is found. No claim about model quality is made.
+Checked **2026-11-19**. By owner decision on **2026-11-20**, public datasets are not to be downloaded or used for training. Attain, TACO, and the water-leakage collection below are set aside as future work; the remaining records are retained only as research notes. Keep all six product categories in the product. For the requested first evaluation, the owner-provided photo folders are `pothole`, `garbage`, `drainage`, `streetlight`, and `other`; `water_leakage` is not in that evaluation set and will receive no suggestion unless added to a later evaluation.
 
 ## Category candidates
 

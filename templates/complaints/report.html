@@ -1,10 +1,78 @@
-{% extends "base.html" %}{% load static %}{% block title %}Report an issue · AI Smart City{% endblock %}{% block content %}
-<header class="page-heading"><div><p class="eyebrow">Resident portal · New report</p><h1>Report an issue</h1><p>Share a photo and confirm the location so the right city team can review it.</p></div><a class="button button-secondary" href="{% url 'my_complaints' %}">My complaints</a></header>
-<section class="panel report-panel"><p class="emergency"><strong>Emergency notice:</strong> This platform is not an emergency service. For immediate danger, contact local emergency services.</p>
-<form method="post" enctype="multipart/form-data" id="report-form">{% csrf_token %}{{ form.non_field_errors }}
-<label for="id_category">Issue category</label>{{ form.category }}{{ form.category.errors }}
-<label for="id_description">Describe the issue <span class="subtle">(optional)</span></label>{{ form.description }}{{ form.description.errors }}
-<label for="id_photo">Photo evidence <span class="subtle">(JPEG, PNG or WebP · maximum 8 MB)</span></label>{{ form.photo }}{{ form.photo.errors }}
-<fieldset><legend>Confirm the location</legend><p class="subtle">Move the pin to the issue location. Your pin determines the ward used for routing. If the map does not load, enter coordinates below.</p><div id="report-map" aria-label="Map for selecting a report location"></div><button type="button" id="locate-button" class="button-secondary">Use my location</button><div class="form-grid"><div><label for="id_latitude">Latitude</label>{{ form.latitude }}{{ form.latitude.errors }}</div><div><label for="id_longitude">Longitude</label>{{ form.longitude }}{{ form.longitude.errors }}</div></div><label for="id_gps_accuracy_m">GPS accuracy in metres <span class="subtle">(optional)</span></label>{{ form.gps_accuracy_m }}{{ form.gps_accuracy_m.errors }}<label class="check">{{ form.consent }} <span>I have read the privacy notice. We store your name, email and report details to process this complaint.</span></label>{{ form.consent.errors }}<label class="check">{{ form.pin_confirmed }} <span>{{ form.pin_confirmed.label }}</span></label>{{ form.pin_confirmed.errors }}</fieldset>
-<button type="submit">Submit complaint</button></form></section>
-{% endblock %}{% block extra_head %}<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">{% endblock %}{% block extra_scripts %}<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script><script src="{% static 'js/report-map.js' %}"></script>{% endblock %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Report an issue · AI Smart City{% endblock %}
+
+{% block content %}
+<header class="page-heading">
+  <div>
+    <p class="eyebrow">Resident portal · New report</p>
+    <h1>Report an issue</h1>
+    <p>Share a photo and confirm the location so the right city team can review it.</p>
+  </div>
+  <a class="button button-secondary" href="{% url 'my_complaints' %}">My complaints</a>
+</header>
+
+<section class="panel report-panel">
+  <p class="emergency"><strong>Emergency notice:</strong> This platform is not an emergency service. For immediate danger, contact local emergency services.</p>
+
+  <form method="post" enctype="multipart/form-data" id="report-form">
+    {% csrf_token %}
+    {% if form.errors %}
+    <div class="form-error-summary" id="report-error-summary" role="alert" aria-live="assertive" tabindex="-1">
+      <h2>Review the report details</h2>
+      <p>Correct the following fields, then submit the report again.</p>
+      <ul>
+        {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+        {% for field in form %}
+          {% for error in field.errors %}<li><a href="#{{ field.id_for_label }}">{{ field.label }}: {{ error }}</a></li>{% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <label for="id_category">Issue category</label>
+    {{ form.category }}{{ form.category.errors }}
+
+    <label for="id_description">Describe the issue <span class="subtle">(optional)</span></label>
+    {{ form.description }}{{ form.description.errors }}
+
+    <label for="id_photo">Photo evidence <span class="subtle">(JPEG, PNG or WebP · maximum 8 MB)</span></label>
+    {{ form.photo }}{{ form.photo.errors }}
+
+    <fieldset>
+      <legend>Confirm the location</legend>
+      <p class="subtle">Move the pin to the issue location. Your pin determines the ward used for routing. If the map does not load, enter coordinates below.</p>
+      <div id="report-map" aria-label="Map for selecting a report location"></div>
+      <button type="button" id="locate-button" class="button-secondary">Use my location</button>
+      <div class="form-grid">
+        <div>
+          <label for="id_latitude">Latitude</label>
+          {{ form.latitude }}{{ form.latitude.errors }}
+        </div>
+        <div>
+          <label for="id_longitude">Longitude</label>
+          {{ form.longitude }}{{ form.longitude.errors }}
+        </div>
+      </div>
+      <label for="id_gps_accuracy_m">GPS accuracy in metres <span class="subtle">(optional)</span></label>
+      {{ form.gps_accuracy_m }}{{ form.gps_accuracy_m.errors }}
+
+      <label class="check">{{ form.consent }} <span>I have read the privacy notice. We store your name, email and report details to process this complaint.</span></label>
+      {{ form.consent.errors }}
+      <label class="check">{{ form.pin_confirmed }} <span>{{ form.pin_confirmed.label }}</span></label>
+      {{ form.pin_confirmed.errors }}
+    </fieldset>
+    <button type="submit">Submit complaint</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+<script src="{% static 'js/report-map.js' %}"></script>
+{% endblock %}

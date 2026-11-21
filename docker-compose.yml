@@ -32,7 +32,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: ["sh", "-c", "python -m pip install --no-cache-dir --timeout 120 --retries 10 -r requirements/dev.txt && python manage.py makemigrations --check --dry-run && pytest -q && ruff check . && pip-audit -r requirements/base.txt"]
+    command: ["sh", "-c", "python -m pip install --no-cache-dir --timeout 120 --retries 10 -r requirements/dev.txt && python manage.py makemigrations --check --dry-run && pytest -q && ruff check . && bandit -r apps -ll && pip-audit -r requirements/base.txt"]
   caddy:
     image: caddy:2.11.9-alpine
     profiles: ["production"]

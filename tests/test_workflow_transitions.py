@@ -145,6 +145,24 @@ def test_transition_helper_scopes_role_actions_to_visible_complaints(workflow_se
 
 
 @pytest.mark.django_db
+def test_inactive_actor_cannot_transition_visible_complaint(workflow_setup):
+    citizen = workflow_setup["users"][User.Role.CITIZEN]
+    complaint = Complaint.objects.create(
+        citizen=citizen,
+        category=workflow_setup["category"],
+        location=Point(0, 0, srid=4326),
+        ward=workflow_setup["ward"],
+        status=Complaint.Status.SUBMITTED,
+        consent_at="2026-01-01T00:00:00Z",
+    )
+    citizen.is_active = False
+    citizen.save(update_fields=["is_active"])
+    assert not can_transition(citizen, complaint, Complaint.Status.CANCELLED)
+    with pytest.raises(ValidationError):
+        transition(complaint, Complaint.Status.CANCELLED, actor=citizen)
+
+
+@pytest.mark.django_db
 def test_information_request_and_citizen_reply_are_audited_messages(workflow_setup):
     complaint = Complaint.objects.create(
         citizen=workflow_setup["users"][User.Role.CITIZEN],

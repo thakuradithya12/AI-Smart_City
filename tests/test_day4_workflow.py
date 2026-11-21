@@ -3,14 +3,16 @@ from datetime import date
 
 import pytest
 from PIL import Image
-from django.contrib.gis.geos import MultiPolygon, Polygon
+from django.contrib.gis.geos import MultiPolygon, Point, Polygon
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 from apps.accounts.models import User
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, Resolution, StatusEvent
-from apps.complaints.services import delete_private_files
+from apps.complaints.services import delete_private_files, private_storage
+from apps.workflow.services import add_field_evidence
 from apps.geography.models import Category, Department, RoutingRule, Ward
 
 
@@ -169,6 +171,89 @@ def test_marking_done_without_after_photo_is_refused(client, day4_setup):
     complaint.refresh_from_db()
     assert complaint.status == Complaint.Status.IN_PROGRESS
     assert not Resolution.objects.filter(complaint=complaint).exists()
+
+
+@pytest.mark.django_db
+def test_field_evidence_service_rechecks_locked_status_before_storing(day4_setup):
+    setup = day4_setup
+    complaint = Complaint.objects.create(
+        public_id="D4-LOCKED-EVIDENCE",
+        citizen=setup["citizen"],
+        category=setup["category"],
+        location=Point(0, 0, srid=4326),
+        ward=setup["ward"],
+        department=setup["department"],
+        assignee=setup["worker"],
+        status=Complaint.Status.IN_PROGRESS,
+        consent_at="2026-01-01T00:00:00Z",
+    )
+    stale_instance = Complaint.objects.get(pk=complaint.pk)
+    Complaint.objects.filter(pk=complaint.pk).update(status=Complaint.Status.RESOLVED_PENDING_VERIFICATION)
+
+    with pytest.raises(ValidationError, match="only be added while work is in progress"):
+        add_field_evidence(stale_instance, setup["worker"], image_file(), "field_after")
+
+    assert not complaint.evidence.exists()
+
+
+@pytest.mark.django_db
+def test_field_evidence_and_private_files_roll_back_when_audit_write_fails(day4_setup, monkeypatch):
+    setup = day4_setup
+    complaint = Complaint.objects.create(
+        public_id="D4-AUDIT-FAIL-EVIDENCE",
+        citizen=setup["citizen"],
+        category=setup["category"],
+        location=Point(0, 0, srid=4326),
+        ward=setup["ward"],
+        department=setup["department"],
+        assignee=setup["worker"],
+        status=Complaint.Status.IN_PROGRESS,
+        consent_at="2026-01-01T00:00:00Z",
+    )
+
+    def stored_names(directory):
+        try:
+            return set(private_storage.listdir(directory)[1])
+        except FileNotFoundError:
+            return set()
+
+    originals_before = stored_names("original")
+    displays_before = stored_names("display")
+    original_save = AuditEvent.save
+
+    def fail_evidence_audit(self, *args, **kwargs):
+        if self.action == "evidence_uploaded":
+            raise RuntimeError("injected evidence audit failure")
+        return original_save(self, *args, **kwargs)
+
+    monkeypatch.setattr(AuditEvent, "save", fail_evidence_audit)
+    with pytest.raises(RuntimeError, match="injected evidence audit failure"):
+        add_field_evidence(complaint, setup["worker"], image_file(), "field_after")
+
+    assert not complaint.evidence.exists()
+    assert stored_names("original") == originals_before
+    assert stored_names("display") == displays_before
+
+
+@pytest.mark.django_db
+def test_deactivated_users_are_not_authorized_to_view_complaints(day4_setup):
+    complaint = Complaint.objects.create(
+        public_id="D4-INACTIVE-USER",
+        citizen=day4_setup["citizen"],
+        category=day4_setup["category"],
+        location=Point(0, 0, srid=4326),
+        ward=day4_setup["ward"],
+        status=Complaint.Status.IN_TRIAGE,
+        consent_at="2026-01-01T00:00:00Z",
+    )
+    inactive_reviewer = User.objects.create_user(
+        email="inactive-reviewer@example.test",
+        password="Strong!Password982",
+        name="Inactive reviewer",
+        role=User.Role.TRIAGE_REVIEWER,
+        is_active=False,
+    )
+    assert not Complaint.objects.visible_to(inactive_reviewer).filter(pk=complaint.pk).exists()
 
 
 @pytest.mark.django_db

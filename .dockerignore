@@ -1,0 +1,15 @@
+.git/
+.env
+.env.*
+*.zip
+ml/data/
+private_media/
+backups/
+.venv/
+.python-runtime/
+.uv-cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+staticfiles/
