@@ -45,3 +45,7 @@ The first suite run produced `2 failed, 35 passed`: the complaint timeline templ
 - No schema changes were needed. Existing complaint creation transaction and state-machine-only status assignment were rechecked by the passing suite/code scan.
 
 Phase 1 gate passed locally. GitHub CI was not checked; no production deployment or pilot ward data is claimed.
+
+### Independent rerun on committed Phase 1
+
+Reran the gate on **2026-11-21** with `HEAD=fac743d` after rebuilding the image from that commit. Results: migration check `No changes detected`; `39 passed in 92.20s`; Ruff `All checks passed!`; pip-audit `No known vulnerabilities found`. `check --deploy` exited successfully with only the same two intentional HSTS warnings. Requests to `/`, `/ui-showcase/` and `/workspace/` returned HTTP 200 (workspace response includes the login redirect, covered by its test). Docker Desktop Linux engine access was granted for these commands. This independently confirms the Phase 1 report above.

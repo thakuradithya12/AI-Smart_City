@@ -1,5 +1,12 @@
 # Progress
 
+## 2026-11-21 — Independent Phase 1 test rerun
+
+- Independently rebuilt `HEAD=fac743d` with Docker Desktop's Linux engine, DB reported healthy, then ran `docker compose run --rm checks`.
+- Results: `No changes detected`; `39 passed in 92.20s`; Ruff `All checks passed!`; pip-audit `No known vulnerabilities found`.
+- Re-ran rebuilt-container `check --deploy`: exit 0 with only `security.W005`/`security.W021` HSTS warnings. Smoke requests to `/`, `/ui-showcase/`, and `/workspace/` each returned HTTP 200 (workspace redirects to login; automated test asserts the redirect).
+- Details: [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md). This confirms the local Phase 1 gate on the committed code; no GitHub CI result is inferred.
+
 ## 2026-11-21 — Backend roadmap Phase 1 complete
 
 - Moved active ward-specific/all-ward routing rule selection, override reason validation, state transition and routing audit write into a single atomic workflow service. The console view now calls the service and handles display messages only.
