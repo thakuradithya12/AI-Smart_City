@@ -2,11 +2,11 @@
 
 ## 2026-11-21 — Phase 6 local acceptance and handoff
 
-- Reran the integrated Docker gate after accessibility fixes on the dirty worktree based on `ada8fa5813d98b962a6f09f8b7361983661bfe9d`: migrations consistent; 58 tests passed in 62.03s; Ruff clean; Bandit 0 findings across 1,453 lines; pip-audit clean. Production Django check exited 0 with the two documented short-HSTS warnings. Five local routes were smoke-tested; workspace redirected to login.
+- Reran the integrated Docker gate after accessibility fixes and local commit `e806d63799ebb374d644b1746465d2ae858769b7`: migrations consistent; post-commit 58 tests passed in 57.76s; Ruff clean; Bandit 0 findings across 1,453 lines; pip-audit clean. Production Django check exited 0 with the two documented short-HSTS warnings. Five local routes were smoke-tested; workspace redirected to login.
 - Browser review showed the landing, 47-screen showcase listing and citizen dashboard design. This in-app viewport is narrow, and no phone, full desktop keyboard/contrast or live fresh-account demo evidence is claimed.
 - Accessibility review found the old focus outline was only 2.13:1 against the page canvas. Replaced it with #1d4ed8 (6.24:1 against the canvas), added visible focus to native disclosure summaries and moved keyboard focus to an announced, field-linked report validation summary. Four regression tests now cover the report and triage template controls and contrast ratio. The final ZAP rerun against 128 URLs found 0 FAIL, 5 reviewed WARN categories and 57 PASS.
 - Added [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md), and [`docs/PHASE6_ACCEPTANCE.md`](docs/PHASE6_ACCEPTANCE.md); linked them from README and wrote the currently applicable no-auto-deletion retention rule without inventing a retention duration.
-- Phase 6 release gate remains open for owner domain/server and pilot geography, remote CI, live demo rehearsal, two-phone/accessibility checks, production operations, strict showcase CSP/SRI work, and a clean committed release. Git has no configured remote; `.git` is read-only here, so no commit or tag was made.
+- Phase 6 release gate remains open for owner domain/server and pilot geography, remote CI, live demo rehearsal, two-phone/accessibility checks, production operations and strict showcase CSP/SRI work. No day tag or push is claimed; no remote is configured. The local code commit exists and passed the post-commit suite.
 
 ## 2026-11-21 — Phase 5 local security gate
 

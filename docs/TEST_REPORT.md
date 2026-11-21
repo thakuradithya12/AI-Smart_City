@@ -2,18 +2,19 @@
 
 ## 2026-11-21 — Phase 6 local acceptance
 
-**Base revision:** `ada8fa5813d98b962a6f09f8b7361983661bfe9d`; the tested worktree was dirty, so these results are not attributed to an exact release commit.
+**Verified code commit:** `e806d63799ebb374d644b1746465d2ae858769b7` (the uploaded ZIP was untracked and excluded; tracked source was clean).
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| Full Compose gate | Passed | `No changes detected`; final rerun: `58 passed in 62.03s`; Ruff passed; Bandit: 0 findings across 1,453 lines; pip-audit: no known vulnerabilities. |
+| Full Compose gate | Passed after commit | `No changes detected`; post-commit rerun on the verified code SHA: `58 passed in 57.76s`; Ruff passed; Bandit: 0 findings across 1,453 lines; pip-audit: no known vulnerabilities. |
 | Django production check | Passed with known warnings | Exit 0 using the actual protected Compose key; only `security.W005` and `security.W021` remain for the short HSTS configuration without owner-confirmed domain/subdomain policy. |
 | Local route smoke | Passed | `/`, `/ui-showcase/`, `/ui-showcase/citizen_dashboard_mobile/`, `/accounts/login/` returned 200; `/workspace/` redirected to login and then returned 200. |
 | Browser/accessibility acceptance | Partial | Local browser showed the landing page, 47-screen showcase index and citizen dashboard mockup. Four new tests cover labelled report/triage controls, error announcements/field links and focus-indicator contrast ≥3:1. Viewport was narrow; no full desktop keyboard, screen-reader or real-device result is claimed. |
 | Workflow rehearsal | Automated paths passed | Existing tests cover the four-role lifecycle, separate work claim/verification, dispute/reopen/reassign, cancellation, permissions and transition matrix. No live fresh-account rehearsal was performed. |
-| Release CI and commit | Not verified | No Git remote; the worktree was dirty and local Git metadata is read-only. No remote CI result, final commit or day tag is claimed. |
+| Local code commit | Passed | `e806d63799ebb374d644b1746465d2ae858769b7`; full Compose gate rerun after commit. The uploaded UI ZIP was excluded and remains untracked. |
+| Remote CI and push | Not verified | No Git remote is configured, so no remote Actions result or push is claimed. |
 
-The fresh-account rehearsal twice, two-phone and full desktop keyboard/screen-reader checks, public deployment, production restore/monitoring, and exact committed-release rerun remain open. See [`PHASE6_ACCEPTANCE.md`](PHASE6_ACCEPTANCE.md) and [`LIMITS.md`](LIMITS.md).
+The fresh-account rehearsal twice, two-phone and full desktop keyboard/screen-reader checks, public deployment, and production restore/monitoring remain open. See [`PHASE6_ACCEPTANCE.md`](PHASE6_ACCEPTANCE.md) and [`LIMITS.md`](LIMITS.md).
 
 ## 2026-11-21 — Phase 5 local operations and security gate
 
