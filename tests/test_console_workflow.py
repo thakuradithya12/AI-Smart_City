@@ -72,6 +72,28 @@ def test_triage_routes_from_ward_category_rule_and_audits(client, console_setup)
 
 
 @pytest.mark.django_db
+def test_route_rolls_back_status_and_events_if_routing_audit_fails(client, console_setup, monkeypatch):
+    complaint = make_complaint(console_setup)
+    client.force_login(console_setup["reviewer"])
+    original_save = AuditEvent.save
+
+    def fail_routing_event(self, *args, **kwargs):
+        if self.action == "complaint_routed":
+            raise RuntimeError("injected routing audit failure")
+        return original_save(self, *args, **kwargs)
+
+    monkeypatch.setattr(AuditEvent, "save", fail_routing_event)
+    with pytest.raises(RuntimeError, match="injected routing audit failure"):
+        client.post(reverse("route_complaint", args=[complaint.pk]), {})
+
+    complaint.refresh_from_db()
+    assert complaint.status == Complaint.Status.IN_TRIAGE
+    assert complaint.department is None
+    assert not StatusEvent.objects.filter(complaint=complaint).exists()
+    assert not AuditEvent.objects.filter(object_id=str(complaint.pk)).exists()
+
+
+@pytest.mark.django_db
 def test_triage_override_requires_reason_and_admin_override_is_flagged(client, console_setup):
     complaint = make_complaint(console_setup)
     client.force_login(console_setup["reviewer"])

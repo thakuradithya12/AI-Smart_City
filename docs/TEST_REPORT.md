@@ -24,3 +24,24 @@ The first suite run produced `2 failed, 35 passed`: the complaint timeline templ
 - No GitHub Actions run was checked or inferred.
 - The `check --deploy` HSTS warnings are recorded above; public deployment remains unconfigured.
 - This report covers local Docker tests on the worktree state identified above, not the final completion of every backend roadmap phase.
+
+## 2026-11-21 — Backend Phase 1: workflow integrity
+
+**Code under test:** Phase 1 worktree after `7a4038e`, including workflow-service routing transaction and ORM append-only guards. The Phase 0 public landing/login tests remain included.
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Migration consistency | Passed | `docker compose run --rm checks`: `No changes detected`. |
+| pytest | Passed | `39 passed in 61.03s`. Includes route-audit failure rollback and instance/queryset append-only tests. |
+| Ruff | Passed | `All checks passed!`. |
+| pip-audit | Passed | `No known vulnerabilities found`. |
+| Django production deploy check | Passed with same documented warnings | Exit 0 on rebuilt container; only HSTS subdomain/preload warnings remain. |
+| Fresh web image | Passed | `docker compose up -d --build db web`; PostGIS healthy and web started. |
+
+### Phase 1 changes
+
+- Ward/category routing rule selection, override validation, transition and routing audit now execute inside a single transaction in `apps/workflow/services.py`. Injected routing-audit failure rolls the status and event writes back.
+- `StatusEvent` and `AuditEvent` now reject instance save/delete updates and queryset update/delete operations. Tests cover all four bypass paths.
+- No schema changes were needed. Existing complaint creation transaction and state-machine-only status assignment were rechecked by the passing suite/code scan.
+
+Phase 1 gate passed locally. GitHub CI was not checked; no production deployment or pilot ward data is claimed.

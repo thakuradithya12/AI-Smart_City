@@ -230,3 +230,11 @@ def test_status_and_audit_events_are_append_only(citizen, ward, category):
             event.save()
         with pytest.raises(ValueError):
             event.delete()
+    with pytest.raises(ValueError, match="Status events are append-only"):
+        StatusEvent.objects.filter(pk=status.pk).update(reason="rewritten")
+    with pytest.raises(ValueError, match="Status events are append-only"):
+        StatusEvent.objects.filter(pk=status.pk).delete()
+    with pytest.raises(ValueError, match="Audit events are append-only"):
+        AuditEvent.objects.filter(pk=audit.pk).update(reason="rewritten")
+    with pytest.raises(ValueError, match="Audit events are append-only"):
+        AuditEvent.objects.filter(pk=audit.pk).delete()

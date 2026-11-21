@@ -4,15 +4,14 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
 
 from apps.accounts.models import User
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, Evidence
 from apps.complaints.services import delete_private_files, store_citizen_image
-from apps.geography.models import Department, RoutingRule, Ward
+from apps.geography.models import Department, Ward
 from apps.workflow.permissions import can_transition
-from apps.workflow.services import transition
+from apps.workflow.services import route_complaint as route_complaint_service, transition
 
 from .forms import (AssignComplaintForm, FieldEvidenceForm, MessageForm, ReasonForm, RejectComplaintForm,
                     RouteComplaintForm, TransferComplaintForm, VerifyForm, WorkDoneForm)
@@ -24,13 +23,6 @@ def _triage_user(user):
 
 def _department_user(user):
     return user.is_authenticated and user.role in {User.Role.DEPARTMENT_OFFICIAL, User.Role.SUPERVISOR}
-
-
-def _active_routing_rule(complaint):
-    # A ward-specific current rule takes precedence over a current all-wards rule.
-    rules = RoutingRule.objects.filter(category=complaint.category, effective_from__lte=timezone.now()).order_by("-version")
-    rule = rules.filter(ward_id=complaint.ward_id).first() if complaint.ward_id else None
-    return rule or rules.filter(ward__isnull=True).first()
 
 
 @login_required
@@ -66,27 +58,18 @@ def route_complaint(request, pk):
         raise Http404
     form = RouteComplaintForm(request.POST)
     if form.is_valid():
-        rule = _active_routing_rule(complaint)
-        if not rule:
-            messages.error(request, "No active ward or category routing rule is configured for this complaint.")
+        try:
+            route_complaint_service(
+                complaint,
+                actor=request.user,
+                department_override=form.cleaned_data["department"],
+                reason=form.cleaned_data["reason"],
+            )
+        except ValidationError as exc:
+            messages.error(request, " ".join(exc.messages))
         else:
-            department = form.cleaned_data["department"] or rule.department
-            reason = form.cleaned_data["reason"].strip()
-            overridden = department.pk != rule.department_id
-            if overridden and not reason:
-                messages.error(request, "Give a reason when overriding the routing rule.")
-            elif request.user.role == User.Role.ADMIN and not reason:
-                messages.error(request, "An administrator override requires a reason.")
-            else:
-                transition(complaint, Complaint.Status.ROUTED, actor=request.user,
-                    reason=reason if overridden or request.user.role == User.Role.ADMIN else None,
-                    department=department, rule_version=rule.version)
-                AuditEvent.objects.create(actor=request.user, role=request.user.role, action="complaint_routed",
-                    object_type="Complaint", object_id=str(complaint.pk),
-                    after={"department_id": department.pk, "routing_rule_version": rule.version, "overridden": overridden},
-                    reason=reason if overridden else "")
-                messages.success(request, "Complaint routed to the department.")
-                return redirect("triage_queue")
+            messages.success(request, "Complaint routed to the department.")
+            return redirect("triage_queue")
     else:
         messages.error(request, "Choose a valid department and provide any required override reason.")
     return redirect("triage_queue")

@@ -1,5 +1,14 @@
 # Progress
 
+## 2026-11-21 — Backend roadmap Phase 1 complete
+
+- Moved active ward-specific/all-ward routing rule selection, override reason validation, state transition and routing audit write into a single atomic workflow service. The console view now calls the service and handles display messages only.
+- Added a failure-injection test proving routing status, `StatusEvent` and all `AuditEvent` writes roll back if the routing-specific audit write fails.
+- Closed ORM-level append-only bypasses: queryset `update()`/`delete()` now refuse for both `StatusEvent` and `AuditEvent`; the append-only test covers instance and queryset mutation paths.
+- Phase 1 checks: `docker compose run --rm checks` — `No changes detected`; `39 passed in 61.03s`; Ruff `All checks passed!`; pip-audit `No known vulnerabilities found`. Rebuilt current web image and ran `check --deploy` (exit 0; only the already documented HSTS subdomain/preload warnings).
+- Full evidence and scope are in [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md). No schema migration was needed. GitHub CI and production deployment were not checked.
+- Next: Phase 2 authorization/evidence-security audit. Review every action/evidence endpoint and upload properties, add targeted coverage for gaps, then run the same full local gate.
+
 ## 2026-11-21 — Phase 0 runtime verification
 
 - Started Docker Desktop and accessed its Linux engine with approved elevated Docker access. Rebuilt and started current PostGIS/web containers; DB health check passed.

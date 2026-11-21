@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, ComplaintMessage, Resolution, StatusEvent
+from apps.geography.models import RoutingRule
 
 # One table controls every valid status transition; later days add console actions through this service.
 TRANSITIONS = {
@@ -24,6 +25,56 @@ TRANSITIONS = {
     ("in_triage", "cancelled"): {"citizen"},
     ("routed", "cancelled"): {"citizen"},
 }
+
+
+def active_routing_rule(complaint):
+    # Ward-specific active routing rules take precedence over all-ward defaults.
+    rules = RoutingRule.objects.filter(
+        category=complaint.category,
+        effective_from__lte=timezone.now(),
+    ).order_by("-version")
+    ward_rule = rules.filter(ward_id=complaint.ward_id).first() if complaint.ward_id else None
+    return ward_rule or rules.filter(ward__isnull=True).first()
+
+
+@transaction.atomic
+def route_complaint(complaint, actor, department_override=None, reason=None):
+    locked = Complaint.objects.select_for_update().select_related("category").get(pk=complaint.pk)
+    if locked.status != Complaint.Status.IN_TRIAGE:
+        raise ValidationError("Only complaints in triage can be routed.")
+    rule = active_routing_rule(locked)
+    if rule is None:
+        raise ValidationError("No active ward or category routing rule is configured.")
+    department = department_override or rule.department
+    reason = (reason or "").strip()
+    overridden = department.pk != rule.department_id
+    if overridden and not reason:
+        raise ValidationError("A reason is required when overriding the routing rule.")
+    if actor.role == "admin" and not reason:
+        raise ValidationError("An administrator routing decision requires a reason.")
+
+    transition(
+        locked,
+        Complaint.Status.ROUTED,
+        actor=actor,
+        reason=reason if overridden or actor.role == "admin" else None,
+        department=department,
+        rule_version=rule.version,
+    )
+    AuditEvent.objects.create(
+        actor=actor,
+        role=actor.role,
+        action="complaint_routed",
+        object_type="Complaint",
+        object_id=str(locked.pk),
+        after={
+            "department_id": department.pk,
+            "routing_rule_version": rule.version,
+            "overridden": overridden,
+        },
+        reason=reason if overridden or actor.role == "admin" else "",
+    )
+    return locked
 
 
 @transaction.atomic

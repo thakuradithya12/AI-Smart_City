@@ -45,6 +45,8 @@
 | 2026-11-20 | Compute overview counts from `Complaint.objects.visible_to(request.user)` | Dashboard metrics must reflect role visibility and actual records. | Showing example/demo counts or querying complaints without role scoping. |
 | 2026-11-21 | Complete backend work in gated phases beginning with a current-HEAD baseline audit | Historical test results must not be presented as proof for later code; backend priorities and stop conditions are mapped to the frozen project scope in `docs/BACKEND_ROADMAP.md`. | Restarting completed work blindly or declaring overall completion from stale test evidence. |
 | 2026-11-21 | Keep the public UI landing/gallery unauthenticated, but require login for `/workspace/` | The workspace reads role-scoped complaint data and dereferences the authenticated user's role; the UI-only landing/gallery does not access private records. | Applying login to the showcase or leaving the data dashboard accessible anonymously. |
+| 2026-11-21 | Put rule selection, route override validation, status transition and route audit write in one workflow-service transaction | A route must not commit if its routing audit event fails; views should only handle request/response concerns. | Writing the second route audit after the transition commits or keeping route policy in the console view. |
+| 2026-11-21 | Reject queryset update/delete for `StatusEvent` and `AuditEvent` as well as instance mutation | Django queryset bulk methods bypass model `save()`/`delete()` guards; closing this path makes the application-level append-only guarantee enforceable through the ORM. | Relying only on instance-level guards or granting broad database-role changes before review. |
 
 ## Verification sources
 

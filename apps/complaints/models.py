@@ -2,6 +2,15 @@ from django.contrib.gis.db import models
 from django.conf import settings
 from django.utils import timezone
 
+
+class AppendOnlyQuerySet(models.QuerySet):
+    def update(self, **kwargs):
+        raise ValueError("Status events are append-only")
+
+    def delete(self):
+        raise ValueError("Status events are append-only")
+
+
 class ComplaintQuerySet(models.QuerySet):
     def visible_to(self, user):
         # Every complaint lookup must be scoped by role before a view returns data.
@@ -70,6 +79,8 @@ class Evidence(models.Model):
     uploaded_at = models.DateTimeField(default=timezone.now)
 
 class StatusEvent(models.Model):
+    objects = models.Manager.from_queryset(AppendOnlyQuerySet)()
+
     complaint = models.ForeignKey(Complaint, on_delete=models.PROTECT, related_name="status_events")
     from_status = models.CharField(max_length=40, blank=True)
     to_status = models.CharField(max_length=40)

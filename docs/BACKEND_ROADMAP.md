@@ -2,7 +2,7 @@
 
 **Status:** planning baseline, 2026-11-21. This roadmap follows the frozen v1 requirements in [`../AGENTS.md`](../AGENTS.md). It is an execution plan, not evidence that a gate has passed. Work one phase at a time; do not begin a later phase until its entry conditions are met.
 
-**Latest execution update:** Phase 0 was attempted on 2026-11-21. Source review confirmed the core modules/tests exist and caught/fixed missing login protection on the separate `/workspace/` dashboard. Runtime baseline remains blocked because Docker CLI cannot connect to the Docker Desktop Linux engine pipe; see [`../PROGRESS.md`](../PROGRESS.md). Phase 1 has not started.
+**Latest execution update:** Phase 0 passed locally on 2026-11-21. Phase 1 passed locally on 2026-11-21 with routing policy moved into a single atomic workflow service and queryset mutation guards added for append-only logs; current evidence is in [`../docs/TEST_REPORT.md`](TEST_REPORT.md). Phase 2 is next. The production check retains only the documented HSTS subdomain/preload warnings; see [`../PROGRESS.md`](../PROGRESS.md).
 
 ## Target
 

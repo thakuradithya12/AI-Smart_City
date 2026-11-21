@@ -1,7 +1,18 @@
 from django.conf import settings
 from django.db import models
 
+
+class AppendOnlyQuerySet(models.QuerySet):
+    def update(self, **kwargs):
+        raise ValueError("Audit events are append-only")
+
+    def delete(self):
+        raise ValueError("Audit events are append-only")
+
+
 class AuditEvent(models.Model):
+    objects = models.Manager.from_queryset(AppendOnlyQuerySet)()
+
     actor = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT)
     role = models.CharField(max_length=32)
     action = models.CharField(max_length=64)
