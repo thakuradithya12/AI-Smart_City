@@ -18,7 +18,7 @@
   {% for complaint in recent_complaints %}
   <article class="card card-spaced">
     <div class="card-head"><h2><a class="mono" href="{% url 'complaint_detail' complaint.pk %}">{{ complaint.public_id }}</a></h2><span class="badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></div>
-    <div class="card-meta"><span>{{ complaint.category.name }}</span><span>{{ complaint.ward.name|default:"Ward pending" }}</span><span>{{ complaint.created_at|date:"M j, Y · H:i" }}</span></div>
+    <div class="card-meta"><span>{{ complaint.category.display_label }}</span><span>{{ complaint.ward.name|default:"Ward pending" }}</span><span>{{ complaint.created_at|date:"M j, Y · H:i" }}</span></div>
     {% if complaint.due_at %}<p class="card-copy">Due {{ complaint.due_at|date:"M j, Y" }}{% if complaint.is_overdue %} <span class="badge overdue">Overdue</span>{% endif %}</p>{% endif %}
   </article>
   {% empty %}

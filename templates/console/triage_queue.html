@@ -6,7 +6,7 @@
 {% for complaint in complaints %}
 <article class="card">
   <div class="card-head"><h2><a class="mono" href="{% url 'complaint_detail' complaint.pk %}">{{ complaint.public_id }}</a></h2><span class="badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></div>
-  <div class="card-meta"><span>{{ complaint.category.name }}{% if complaint.category.is_safety_critical %} · Safety critical{% endif %}</span><span>Ward: {{ complaint.ward.name|default:"Unknown" }}</span><span>Reported by {{ complaint.citizen.name }}</span><span>Due {{ complaint.due_at|date:"M j, Y"|default:"Not set" }}{% if complaint.is_overdue %} · <strong class="overdue">Overdue</strong>{% endif %}</span></div>
+  <div class="card-meta"><span>{{ complaint.category.display_label }}{% if complaint.category.is_safety_critical %} · Safety critical{% endif %}</span><span>Ward: {{ complaint.ward.name|default:"Unknown" }}</span><span>Reported by {{ complaint.citizen.name }}</span><span>Due {{ complaint.due_at|date:"M j, Y"|default:"Not set" }}{% if complaint.is_overdue %} · <strong class="overdue">Overdue</strong>{% endif %}</span></div>
   {% if complaint.description %}<p class="card-copy">{{ complaint.description|truncatechars:300 }}</p>{% endif %}
   <div class="card-actions"><a class="button button-secondary" href="{% url 'complaint_detail' complaint.pk %}">Open complaint</a></div>
   {% if complaint.status == "in_triage" %}

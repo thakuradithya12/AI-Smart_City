@@ -49,8 +49,12 @@ class Category(models.Model):
     default_department = models.ForeignKey(Department, null=True, blank=True, on_delete=models.PROTECT)
     is_safety_critical = models.BooleanField(default=False)
 
+    @property
+    def display_label(self):
+        return self.name.replace("_", " ").title()
+
     def __str__(self):
-        return self.name
+        return self.display_label
 
 class RoutingRule(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)

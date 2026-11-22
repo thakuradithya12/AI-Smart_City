@@ -15,7 +15,7 @@ def home(request):
     activity = StatusEvent.objects.select_related("complaint__category", "complaint__ward").order_by("-created_at")[:3]
     updates = [
         {
-            "category": event.complaint.category.name,
+            "category": event.complaint.category.display_label,
             "ward": event.complaint.ward.name if event.complaint.ward_id else "Service area",
             "status": status_labels.get(event.to_status, event.to_status.replace("_", " ").title()),
             "created_at": event.created_at,

@@ -287,3 +287,8 @@
 
 - Reproduced unordered `.first()` ward selection. Added `active_ward_for_point()` to refuse multi-ward matches and wired it into report submission before image storage; added a duplicate-active-polygon regression test.
 - `python -m pytest -q tests/test_day2_reporting.py -k overlapping_active_wards` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). PostGIS behavior is not verified; see `docs/TEST_REPORT.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V6
+
+- Reproduced raw category slug rendering. Added a derived human-readable category label, updated complaint/queue/dashboard/public-update displays and `Category.__str__`, and added label/template-source regression tests.
+- `python -m pytest -q tests/test_geography_admin.py -k display_label` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Rendered output is not runtime-verified; see `docs/TEST_REPORT.md`.
