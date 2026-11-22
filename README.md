@@ -26,7 +26,7 @@ Day 2 local routes, demo seeding and the vendor asset download/check command are
 
 ## Privacy and retention
 
-The site stores account email and name, complaint descriptions, map pins and evidence photos. The report form records consent. Do not submit emergency requests; this platform is not an emergency service. Evidence is served only to users authorized for the associated complaint. No automatic complaint or photo deletion is configured. Before public deployment, the project owner must approve and publish a retention period and deletion process; until then, production data collection is not authorized.
+New citizen accounts store a unique Indian phone number and name, complaint descriptions, map pins and evidence photos. Existing staff email identifiers remain only until their accounts are assigned phone numbers. SMS/OTP verification is not implemented. The report form records consent. Do not submit emergency requests; this platform is not an emergency service. Evidence is served only to users authorized for the associated complaint. No automatic complaint or photo deletion is configured. Before public deployment, the project owner must approve and publish a retention period and deletion process; until then, production data collection is not authorized.
 
 ## Production operations
 

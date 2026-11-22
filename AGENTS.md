@@ -51,7 +51,7 @@ Core ideas that must be visible in the code:
 
 ### In scope (version 1, website)
 
-1. Accounts with roles; email and password login.
+1. Accounts with roles; Indian mobile number and password login. SMS/OTP verification is out of scope for v1.
 2. Citizen: report (photo, map pin, category, description), see own complaints with a status timeline, confirm or dispute a resolution, cancel before acknowledgement.
 3. Triage queue for reviewers; routing to a department from ward and category rules; override with reason.
 4. Department inbox: acknowledge, reject or transfer with reason, assign to field worker.
@@ -139,7 +139,7 @@ Create `AUTH_USER_MODEL = "accounts.User"` **before the first migration**. Use `
 
 | Model | Fields (minimum) | Notes |
 | --- | --- | --- |
-| `User` | email (unique, login), name, role, department (FK, null), is_active | Roles: `citizen`, `triage_reviewer`, `department_official`, `supervisor`, `field_worker`, `admin` |
+| `User` | phone_number (unique, login), name, role, department (FK, null), is_active | Optional legacy email is retained only for staff accounts awaiting phone migration. Roles: `citizen`, `triage_reviewer`, `department_official`, `supervisor`, `field_worker`, `admin` |
 | `Ward` | name, boundary (MultiPolygon, SRID 4326), source, effective_from, effective_to | Record where the boundary came from |
 | `Department` | name | |
 | `Category` | name, default_due_hours, default_department (FK, null), is_safety_critical | Safety-critical flag shows a visible warning to the reviewer |
@@ -164,7 +164,7 @@ Enforce on the server in one place (`apps/workflow/permissions.py`) and reuse it
 | Role | May see | May do |
 | --- | --- | --- |
 | citizen | Own complaints only | Submit, cancel before acknowledgement, reply to information requests, confirm or dispute resolution |
-| triage_reviewer | All complaints; minimal personal data (no email) | Edit category, route, request information, reject, mark duplicate |
+| triage_reviewer | All complaints; minimal personal data (no phone or email) | Edit category, route, request information, reject, mark duplicate |
 | department_official | Complaints routed to their department | Acknowledge, reject or transfer with reason, assign within department |
 | supervisor | Their department's complaints and field workers | Assign, reassign, verify, dispute, reopen |
 | field_worker | Only tasks assigned to them | Start work, upload evidence, mark done |
@@ -254,7 +254,7 @@ When triaging, show other open complaints in the same category within a configur
 - Password validators on; no default or shared passwords in production.
 - All object access through `visible_to`; add tests for cross-user and cross-department access (IDOR) on every detail, evidence and action URL.
 - Output escaping stays on; no `|safe` on user text; CSP header if time allows.
-- Collect only email, name and complaint data. No phone numbers, no government IDs.
+- Collect only phone number, name and complaint data for new citizens. Do not collect email for new citizen accounts or government IDs. Retain existing staff email only until phone migration; never show contact data to reviewers.
 - Demo accounts exist only on dev and the demo server. Create them with random passwords printed once by `seed_demo`; disable or rotate them after the demo.
 - Backups are encrypted or stored with restricted access; the restore test is a deliverable.
 

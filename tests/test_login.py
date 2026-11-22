@@ -6,7 +6,7 @@ def test_login_page_renders(client):
     response = client.get(reverse("login"))
     assert response.status_code == 200
     assert b"Sign in" in response.content
-    assert b"type=\"email\"" in response.content
+    assert b"type=\"tel\"" in response.content
     assert response["Permissions-Policy"] == "camera=(), microphone=(), geolocation=(self)"
     assert response["Cross-Origin-Resource-Policy"] == "same-origin"
     assert response["Cache-Control"] == "no-store"

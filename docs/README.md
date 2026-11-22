@@ -2,7 +2,7 @@
 
 ## Routes
 
-- `/accounts/login/` — sign in with email and password.
+- `/accounts/login/` — sign in with an Indian mobile number and password. Existing staff accounts can use their legacy email identifier until an administrator assigns a phone number.
 - `/register/` — create and sign in to a citizen account.
 - `/` — signed-in home. Citizens can start a report or open their complaints.
 - `/complaints/new/` — submit category, optional description, required photo, confirmed coordinates, and consent.

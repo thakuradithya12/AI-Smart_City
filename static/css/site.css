@@ -25,7 +25,10 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; background: var(--canvas); font-size: 14px; line-height: 1.5; }
+body { position: relative; isolation: isolate; margin: 0; min-width: 320px; background: var(--canvas); font-size: 14px; line-height: 1.5; }
+body::before { position: fixed; z-index: 0; inset: -2rem; background: url("/static/img/civic-street-lines.svg") no-repeat right 46% / min(960px, 84vw) auto; opacity: .34; transform: translate3d(var(--city-shift-x, 0), var(--city-shift-y, 0), 0); transition: transform 800ms cubic-bezier(.2, .65, .3, 1); animation: city-route-breathe 16s ease-in-out infinite alternate; content: ""; pointer-events: none; }
+body > * { position: relative; z-index: 1; }
+@keyframes city-route-breathe { from { opacity: .22; } to { opacity: .36; } }
 a { color: var(--blue); text-decoration: none; }
 a:hover { color: var(--navy); text-decoration: underline; }
 button, input, select, textarea { font: inherit; }
@@ -142,6 +145,10 @@ legend { padding: 0 .4rem; color: var(--navy); font-weight: 700; }
 .site-footer strong { display: block; color: var(--navy); }
 .footer-note { align-self: center; }
 
+@media (pointer: coarse) {
+  body::before { background-position: center 55%; opacity: .2; }
+}
+
 @media (max-width: 760px) {
   .header-inner { flex-wrap: wrap; gap: .4rem .75rem; padding: .65rem 1rem; }
   .primary-nav { order: 3; width: 100%; overflow-x: auto; margin: .25rem 0 -.2rem; }
@@ -162,4 +169,5 @@ legend { padding: 0 .4rem; color: var(--navy); font-weight: 700; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  body::before { transform: none !important; }
 }

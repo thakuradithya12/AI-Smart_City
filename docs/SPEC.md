@@ -15,7 +15,7 @@ Citizens submit civic reports with a category, optional description, photo, and 
 
 ## Workflow rules
 
-1. Submission creates the citizen report and photo evidence, confirms consent, checks the pin against an active local ward, and enters `in_triage`. Registration does not depend on AI, email, geocoding, or map tiles.
+1. Submission creates the citizen report and photo evidence, confirms consent, checks the pin against an active local ward, and enters `in_triage`. Registration does not depend on AI, SMS, email, geocoding, or map tiles.
 2. A reviewer routes using an active category/ward rule or records a reason for an override. The routing rule version is audited. The department sees the complaint only after routing.
 3. Department acknowledgement and assignment precede field work. Field completion is a claim; verification is a separate outcome.
 4. A citizen or supervisor may verify or dispute the fix. Disputes reopen the work with a reason. Citizen silence never closes a report.
@@ -28,7 +28,7 @@ The project stores WGS84 points and uses an effective ward boundary to decide ju
 
 ## Privacy and safety
 
-Complaint photos are private and served only after the same complaint visibility check. The platform is not an emergency service. Collect account email/name and complaint information only; do not collect phone numbers or government IDs. AI, when delivered, may suggest a category to a human reviewer only.
+Complaint photos are private and served only after the same complaint visibility check. The platform is not an emergency service. New citizen accounts use a unique Indian mobile number and name; no email, OTP or government ID is collected. Existing staff email identifiers remain available only until an administrator assigns those accounts a phone number. AI, when delivered, may suggest a category to a human reviewer only.
 
 ## v1 exclusions
 

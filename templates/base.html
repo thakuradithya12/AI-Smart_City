@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#172b4d">
+  <meta name="theme-color" content="#183b32">
   <title>{% block title %}AI Smart City · Civic service portal{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
@@ -31,7 +31,7 @@
           <a href="{% url 'field_tasks' %}"{% if request.resolver_match.url_name == 'field_tasks' %} aria-current="page"{% endif %}>My field tasks</a>
         {% endif %}
       </nav>
-      <div class="account-menu"><span class="user-name">{{ request.user.name|default:request.user.email }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button-quiet" type="submit">Sign out</button></form></div>
+      <div class="account-menu"><span class="user-name">{{ request.user.name|default:request.user.phone_number }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button-quiet" type="submit">Sign out</button></form></div>
       {% else %}<a class="button" href="{% url 'login' %}">Sign in</a>{% endif %}
     </div>
   </header>
@@ -41,6 +41,7 @@
   </main>
   <footer class="site-footer"><div><strong>AI Smart City</strong><span>Report local issues. Follow progress. Help improve your neighbourhood.</span></div><span class="footer-note">This platform is not an emergency service.</span></footer>
   <script defer src="{% static 'js/accessibility.js' %}"></script>
+  <script defer src="{% static 'js/city-background.js' %}"></script>
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>

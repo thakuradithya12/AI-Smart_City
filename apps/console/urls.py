@@ -52,6 +52,16 @@ def ui_showcase(request, screen="", updates=None):
             from django.http import Http404
             raise Http404
         html = (root / screen / "code.html").read_text(encoding="utf-8")
+        # Apply the same quiet, reduced-motion-aware city map treatment to each supplied UI screen.
+        background = '''<style>
+          body{position:relative;isolation:isolate}
+          body::before{position:fixed;z-index:0;inset:-2rem;background:url("/static/img/civic-street-lines.svg") no-repeat right 46%/min(960px,84vw) auto;opacity:.34;transform:translate3d(var(--city-shift-x,0),var(--city-shift-y,0),0);transition:transform 800ms cubic-bezier(.2,.65,.3,1);animation:city-route-breathe 16s ease-in-out infinite alternate;content:"";pointer-events:none}
+          body>*{position:relative;z-index:1}
+          @keyframes city-route-breathe{from{opacity:.2}to{opacity:.34}}
+          @media(pointer:coarse){body::before{background-position:center 55%;opacity:.2}}
+          @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}body::before{transform:none!important}}
+        </style><script defer src="/static/js/city-background.js"></script>'''
+        html = html.replace("</head>", background + "</head>")
         # Keep the temporary showcase navigation below the designed footer so it never overlaps the page header.
         nav = '<a aria-label="Return to all supplied screens" style="display:inline-flex;align-items:center;min-height:38px;padding:7px 12px;border:1px solid #c9d4cc;border-radius:6px;color:#234c3d;text-decoration:none;white-space:nowrap" href="/ui-showcase/">← All screens</a>'
         html = html.replace("<!-- LOCAL-UPDATES -->", render_to_string("public_updates.html", {"updates": updates or []}))

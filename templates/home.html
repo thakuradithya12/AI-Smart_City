@@ -2,7 +2,7 @@
 {% block title %}Overview · AI Smart City{% endblock %}
 {% block content %}
 <header class="page-heading">
-  <div><p class="eyebrow">{{ request.user.get_role_display }} workspace</p><h1>Hello, {{ request.user.name|default:request.user.email }}</h1><p>Review civic reports and follow the work happening across your service area.</p></div>
+  <div><p class="eyebrow">{{ request.user.get_role_display }} workspace</p><h1>Hello, {{ request.user.name|default:request.user.phone_number }}</h1><p>Review civic reports and follow the work happening across your service area.</p></div>
   {% if request.user.role == "citizen" %}<a class="button" href="{% url 'report' %}">＋ Report an issue</a>{% elif queue_url_name %}<a class="button" href="{% url queue_url_name %}">Open your work queue</a>{% endif %}
 </header>
 <section class="stat-grid" aria-label="Complaint overview">

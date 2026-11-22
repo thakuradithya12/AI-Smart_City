@@ -1,5 +1,14 @@
 # Progress
 
+## 2026-11-23 — Phone-based citizen accounts and shared UI motion
+
+- Changed new citizen registration and login to use unique Indian mobile numbers, normalized to `+91` format. Added a custom authentication backend and login lockout-compatible form normalization. Existing email-only staff/demo accounts remain able to sign in until an administrator assigns a phone number; new citizen accounts store no email.
+- Added and applied `accounts.0002_user_phone_number_alter_user_email` to the local PostGIS database. Existing accounts are preserved with a nullable phone field; no phone numbers were fabricated or backfilled.
+- Added a shared civic street-map illustration with subtle pointer response and slow breathing motion. Reduced-motion users and coarse-pointer devices receive a static, lower-opacity treatment. Applied the treatment to the Django site and supplied static UI showcase screens.
+- Updated the register/sign-in screens, the supplied auth mockups, privacy wording, project specification, and operating guide. The form explicitly states that SMS/OTP ownership verification is not available.
+- Evidence: rebuilt the `web` container and collected 154 static files; migration applied successfully; `manage.py check` reported `System check identified no issues (0 silenced)`; `git diff --check` passed. Browser verified `/register/` has phone/name/password fields and `/accounts/login/` has phone/password fields, with the animated map artwork visible. Automated tests were not run for this task.
+- Next: test phone registration/sign-in including normalization and uniqueness; decide whether to migrate existing staff/demo users to phone credentials when owner-supplied numbers are available.
+
 ## 2026-11-23 — Refresh public landing UI
 
 - Reworked the public landing page and shared application palette from navy/blue to deep evergreen, warm stone and terracotta, enlarged the CivicOps mark, and changed the header to a three-column layout with a compact mobile breakpoint.

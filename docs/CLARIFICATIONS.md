@@ -19,7 +19,8 @@ These decisions were supplied by the project owner on 2026-11-18. They are bindi
 - `routed -> in_triage` means transfer back to triage with a reason; a reviewer manually routes it again. Never automatically re-route.
 - Admin overrides may use only transitions in AGENTS.md section 8, require a reason, and are flagged in the audit log.
 - Create the complaint row, then set `public_id` from its primary key inside the same atomic block; enforce uniqueness.
-- Reviewers see complaint facts and citizen name, but not email.
+- Reviewers see complaint facts and citizen name, but not phone number or email.
+- Owner request (2026-11-23): new citizen registration and sign-in use a unique Indian phone number instead of email. SMS/OTP verification remains out of scope. Existing staff email-based accounts remain usable until an administrator assigns phone numbers.
 - Vendor Bootstrap and Leaflet locally and record licences. Use OSM tiles only within the published usage policy and at demo-level traffic.
 - Worker is an optional Compose profile until Day 5: one process, one retry, then mark failed.
 - Duplicate candidates use 30 m, last 7 days; “open” means every status except `verified_closed`, `rejected`, and `cancelled`.

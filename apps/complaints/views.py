@@ -28,7 +28,7 @@ def register(request):
     form = CitizenRegistrationForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         user = form.save()
-        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+        login(request, user, backend="apps.accounts.backends.PhoneOrLegacyEmailBackend")
         return redirect("dashboard")
     return render(request, "complaints/register.html", {"form": form})
 

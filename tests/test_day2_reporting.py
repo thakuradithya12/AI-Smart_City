@@ -73,20 +73,22 @@ def test_original_hash_and_exif_free_display():
 
 @pytest.mark.django_db
 def test_registration_weak_password_rejected(client):
-    response = client.post(reverse("register"), {"email": "weak@example.test", "name": "Weak User", "password1": "123", "password2": "123"})
+    response = client.post(reverse("register"), {"phone_number": "9876543210", "name": "Weak User", "password1": "123", "password2": "123"})
     assert response.status_code == 200
-    assert not User.objects.filter(email="weak@example.test").exists()
+    assert not User.objects.filter(phone_number="+919876543210").exists()
 
 
 @pytest.mark.django_db
 def test_registration_and_login(client):
-    response = client.post(reverse("register"), {"email": "new@example.test", "name": "New Citizen", "password1": "Good!Password982", "password2": "Good!Password982"})
+    response = client.post(reverse("register"), {"phone_number": "98765 43210", "name": "New Citizen", "password1": "Good!Password982", "password2": "Good!Password982"})
     assert response.status_code == 302
     assert response.url == reverse("dashboard")
-    user = User.objects.get(email="new@example.test")
+    user = User.objects.get(phone_number="+919876543210")
+    assert user.email is None
+    assert user.username == user.phone_number
     assert user.role == User.Role.CITIZEN
     client.logout()
-    response = client.post(reverse("login"), {"username": user.email, "password": "Good!Password982"})
+    response = client.post(reverse("login"), {"username": "+91 (98765) 43210", "password": "Good!Password982"})
     assert response.status_code == 302
     assert response.url == reverse("dashboard")
     assert str(user.pk) == client.session.get("_auth_user_id")
