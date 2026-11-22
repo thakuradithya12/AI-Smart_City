@@ -311,3 +311,8 @@
 ## 2026-11-23 — ROADMAP_V2 Phase 0.5 V10
 
 - Confirmed the state table allows department officials to mark work done while `mark_work_done` requires a field worker. Per roadmap owner-decision rule, made no code change; recorded the question and recommended default in `docs/DECISIONS_NEEDED.md` and `docs/TEST_REPORT.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V11
+
+- Reproduced missing report photo `accept`/`capture` hints; added JPEG/PNG/WebP acceptance and `capture="environment"` to the report input, plus a rendered-page regression test.
+- `python -m pytest -q tests/test_day2_reporting.py -k mobile_file_hints` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Rendered HTML is not verified; see `docs/TEST_REPORT.md`.

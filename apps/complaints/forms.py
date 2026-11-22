@@ -78,7 +78,11 @@ class PhoneAuthenticationForm(AuthenticationForm):
 class ReportForm(forms.Form):
     category = forms.ModelChoiceField(queryset=Category.objects.all())
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={"rows": 4}))
-    photo = forms.ImageField()
+    photo = forms.ImageField(
+        widget=forms.ClearableFileInput(
+            attrs={"accept": "image/jpeg,image/png,image/webp", "capture": "environment"}
+        )
+    )
     latitude = forms.DecimalField(min_value=-90, max_value=90, max_digits=10, decimal_places=7)
     longitude = forms.DecimalField(min_value=-180, max_value=180, max_digits=10, decimal_places=7)
     gps_accuracy_m = forms.DecimalField(required=False, min_value=0, max_digits=10, decimal_places=2)

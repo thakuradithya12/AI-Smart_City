@@ -79,6 +79,17 @@ def test_registration_weak_password_rejected(client):
 
 
 @pytest.mark.django_db
+def test_report_photo_input_has_mobile_file_hints(client, citizen):
+    client.force_login(citizen)
+
+    response = client.get(reverse("report"))
+
+    assert response.status_code == 200
+    assert b'accept="image/jpeg,image/png,image/webp"' in response.content
+    assert b'capture="environment"' in response.content
+
+
+@pytest.mark.django_db
 def test_registration_and_login(client):
     response = client.post(reverse("register"), {"phone_number": "98765 43210", "name": "New Citizen", "password1": "Good!Password982", "password2": "Good!Password982"})
     assert response.status_code == 302

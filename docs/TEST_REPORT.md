@@ -118,6 +118,15 @@
 | Suspected defect reproduction | Confirmed from source | `TRANSITIONS` allows both `field_worker` and `department_official`; `mark_work_done` explicitly requires `field_worker`. The roadmap requires the owner to choose. |
 | Decision | Blocked on owner | No code changed. Recommended default: field worker only, matching the role matrix and current view. See `docs/DECISIONS_NEEDED.md`. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V11 report photo hints
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | `ReportForm.photo` used default `ImageField` widget attrs and the report template rendered it directly, with no `accept` or `capture` hints. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_day2_reporting.py -k mobile_file_hints` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Change | Implemented, not runtime-verified | Set accepted JPEG/PNG/WebP types and `capture="environment"` on the report photo input; added a rendered-page regression test. |
+| Syntax check | Passed | Python `ast.parse` parsed `apps/complaints/forms.py` and `tests/test_day2_reporting.py`. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |
