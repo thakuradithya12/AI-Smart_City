@@ -5,6 +5,7 @@ from .base import *  # noqa: F403
 
 DEBUG = True
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "local-only-insecure-development-key")
+EMAIL_BACKEND = os.environ.get("DJANGO_EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
 MIDDLEWARE = [
     middleware
     for middleware in base_settings.MIDDLEWARE

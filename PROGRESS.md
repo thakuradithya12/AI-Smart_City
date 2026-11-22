@@ -262,3 +262,9 @@
 
 - Confirmed `actions/checkout@v6` and `actions/setup-python@v5` exist in official release histories; added dated evidence and outstanding owner inputs to `docs/DECISIONS_NEEDED.md`.
 - `git remote -v` returned no rows. No remote was invented and no push/CI result is claimed; owner must provide an owner-controlled repo URL and authenticated remote setup. See `docs/TEST_REPORT.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V1
+
+- Reproduced missing reset templates/email settings from source; added styled Django password-reset pages, environment-backed SMTP settings, and a focused legacy-staff email test. Files: `config/settings/{base,dev,prod}.py`, `.env.example`, `templates/registration/password_reset_*`, `tests/test_accounts.py`.
+- `python -m pytest -q tests/test_accounts.py -k password_reset` exited 2 before assertions (`ModuleNotFoundError: No module named 'django'`); `makemigrations --check --dry-run` has the same environment blocker. Runtime result: not verified.
+- New citizen phone-account recovery remains unavailable without an owner-approved phone verification route; see `docs/LIMITS.md` and D4.

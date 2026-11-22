@@ -35,6 +35,14 @@
 | Existing action tags | Source-verified | Official release pages confirm `actions/checkout@v6.0.0` and `actions/setup-python@v5.6.0` on 2026-11-23. |
 | Green Actions run | Not verified | Requires owner-controlled GitHub repository URL and authenticated remote setup; see `docs/DECISIONS_NEEDED.md`. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V1 password reset
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | `config/urls.py` includes `django.contrib.auth.urls`; `templates/registration/` had only `logged_out.html` and `login.html`; `rg` found no email settings. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_accounts.py -k password_reset` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Change | Implemented, not runtime-verified | Added styled reset form/done/confirm/complete/email templates, safe dev console email, production SMTP environment settings and a focused legacy-staff reset test. No provider credentials were added. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |
