@@ -14,15 +14,15 @@
 - `/console/field/` and `/console/field/<id>/` — assigned field tasks, start work, before/after evidence uploads and work claim.
 - Complaint detail — chronological status, message and evidence timeline; citizen cancel/reply/confirm/dispute, supervisor verify/dispute/reassign actions when allowed by the state machine.
 
-Run the local stack, apply migrations, and seed a demo square ward centered at coordinates you choose:
+Run the local stack, apply migrations, and seed the synthetic demo ward centered in Hyderabad, Telangana:
 
 ```powershell
 docker compose up -d db web
 docker compose exec web python manage.py migrate
-docker compose exec web python manage.py seed_demo --lat <latitude> --lon <longitude>
+docker compose exec web python manage.py seed_demo
 ```
 
-The seed command creates a small demo ward, the six default categories, demo-labelled departments, and five demo roles with random passwords. The demo category routes use the same demo department as the seeded staff so a single set of demo logins can complete a lifecycle. It prints each new account's password once. With `DEBUG=False`, it refuses unless `--force` is supplied. Use test polygons for automated geography tests; do not treat the demo ward as pilot data.
+The seed command creates a small synthetic square demo ward in Hyderabad, Telangana, the six default categories, demo-labelled departments, and five demo roles with random passwords. The demo category routes use the same demo department as the seeded staff so a single set of demo logins can complete a lifecycle. It prints each new account's password once. With `DEBUG=False`, it refuses unless `--force` is supplied. The Hyderabad boundary is demo-only and is not an authoritative Telangana or municipal ward boundary or pilot data. Use test polygons for automated geography tests.
 
 ## Local vendor assets
 

@@ -10,24 +10,24 @@ from apps.accounts.models import User
 from apps.geography.models import Category, Department, RoutingRule, Ward
 from django.utils import timezone
 
+# Fixed local demo centre in Hyderabad, Telangana; this is not pilot geography.
+DEMO_LATITUDE = 17.3850
+DEMO_LONGITUDE = 78.4867
+
 class Command(BaseCommand):
     help = "Create local demo accounts with random passwords (printed once)."
 
     def add_arguments(self, parser):
-        parser.add_argument("--lat", type=float, required=True)
-        parser.add_argument("--lon", type=float, required=True)
         parser.add_argument("--force", action="store_true")
 
     def handle(self, *args, **options):
         if not settings.DEBUG and not options["force"]:
             raise CommandError("Refusing demo seed with DEBUG=False. Pass --force to continue.")
-        lat, lon = options["lat"], options["lon"]
-        if not -90 <= lat <= 90 or not -180 <= lon <= 180:
-            raise CommandError("Latitude or longitude is outside valid coordinate bounds.")
-        # A small square gives local demos a supported area without inventing pilot geography.
-        half_side = 0.001
+        lat, lon = DEMO_LATITUDE, DEMO_LONGITUDE
+        # A synthetic central Hyderabad area keeps local demos in Telangana without claiming pilot boundaries.
+        half_side = 0.1
         ring = ((lon-half_side, lat-half_side), (lon+half_side, lat-half_side), (lon+half_side, lat+half_side), (lon-half_side, lat+half_side), (lon-half_side, lat-half_side))
-        ward, _ = Ward.objects.update_or_create(name="Demo Ward", defaults={"boundary": MultiPolygon(Polygon(ring), srid=4326), "source": f"hand-drawn, {date.today().isoformat()}", "effective_from": date.today()})
+        ward, _ = Ward.objects.update_or_create(name="Demo Ward", defaults={"boundary": MultiPolygon(Polygon(ring), srid=4326), "source": f"synthetic demo boundary centered in Hyderabad, Telangana; not pilot data; {date.today().isoformat()}", "effective_from": date.today()})
         # All seeded categories share the staff department so one demo login set can exercise a full workflow.
         demo_department, _ = Department.objects.get_or_create(name="Demo Department — Roads")
         for name in ("Sanitation", "Water", "Lighting"):

@@ -38,7 +38,7 @@ The sequence is submit → triage → route → acknowledge → assign → work 
 
 ## Local demo data
 
-`seed_demo` creates demo-labelled departments, categories, a synthetic square ward and role accounts with random passwords printed once. Use only in a disposable local development database, with coordinates explicitly chosen for a test fixture. Never treat the generated ward as pilot geography or run demo seeding against production. The command requires `--force` when Django debug mode is off; do not use that flag to seed a production system.
+`seed_demo` creates demo-labelled departments, categories, a synthetic square ward centered in Hyderabad, Telangana, and role accounts with random passwords printed once. The location is fixed to keep the demo area in Telangana. This is not an authoritative ward boundary or pilot geography. Use only in a disposable local development database; never run demo seeding against production. The command requires `--force` when Django debug mode is off; do not use that flag to seed a production system.
 
 ## Privacy and support
 

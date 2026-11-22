@@ -15,6 +15,7 @@ from django.test import override_settings
 from django.urls import reverse
 
 from apps.accounts.models import User
+from apps.accounts.management.commands.seed_demo import DEMO_LATITUDE, DEMO_LONGITUDE
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, Evidence, StatusEvent
 from apps.complaints.services import delete_private_files, private_storage, store_citizen_image
@@ -102,13 +103,16 @@ def test_authenticated_user_visiting_login_is_sent_to_workspace(client, citizen)
 
 
 @pytest.mark.django_db
-def test_seed_demo_creates_coordinate_ward_defaults_and_prints_passwords_once():
+def test_seed_demo_creates_hyderabad_demo_ward_defaults_and_prints_passwords_once():
     output = StringIO()
     with override_settings(DEBUG=True):
-        call_command("seed_demo", lat=12.3456, lon=78.9012, stdout=output)
+        call_command("seed_demo", stdout=output)
     ward = Ward.objects.get(name="Demo Ward")
-    assert ward.boundary.covers(Point(78.9012, 12.3456, srid=4326))
-    assert ward.source.startswith("hand-drawn, ")
+    assert ward.boundary.covers(Point(DEMO_LONGITUDE, DEMO_LATITUDE, srid=4326))
+    assert "Hyderabad, Telangana" in ward.source
+    assert "not pilot data" in ward.source
+    assert ward.boundary.covers(Point(DEMO_LONGITUDE + 0.05, DEMO_LATITUDE + 0.05, srid=4326))
+    assert not ward.boundary.covers(Point(77.5946, 12.9716, srid=4326))
     assert set(Category.objects.values_list("name", flat=True)) == {"pothole", "garbage", "drainage", "streetlight", "water_leakage", "other"}
     assert User.objects.count() == 5
     assert RoutingRule.objects.filter(ward=ward).count() == 6
@@ -119,7 +123,7 @@ def test_seed_demo_creates_coordinate_ward_defaults_and_prints_passwords_once():
 
     second_output = StringIO()
     with override_settings(DEBUG=True):
-        call_command("seed_demo", lat=12.3456, lon=78.9012, stdout=second_output)
+        call_command("seed_demo", stdout=second_output)
     assert "Skipped existing account" in second_output.getvalue()
     assert "@example.test " not in second_output.getvalue()
 
@@ -128,8 +132,8 @@ def test_seed_demo_creates_coordinate_ward_defaults_and_prints_passwords_once():
 def test_seed_demo_requires_force_when_debug_is_false():
     with override_settings(DEBUG=False):
         with pytest.raises(CommandError, match="Pass --force"):
-            call_command("seed_demo", lat=12, lon=78)
-        call_command("seed_demo", lat=12, lon=78, force=True, stdout=StringIO())
+            call_command("seed_demo")
+        call_command("seed_demo", force=True, stdout=StringIO())
 
 
 @pytest.mark.django_db

@@ -1,5 +1,12 @@
 # Progress
 
+## 2026-11-22 — Keep local demo coverage in Telangana
+
+- Changed `seed_demo` to always place its synthetic demo area in central Hyderabad, Telangana; removed latitude/longitude overrides so the command cannot seed this demo ward in another state. Its source is explicitly labeled synthetic and not pilot data.
+- Expanded the synthetic square to cover the central Hyderabad demo area. Updated the seed regression test to check the Hyderabad center, an interior test point, and an outside point. Updated local setup and user guide instructions.
+- Rebuilt and restarted the Docker web image, then reseeded the local database with output suppressed so passwords were not exposed. Database verification shows bounds `(78.3867, 17.285, 78.5867, 17.485)`, the Hyderabad center and an interior point are covered, Bengaluru is outside, and the ward source says synthetic/not pilot data.
+- Docker Compose checks passed: migration check reported `No changes detected`; all `61` tests passed; Ruff passed; Bandit reported no issues across 1,455 lines; pip-audit found no known vulnerabilities. `compileall` and `git diff --check` also passed. An initial check invocation returned errors; a clean full rerun passed.
+
 ## 2026-11-22 — Repair public sign-in and landing/report interactions
 
 - Reproduced the landing sign-in defect: click changed the address to `/#login` and did not open the Django login route. Registration/login then redirected to the landing mockup instead of the authenticated workspace. Updated both CTAs and redirects; authenticated Overview/brand links now return to `/workspace/`.
