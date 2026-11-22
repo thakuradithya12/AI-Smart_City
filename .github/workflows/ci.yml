@@ -28,6 +28,13 @@ jobs:
       DJANGO_CSRF_TRUSTED_ORIGINS: https://localhost
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: "false"
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

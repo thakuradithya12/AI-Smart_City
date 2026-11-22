@@ -252,3 +252,8 @@
 - Increased pip's Docker install timeout to 120 seconds with 10 retries after the supplied build log showed a transient PyPI socket timeout.
 - Evidence already observed before Docker became unavailable in this session: `makemigrations --check --dry-run` reported `No changes detected`; `migrate` completed all migrations; pytest reported `3 passed`; `ruff check .` reported `All checks passed!`; `pip-audit -r requirements/base.txt` reported `No known vulnerabilities found`; the login endpoint returned HTTP 200 inside the container.
 - Remaining verification in this session: final rebuild and Docker-based checks are blocked because Buildx lock access is denied and the Docker Desktop Linux engine pipe returns permission denied. The public HTTPS deployment remains blocked because no domain/server was supplied. Day 1 is not claimed complete and no `day-1` tag is created.
+# 2026-11-23 — ROADMAP_V2 Phase 0.3
+
+- Rotated the local Django signing key without exposing it; `.env` is untracked. PostgreSQL role password rotation is pending because the local Docker/PostGIS engine is unavailable.
+- Removed the specified caches and uploaded ZIP; preserved `private_media/`. Added `*.zip` ignore and full-history Gitleaks v3 CI scan (`fetch-depth: 0`); official action version checked 2026-11-23.
+- No local history scan ran: Gitleaks is not installed and no Git remote is configured. See `docs/LIMITS.md` and `docs/TEST_REPORT.md`; 0.3 acceptance remains partial.

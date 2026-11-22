@@ -6,13 +6,26 @@
 
 | Command | Exit | Exact observed result |
 | --- | ---: | --- |
-| `docker compose run --rm checks` | 1 | `permission denied while trying to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine` |
+| `docker compose run --rm checks` | 1 | Exact stdout/stderr: `permission denied while trying to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine` |
 | `python --version` | 0 | `Python 3.15.0` (not the repository's Python 3.12 runtime) |
 | `python manage.py check --deploy --settings=config.settings.prod` | 1 | Traceback ends `ModuleNotFoundError: No module named 'django'` |
 | `.python-runtime\python.exe` existence check | n/a | `PYTHON_312_RUNTIME_NOT_FOUND` |
-| `docker compose build web` | 1 | `open C:\Users\thaku\.docker\buildx\.lock: Access is denied.` |
+| `docker compose build web` | 1 | Exact stdout/stderr: ` Image ai-smart_city-web Building` followed by `open C:\Users\thaku\.docker\buildx\.lock: Access is denied.` |
 
 **Counts:** pytest/Ruff/Bandit/pip-audit and migration results: not run; Docker image build: not built. The older 67-test and static-scan results below are historical and do not verify this HEAD. No remote or public deployment check was possible.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.3 hygiene and secret handling
+
+**Code under test before this documentation update:** `7c717bf783a40aa7adae949b17eff64800d62405`.
+
+| Check/action | Result | Evidence |
+| --- | --- | --- |
+| `.env` tracking check | Passed | `git ls-files --error-unmatch .env` exited 1 (not tracked); `.env` exists and was not printed or staged. |
+| Django key rotation | Completed locally | `DJANGO_SECRET_KEY` regenerated in `.env` using 64 random bytes; generated value was not printed. |
+| PostgreSQL role password rotation | Not verified | `localhost:5432` connection check failed; Docker API unavailable. Did not change only the env value and leave the existing database volume mismatched. |
+| Cache/archive cleanup | Completed | Removed `.uv-cache/`, `.python-runtime/`, `.pytest_cache/`, `.ruff_cache/`, `__pycache__/`, and the named untracked ZIP. `private_media/` remains present. |
+| Full-history secret scan | Not verified | No `gitleaks`, `trufflehog`, or `git-secrets` executable is installed; no Git remote exists. CI now checks out full history and invokes Gitleaks Action v3. |
+| Secret scan action version | Source-verified | Official `gitleaks/gitleaks-action` README/releases were checked 2026-11-23; v3 exists and uses Node 24. No CI run is claimed. |
 
 ## 2026-11-22 — Final local backlog and access-control pass
 
