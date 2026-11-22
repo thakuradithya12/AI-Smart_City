@@ -32,7 +32,9 @@ Complaint photos are private and served only after the same complaint visibility
 
 ## v1 exclusions
 
-No mobile app/PWA, public complaint map/dashboard, messaging or phone integrations, autonomous AI decisions, municipal system integration, multi-city tenant screens, payment, or social login.
+The owner authorized roadmap scope on 2026-11-23, lifting the v1 exclusions for in-app/email notifications, public transparency views, SLA monitoring/escalation, multilingual UI, and a versioned JSON API. These are gated roadmap work, not claims of delivery; each retains its roadmap decision and acceptance requirements. Public data defaults to category, ward, status and counts only, with no photos, text, names, person-linked IDs or exact pins unless the owner approves otherwise.
+
+Mobile app/PWA, SMS/WhatsApp/phone integrations, push notifications, autonomous AI decisions, municipal system integration, multi-city tenant screens, payment, social login, and other work outside the recommended submission cut remain excluded from this delivery. See [`ROADMAP_V2.md`](../ROADMAP_V2.md) for sequencing and later-phase boundaries.
 
 ## Delivery state
 

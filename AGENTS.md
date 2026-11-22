@@ -47,7 +47,9 @@ Core ideas that must be visible in the code:
 
 ---
 
-## 3. Scope (frozen)
+## 3. Scope (owner-amended 2026-11-23)
+
+The owner authorized execution of the repository's `ROADMAP_V2.md` on 2026-11-23. This supersedes the v1 exclusions below only for roadmap work and only where the roadmap acceptance gates and owner decisions are satisfied. The recommended submission cut in roadmap section 4 still governs sequencing; post-cut items remain roadmap work, not delivered features.
 
 ### In scope (version 1, website)
 
@@ -64,11 +66,15 @@ Core ideas that must be visible in the code:
 11. Duplicate flag using a PostGIS distance query (only if time remains).
 12. Deployment with HTTPS, CI, backups and a restore test.
 
-### Out of scope (do not build)
+### Additional roadmap scope (gated; not presumed delivered)
 
-Mobile app, PWA, React, Celery, Redis, Kafka, microservices, SMS, push notifications, SLA escalation chains, multi-city tenant screens, public map, public dashboard, chatbot, IoT, payment, government integrations, phone OTP, social login, multi-language UI, any autonomous AI decision.
+In-app/email notifications, SLA monitoring and escalation, public transparency views, multilingual UI, and a versioned JSON API are authorized as roadmap scope. Their dependent decisions (D4, D7–D9, and API authentication) and phase gates still apply. The public transparency defaults are counts/status/category/ward only, with no photos, complaint text, names, personal identifiers or exact pins until the owner explicitly approves a different policy.
 
-Keep `tenant_id` out of v1 code. Mention multi-city only in the roadmap docs.
+### Still out of scope for this submission cut
+
+Mobile app/PWA, React, Celery, Redis, Kafka, microservices, SMS/WhatsApp/phone integrations, push notifications, multi-city tenant screens, chatbot, IoT, payment, government integrations, phone OTP, social login, and any autonomous AI decision. The roadmap may describe these as future ideas, but the recommended submission cut does not authorize implementation unless a later owner decision expands it.
+
+Keep `tenant_id` out of the code. Mention multi-city only in roadmap documentation.
 
 ---
 
