@@ -307,3 +307,7 @@
 
 - Reproduced the per-row department worker lookup; verified the message timeline already selects authors. Precomputed inbox workers and eager-loaded complaint detail relations, resolution actors, messages/authors and evidence. Added query-count growth tests for 1 vs 30 complaints and 0 vs 30 messages.
 - `python -m pytest -q tests/test_console_workflow.py -k query_count` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Query counts remain unverified; see `docs/TEST_REPORT.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V10
+
+- Confirmed the state table allows department officials to mark work done while `mark_work_done` requires a field worker. Per roadmap owner-decision rule, made no code change; recorded the question and recommended default in `docs/DECISIONS_NEEDED.md` and `docs/TEST_REPORT.md`.

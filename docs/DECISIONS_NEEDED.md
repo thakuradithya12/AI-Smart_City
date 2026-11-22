@@ -15,6 +15,7 @@ These questions block only the roadmap tasks that depend on them. Defaults are p
 | D9 | Native Telugu and Hindi translation reviewers | 7 | English only until reviewers are available. |
 | D10 | Submission deadline date and cut line | Scheduling | Owner supplies the actual date; do not infer it from the roadmap's “deadline is close” wording. |
 | API auth | Authentication choice for `/api/v1/` | 6.1 | Do not build the API before owner choice; session or token auth as selected by owner. |
+| V10 | May a `department_official` mark work done (`in_progress` → `resolved_pending_verification`), or is that action reserved for `field_worker`? | 0.5 V10 alignment | **Recommended:** field worker only. The role matrix assigns evidence and the work claim to field workers, while department officials acknowledge/assign; aligning the transition table to the existing view preserves that division. |
 
 ## Git remote and CI (Phase 0.4)
 

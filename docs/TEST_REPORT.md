@@ -111,6 +111,13 @@
 | Change | Implemented, not runtime-verified | Department workers are fetched once per request; complaint detail eager-loads resolution actors and complaint relations and prefetches status, messages/authors, and evidence. Added query-growth tests comparing 1 vs 30 inbox rows and 0 vs 30 messages. |
 | Static checks | Passed | No `complaint.department.users.all` or redundant per-message query pattern remains; Python `ast.parse` parsed the changed views and query tests. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V10 work-done permission
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | `TRANSITIONS` allows both `field_worker` and `department_official`; `mark_work_done` explicitly requires `field_worker`. The roadmap requires the owner to choose. |
+| Decision | Blocked on owner | No code changed. Recommended default: field worker only, matching the role matrix and current view. See `docs/DECISIONS_NEEDED.md`. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |
