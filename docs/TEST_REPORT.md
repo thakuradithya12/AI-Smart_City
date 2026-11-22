@@ -58,6 +58,14 @@
 | Suspected defect reproduction | Closed as not unused | `templates/base.html` loads `vendor/bootstrap/bootstrap.min.css`; live templates use `.card` and `.badge`; Bootstrap's `.card` flex layout remains in effect because `site.css` does not override `display`. `site.css` styles those components further. No Bootstrap JS is loaded. |
 | Change | None | Removing the stylesheet would alter component layout; therefore no asset or page change is justified by this suspicion. No screenshot comparison was needed because no UI was changed. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V4 Ward GIS admin
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | `Ward.boundary` is `MultiPolygonField(srid=4326)` while `WardAdmin` inherited plain `admin.ModelAdmin`. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_geography_admin.py` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Change | Implemented, not runtime-verified | `WardAdmin` now inherits Django 5.2 `GISModelAdmin`; added a focused inheritance test. API confirmed against official Django 5.2 docs on 2026-11-23. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |

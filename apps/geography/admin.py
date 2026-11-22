@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django.contrib.gis.admin import GISModelAdmin
 
 from .models import Category, Department, RoutingRule, Ward
 
 
 @admin.register(Ward)
-class WardAdmin(admin.ModelAdmin):
+class WardAdmin(GISModelAdmin):
     list_display = ("name", "source", "effective_from", "effective_to")
     list_filter = ("effective_from", "effective_to")
     search_fields = ("name", "source")
