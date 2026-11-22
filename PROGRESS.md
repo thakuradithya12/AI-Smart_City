@@ -316,3 +316,14 @@
 
 - Reproduced missing report photo `accept`/`capture` hints; added JPEG/PNG/WebP acceptance and `capture="environment"` to the report input, plus a rendered-page regression test.
 - `python -m pytest -q tests/test_day2_reporting.py -k mobile_file_hints` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Rendered HTML is not verified; see `docs/TEST_REPORT.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V12
+
+- Reproduced missing evidence response headers. Authorized display evidence now returns private 5-minute caching, `nosniff`, and inline disposition; a regression test asserts headers and confirms only the display path is opened.
+- `python -m pytest -q tests/test_day2_reporting.py -k evidence_response` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). HTTP behavior remains unverified; see `docs/TEST_REPORT.md` and `docs/LIMITS.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V13
+
+- Reproduced homepage's dependency on `docs/ui_reference` mockup HTML. Replaced it with the server-rendered `templates/landing.html`, routed authenticated visitors to their dashboard, and removed temporary showcase endpoints.
+- Added a regression test that sets `BASE_DIR` to an empty temporary directory and checks the public homepage renders while `/ui-showcase/` is no longer routed.
+- Focused test exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Python AST parsing and `git diff --check` passed; runtime behavior remains unverified.

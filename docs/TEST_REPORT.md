@@ -127,6 +127,23 @@
 | Change | Implemented, not runtime-verified | Set accepted JPEG/PNG/WebP types and `capture="environment"` on the report photo input; added a rendered-page regression test. |
 | Syntax check | Passed | Python `ast.parse` parsed `apps/complaints/forms.py` and `tests/test_day2_reporting.py`. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V12 evidence headers
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | `evidence_file()` returned a `FileResponse` without cache, nosniff, or disposition headers. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_day2_reporting.py -k evidence_response` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Change | Implemented, not runtime-verified | Display evidence now has `private, max-age=300`, `X-Content-Type-Options: nosniff`, and `Content-Disposition: inline`. Added a test verifying the endpoint opens only `display_path`; existing visibility checking remains before file access. |
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V13 remove runtime mockup dependency
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | `/` called `ui_showcase()` which read `docs/ui_reference/public_landing_civicops/code.html`; showcase routes read further archive files. |
+| Change | Implemented, not runtime-verified | Public `/` renders `templates/landing.html`; authenticated `/` delegates to the dashboard; UI showcase routes and file reads removed. A test points `BASE_DIR` at an empty temporary directory and checks the homepage remains available and the old showcase path is 404. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_error_pages.py -k public_landing` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Syntax and source checks | Passed | Python `ast.parse` accepted the changed Python files; `rg` found no runtime references to `ui_showcase`, `ui_reference`, or `ui-showcase` under `apps`, `templates`, or `config`; `git diff --check` passed. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |

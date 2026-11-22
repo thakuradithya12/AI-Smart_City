@@ -167,4 +167,8 @@ def evidence_file(request, pk):
     evidence = get_object_or_404(Evidence.objects.select_related("complaint"), pk=pk)
     if not Complaint.objects.visible_to(request.user).filter(pk=evidence.complaint_id).exists():
         raise Http404
-    return FileResponse(private_storage.open(evidence.display_path, "rb"), content_type="image/jpeg")
+    response = FileResponse(private_storage.open(evidence.display_path, "rb"), content_type="image/jpeg")
+    response["Cache-Control"] = "private, max-age=300"
+    response["X-Content-Type-Options"] = "nosniff"
+    response["Content-Disposition"] = "inline"
+    return response

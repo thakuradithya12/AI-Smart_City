@@ -90,6 +90,43 @@ def test_report_photo_input_has_mobile_file_hints(client, citizen):
 
 
 @pytest.mark.django_db
+def test_evidence_response_has_private_safe_headers_and_never_opens_original(
+    client, citizen, ward, category, monkeypatch
+):
+    complaint = Complaint.objects.create(
+        citizen=citizen,
+        category=category,
+        location=Point(0, 0, srid=4326),
+        ward=ward,
+        consent_at="2026-01-01T00:00:00Z",
+    )
+    evidence = Evidence.objects.create(
+        complaint=complaint,
+        kind=Evidence.Kind.CITIZEN,
+        original_path="original/private.jpg",
+        display_path="display/photo.jpg",
+        sha256="a" * 64,
+        uploaded_by=citizen,
+    )
+    opened = []
+
+    def open_display(path, mode):
+        opened.append(path)
+        return io.BytesIO(b"display image bytes")
+
+    monkeypatch.setattr("apps.complaints.views.private_storage.open", open_display)
+    client.force_login(citizen)
+
+    response = client.get(reverse("evidence_file", args=[evidence.pk]))
+
+    assert response.status_code == 200
+    assert response["Cache-Control"] == "private, max-age=300"
+    assert response["X-Content-Type-Options"] == "nosniff"
+    assert response["Content-Disposition"] == "inline"
+    assert opened == [evidence.display_path]
+
+
+@pytest.mark.django_db
 def test_registration_and_login(client):
     response = client.post(reverse("register"), {"phone_number": "98765 43210", "name": "New Citizen", "password1": "Good!Password982", "password2": "Good!Password982"})
     assert response.status_code == 302
