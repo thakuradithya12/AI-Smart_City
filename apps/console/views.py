@@ -121,7 +121,20 @@ def department_inbox(request):
     status = request.GET.get("status")
     if status in {value for value, _ in Complaint.Status.choices}:
         complaints = complaints.filter(status=status)
-    return render(request, "console/department_inbox.html", {"complaints": complaints, "statuses": Complaint.Status.choices, "selected_status": status or ""})
+    # Build the shared worker choices once rather than issuing a department query for every complaint row.
+    field_workers = User.objects.none()
+    if request.user.department_id:
+        field_workers = User.objects.filter(
+            department_id=request.user.department_id,
+            role=User.Role.FIELD_WORKER,
+            is_active=True,
+        ).order_by("name")
+    return render(request, "console/department_inbox.html", {
+        "complaints": complaints,
+        "statuses": Complaint.Status.choices,
+        "selected_status": status or "",
+        "field_workers": field_workers,
+    })
 
 
 @login_required

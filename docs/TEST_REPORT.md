@@ -102,6 +102,15 @@
 | Change | Implemented, not runtime-verified | Routing now falls back to `Category.default_department` only when no active ward or global rule exists. The audit records `routing_source=category_default`, `routing_rule_version=0`; a regression test verifies fallback routing and audit fields. |
 | Syntax check | Passed | Python `ast.parse` parsed `apps/workflow/services.py` and `tests/test_console_workflow.py`. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V9 query scaling
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Partly confirmed | `department_inbox.html` queried `complaint.department.users.all` once per acknowledged complaint. Detail timeline already used `select_related("author")` for messages; this portion of the suspicion was disproved. Resolution actors and detail relations were not eager-loaded. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_console_workflow.py -k query_count` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Change | Implemented, not runtime-verified | Department workers are fetched once per request; complaint detail eager-loads resolution actors and complaint relations and prefetches status, messages/authors, and evidence. Added query-growth tests comparing 1 vs 30 inbox rows and 0 vs 30 messages. |
+| Static checks | Passed | No `complaint.department.users.all` or redundant per-message query pattern remains; Python `ast.parse` parsed the changed views and query tests. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |

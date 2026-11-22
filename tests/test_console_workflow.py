@@ -2,12 +2,14 @@ from datetime import date, timedelta
 
 import pytest
 from django.contrib.gis.geos import MultiPolygon, Point, Polygon
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from django.utils import timezone
 
 from apps.accounts.models import User
 from apps.audit.models import AuditEvent
-from apps.complaints.models import Complaint, StatusEvent
+from apps.complaints.models import Complaint, ComplaintMessage, Resolution, StatusEvent
 from apps.geography.models import Category, Department, RoutingRule, Ward
 
 
@@ -71,6 +73,58 @@ def test_category_default_department_is_used_when_no_routing_rule_exists(client,
     route_audit = AuditEvent.objects.get(action="complaint_routed", object_id=str(complaint.pk))
     assert route_audit.after["routing_rule_version"] == 0
     assert route_audit.after["routing_source"] == "category_default"
+
+
+@pytest.mark.django_db
+def test_department_inbox_worker_query_count_does_not_grow_with_complaints(client, console_setup):
+    setup = console_setup
+    client.force_login(setup["official"])
+    first = make_complaint(
+        setup,
+        status=Complaint.Status.ACKNOWLEDGED,
+        department=setup["department_a"],
+        public_id="QUERY-1",
+    )
+    with CaptureQueriesContext(connection) as one_row_queries:
+        assert client.get(reverse("department_inbox")).status_code == 200
+
+    for index in range(2, 31):
+        make_complaint(
+            setup,
+            status=Complaint.Status.ACKNOWLEDGED,
+            department=setup["department_a"],
+            public_id=f"QUERY-{index}",
+        )
+    with CaptureQueriesContext(connection) as many_row_queries:
+        assert client.get(reverse("department_inbox")).status_code == 200
+
+    assert first.pk
+    assert len(many_row_queries) <= len(one_row_queries) + 1
+
+
+@pytest.mark.django_db
+def test_complaint_detail_query_count_is_bounded_for_message_history(client, console_setup):
+    setup = console_setup
+    complaint = make_complaint(setup, status=Complaint.Status.ACKNOWLEDGED, department=setup["department_a"])
+    Resolution.objects.create(
+        complaint=complaint,
+        claimed_by=setup["field_worker"],
+        claim_note="Completed road repair work.",
+    )
+    client.force_login(setup["supervisor"])
+    with CaptureQueriesContext(connection) as one_row_queries:
+        assert client.get(reverse("complaint_detail", args=[complaint.pk])).status_code == 200
+
+    for index in range(30):
+        ComplaintMessage.objects.create(
+            complaint=complaint,
+            author=setup["citizen"],
+            body=f"History message {index}",
+        )
+    with CaptureQueriesContext(connection) as many_row_queries:
+        assert client.get(reverse("complaint_detail", args=[complaint.pk])).status_code == 200
+
+    assert len(many_row_queries) <= len(one_row_queries) + 1
 
 
 @pytest.mark.django_db

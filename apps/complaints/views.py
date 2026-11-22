@@ -4,6 +4,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Prefetch
 from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -14,7 +15,7 @@ from django.utils import timezone
 from apps.accounts.models import User
 from apps.audit.models import AuditEvent
 from apps.complaints.forms import CitizenRegistrationForm, ReportForm
-from apps.complaints.models import Complaint, Evidence
+from apps.complaints.models import Complaint, ComplaintMessage, Evidence
 from apps.complaints.services import delete_private_files, private_storage, store_citizen_image
 from apps.geography.services import active_ward_for_point
 from apps.workflow.services import potential_duplicates, transition
@@ -111,7 +112,16 @@ def my_complaints(request):
 
 @login_required
 def complaint_detail(request, pk):
-    complaint = get_object_or_404(Complaint.objects.visible_to(request.user), pk=pk)
+    # Eager-load timeline actors and resolution users so a longer history adds no per-row queries.
+    complaints = Complaint.objects.visible_to(request.user).select_related(
+        "category", "ward", "department", "citizen", "assignee", "duplicate_of",
+        "resolution__claimed_by", "resolution__verified_by",
+    ).prefetch_related(
+        "status_events",
+        "evidence",
+        Prefetch("messages", queryset=ComplaintMessage.objects.select_related("author")),
+    )
+    complaint = get_object_or_404(complaints, pk=pk)
     can_review_duplicates = request.user.role == User.Role.TRIAGE_REVIEWER and complaint.status == Complaint.Status.IN_TRIAGE
     status_labels = dict(Complaint.Status.choices)
     timeline = [
@@ -120,13 +130,21 @@ def complaint_detail(request, pk):
     ]
     timeline.extend(
         {"kind": "message", "created_at": message.created_at, "label": message.author.name, "body": message.body}
-        for message in complaint.messages.select_related("author").all()
+        for message in complaint.messages.all()
     )
     timeline.extend(
         {"kind": "evidence", "created_at": evidence.uploaded_at, "label": evidence.get_kind_display(), "evidence": evidence}
         for evidence in complaint.evidence.all()
     )
     timeline.sort(key=lambda item: item["created_at"])
+    can_reassign = can_transition(request.user, complaint, Complaint.Status.ASSIGNED) and request.user.role == User.Role.SUPERVISOR
+    field_workers = User.objects.none()
+    if can_reassign and complaint.department_id:
+        field_workers = User.objects.filter(
+            department_id=complaint.department_id,
+            role=User.Role.FIELD_WORKER,
+            is_active=True,
+        ).order_by("name")
     return render(request, "complaints/detail.html", {
         "complaint": complaint,
         "can_review_duplicates": can_review_duplicates,
@@ -137,7 +155,8 @@ def complaint_detail(request, pk):
         "can_verify": can_transition(request.user, complaint, Complaint.Status.VERIFIED_CLOSED),
         "can_dispute": can_transition(request.user, complaint, Complaint.Status.REOPENED),
         "can_request_info": can_transition(request.user, complaint, Complaint.Status.INFO_REQUESTED),
-        "can_reassign": can_transition(request.user, complaint, Complaint.Status.ASSIGNED) and request.user.role == User.Role.SUPERVISOR,
+        "can_reassign": can_reassign,
+        "field_workers": field_workers,
         "verify_form": VerifyForm(), "reason_form": ReasonForm(), "message_form": MessageForm(),
         "assign_form": AssignComplaintForm(department=complaint.department) if request.user.role == User.Role.SUPERVISOR else None,
     })
