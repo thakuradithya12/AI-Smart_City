@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Page not found · AI Smart City{% endblock %}
+{% block content %}
+<section class="empty-state" aria-labelledby="error-title">
+  <p class="eyebrow">Error 404</p><h1 id="error-title">Page not found</h1>
+  <p>The page may have moved, or the address may be incorrect.</p>
+  <a class="button" href="{% url 'home' %}">Go to home</a>
+</section>
+{% endblock %}

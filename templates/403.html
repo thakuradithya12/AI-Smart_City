@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Access denied · AI Smart City{% endblock %}
+{% block content %}
+<section class="empty-state" aria-labelledby="error-title">
+  <p class="eyebrow">Error 403</p><h1 id="error-title">You cannot access this page</h1>
+  <p>Your account does not have permission for this action.</p>
+  <a class="button" href="{% url 'home' %}">Go to home</a>
+</section>
+{% endblock %}

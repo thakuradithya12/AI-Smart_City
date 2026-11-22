@@ -292,3 +292,8 @@
 
 - Reproduced raw category slug rendering. Added a derived human-readable category label, updated complaint/queue/dashboard/public-update displays and `Category.__str__`, and added label/template-source regression tests.
 - `python -m pytest -q tests/test_geography_admin.py -k display_label` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Rendered output is not runtime-verified; see `docs/TEST_REPORT.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V7
+
+- Confirmed no custom error templates existed; added 400/403/404/500 pages and tests that exercise each Django error handler with `DEBUG=False` using a dedicated test URLconf.
+- `python -m pytest -q tests/test_error_pages.py` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Error-page rendering remains unverified; see `docs/TEST_REPORT.md`.

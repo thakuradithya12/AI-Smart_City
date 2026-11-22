@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Request not accepted · AI Smart City{% endblock %}
+{% block content %}
+<section class="empty-state" aria-labelledby="error-title">
+  <p class="eyebrow">Error 400</p><h1 id="error-title">Request not accepted</h1>
+  <p>We could not process that request. Check the information and try again.</p>
+  <a class="button" href="{% url 'home' %}">Go to home</a>
+</section>
+{% endblock %}

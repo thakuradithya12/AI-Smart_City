@@ -84,6 +84,15 @@
 | Change | Implemented, not runtime-verified | Added a derived human label (`water_leakage` → `Water Leakage`), used it in live templates, public update context and `Category.__str__`; added model and template-source tests. |
 | Static checks | Passed | `rg` found no remaining direct `complaint.category.name` renders; Python `ast.parse` parsed the changed model/view/test files. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V7 error pages
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | The root `templates/` contained none of `400.html`, `403.html`, `404.html`, or `500.html`; `config/urls.py` did not override handlers. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_error_pages.py` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Change | Implemented, not runtime-verified | Added four plain-language error templates and a test URLconf/test covering 400, 403, 404 and 500 handler rendering under `DEBUG=False`. |
+| Syntax check | Passed | Python `ast.parse` parsed `tests/error_urls.py` and `tests/test_error_pages.py`. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |

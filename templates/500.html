@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Service unavailable · AI Smart City{% endblock %}
+{% block content %}
+<section class="empty-state" aria-labelledby="error-title">
+  <p class="eyebrow">Error 500</p><h1 id="error-title">Something went wrong</h1>
+  <p>The service could not complete this request. Please try again later.</p>
+  <a class="button" href="{% url 'home' %}">Go to home</a>
+</section>
+{% endblock %}
