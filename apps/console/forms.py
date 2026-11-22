@@ -9,6 +9,10 @@ class RouteComplaintForm(forms.Form):
     reason = forms.CharField(required=False, min_length=5, max_length=500, widget=forms.Textarea(attrs={"rows": 2, "minlength": 5, "maxlength": 500}))
 
 
+class DuplicateLinkForm(forms.Form):
+    duplicate_of = forms.IntegerField(min_value=1)
+
+
 class RejectComplaintForm(forms.Form):
     reason = forms.CharField(min_length=5, max_length=500, widget=forms.Textarea(attrs={"rows": 2, "minlength": 5, "maxlength": 500}))
 

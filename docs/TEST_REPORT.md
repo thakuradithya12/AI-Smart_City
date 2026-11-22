@@ -1,5 +1,18 @@
 # Test report
 
+## 2026-11-22 — Final local backlog and access-control pass
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| v1 spec and remaining-work record | Passed | Added `SPEC.md` and `PARKING_LOT.md`; clarified that the local Hyderabad polygon is synthetic demo geography and not pilot coverage. |
+| Duplicate candidates | Passed | Triage complaint detail suggests recent open reports in the same category within 30 m, using geography-distance metres and a seven-day window. A triage reviewer can link a candidate; both reports remain visible and open. |
+| Duplicate authorization and audit | Passed | Tests cover near/far, category, age and terminal-state filtering; reviewer linking creates an audit event; citizens cannot invoke the action. |
+| Department default-deny | Fixed and tested | Staff accounts without a department now see no unassigned complaints. Department officials and supervisors receive 404 for detail access and zero dashboard rows; regression covers both roles. |
+| Full Docker gate | Passed | Migration check `No changes detected`; `67 passed in 67.57s`; Ruff passed; Bandit 0 findings across 1,544 lines; pip-audit found no known vulnerabilities. |
+| Production configuration check | Passed with documented warnings | `check --deploy` exited 0; only HSTS subdomain/preload warnings `security.W005` and `security.W021` remain pending a confirmed domain/subdomain policy. |
+| Production image and route smoke | Passed | Latest web image rebuilt; `collectstatic` copied 152 files and post-processed 446. `/` returned 200; protected `/workspace/`, `/console/triage/`, and `/console/department/` returned expected signed-out 302 redirects. |
+| Release gates requiring external inputs | Still open | No public domain/server, pilot boundaries, rights-cleared AI photos/manifest, Git remote, production monitoring account, or physical-device test environment is configured. See [`PARKING_LOT.md`](PARKING_LOT.md). |
+
 ## 2026-11-22 — Citizen-to-department routing visibility
 
 | Check | Result | Evidence |

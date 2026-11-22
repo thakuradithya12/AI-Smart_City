@@ -1,8 +1,8 @@
 # Backend completion roadmap
 
-**Status:** planning baseline, 2026-11-21. This roadmap follows the frozen v1 requirements in [`../AGENTS.md`](../AGENTS.md). It is an execution plan, not evidence that a gate has passed. Work one phase at a time; do not begin a later phase until its entry conditions are met.
+**Status:** maintained execution record, 2026-11-22. This roadmap follows the frozen v1 requirements in [`../AGENTS.md`](../AGENTS.md). It distinguishes local implementation evidence from release gates that need external inputs.
 
-**Latest execution update:** Phases 0 and 1 passed locally on 2026-11-21. Phase 2 security and Phase 3 generic geography/routing logic pass local Docker checks recorded in [`../docs/TEST_REPORT.md`](TEST_REPORT.md). Phase 4 has only the secure intake preflight prepared; training/inference remain gated on actual owner photos plus the Phase 3 pilot inputs. Production `check --deploy` retains only the documented HSTS subdomain/preload warnings; see [`../PROGRESS.md`](../PROGRESS.md).
+**Latest execution update:** Local complaint-to-department routing, the human-reviewed lifecycle, Telangana-only synthetic demo geography, duplicate review, and department default-deny scoping pass the Docker gate. The integrated suite reports 67 tests passing; see [`../docs/TEST_REPORT.md`](TEST_REPORT.md). AI training/inference remain blocked on rights-cleared photos and grouping metadata. Production deployment, authoritative pilot geography, remote CI and device acceptance still need owner-controlled inputs; see [`../docs/PARKING_LOT.md`](PARKING_LOT.md).
 
 ## Target
 
@@ -10,7 +10,7 @@ Complete and prove the existing Django/PostGIS service from complaint submission
 
 ## Repository baseline
 
-The repository contains Django models and migrations, email login and citizen registration, report submission with ward containment and private image storage, role-aware complaint query scoping, triage/routing, department assignment, field evidence, work claims, separate verification/dispute, status/audit events, a seeded demo command, Docker Compose, CI configuration, and deployment/backup scripts. Phases 0 and 1 have current local Docker evidence; Phase 2 and generic effective-date geography checks were rerun on the current worktree and are recorded in the test report. This does not prove GitHub CI, a production deployment, real pilot ward data, backups/restore, or full acceptance.
+The repository contains Django models and migrations, email login and citizen registration, report submission with ward containment and private image storage, role-aware complaint query scoping, triage/routing, department assignment, duplicate review, field evidence, work claims, separate verification/dispute, status/audit events, a local demo seed, Docker Compose, CI configuration, and deployment/backup scripts. Local Docker evidence is current as of 2026-11-22. This does not prove GitHub CI, a production deployment, real pilot ward data, production backups/restore, or full device acceptance.
 
 ## Phase 0 — Establish a trustworthy starting point
 
@@ -51,14 +51,14 @@ The repository contains Django models and migrations, email login and citizen re
 
 ## Phase 3 — Complete geography and routing setup
 
-**Status: generic logic and local checks pass; real pilot setup is blocked on owner data.** `Ward.objects.active_on()` filters the point-in-ward lookup by effective dates, and a database constraint rejects invalid ward date windows. Routing tests prove ward-specific precedence, future-rule exclusion, rule-version audit, and visible safety-critical notices. These use test fixtures; they do not establish any real service area.
+**Status: generic logic and local checks pass; real pilot setup is blocked on owner data.** `Ward.objects.active_on()` filters the point-in-ward lookup by effective dates, and a database constraint rejects invalid ward date windows. Routing tests prove ward-specific precedence, future-rule exclusion, rule-version audit, and visible safety-critical notices. Duplicate suggestions use geography distance in metres, same-category/open-state filters and a seven-day window, with reviewer-controlled audited linking. The synthetic central Hyderabad demo area does not establish any real service area.
 
 **Work**
 
 1. Obtain pilot centre coordinates and authoritative ward boundary/source/effective dates from the project owner. The repository clarification explicitly says these are unresolved and must not be guessed.
 2. Load or enter the real ward polygons and routing rules; verify point-in-ward with known inside/outside points. GPS accuracy is descriptive only; the confirmed pin and ward polygon determine jurisdiction.
 3. Confirm routing rule precedence, effective dating and version audit; show safety-critical category warnings to reviewers.
-4. Add the optional duplicate-distance query only after the core gate passes and time remains; use geography metres and known near/far test points.
+4. Optional duplicate review is implemented locally with a 30 m geography query, a seven-day open-report window, reviewer-only linking and audit evidence. Its tests use known near/far PostGIS points.
 
 **Gate:** source-documented ward data and tests for inside/outside/routing precedence. If coordinates or authoritative boundary source remain unavailable, keep location-specific reporting blocked and record that limit; never create fictitious pilot geography.
 
@@ -94,7 +94,7 @@ The model slice is not being marked complete by the preflight work. `other` rema
 
 ## Phase 6 — End-to-end acceptance and handoff
 
-**Status: local regression and documentation gates pass; release acceptance remains incomplete.** Current evidence and the item-by-item remaining checklist are in [`PHASE6_ACCEPTANCE.md`](PHASE6_ACCEPTANCE.md). The local worktree has no remote and is based on `ada8fa5813d98b962a6f09f8b7361983661bfe9d`; it is not a clean, committed release.
+**Status: local regression and documentation gates pass; release acceptance remains incomplete.** Current evidence and the item-by-item remaining checklist are in [`PHASE6_ACCEPTANCE.md`](PHASE6_ACCEPTANCE.md) and [`PARKING_LOT.md`](PARKING_LOT.md). The worktree has no Git remote; each verified local change is committed, but remote CI and public release are not claimed.
 
 1. Run the complete test suite, lint, dependency audit, production checks and CI on the exact final commit. Record counts/results with commit SHA in `docs/TEST_REPORT.md`.
 2. Exercise fresh demo accounts for citizen → triage → official → field worker → supervisor/citizen verification; also dispute/reopen/reassign and cancellation. Demo passwords are random, printed once, and must not be committed or posted in chat.

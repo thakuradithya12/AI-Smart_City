@@ -7,11 +7,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from apps.accounts.models import User
 from apps.complaints.models import Complaint
 from apps.geography.models import Department, Ward
-from apps.workflow.permissions import can_transition
-from apps.workflow.services import add_field_evidence, route_complaint as route_complaint_service, transition
+from apps.workflow.permissions import can_link_duplicate, can_transition
+from apps.workflow.services import (
+    add_field_evidence,
+    link_duplicate as link_duplicate_service,
+    route_complaint as route_complaint_service,
+    transition,
+)
 
-from .forms import (AssignComplaintForm, FieldEvidenceForm, MessageForm, ReasonForm, RejectComplaintForm,
-                    RouteComplaintForm, TransferComplaintForm, VerifyForm, WorkDoneForm)
+from .forms import (AssignComplaintForm, DuplicateLinkForm, FieldEvidenceForm, MessageForm, ReasonForm,
+                    RejectComplaintForm, RouteComplaintForm, TransferComplaintForm, VerifyForm, WorkDoneForm)
 
 
 def _triage_user(user):
@@ -70,6 +75,24 @@ def route_complaint(request, pk):
     else:
         messages.error(request, "Choose a valid department and provide any required override reason.")
     return redirect("triage_queue")
+
+
+@login_required
+def link_duplicate(request, pk):
+    complaint = get_object_or_404(Complaint.objects.visible_to(request.user), pk=pk)
+    if request.method != "POST" or not can_link_duplicate(request.user, complaint):
+        raise Http404
+    form = DuplicateLinkForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, "Choose a valid nearby report to link as a duplicate.")
+        return redirect("complaint_detail", pk=pk)
+    try:
+        link_duplicate_service(complaint, form.cleaned_data["duplicate_of"], request.user)
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
+        return redirect("complaint_detail", pk=pk)
+    messages.success(request, "The reports are linked. The original report remains visible to its citizen.")
+    return redirect("complaint_detail", pk=pk)
 
 
 @login_required

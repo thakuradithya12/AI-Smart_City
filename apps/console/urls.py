@@ -59,6 +59,7 @@ urlpatterns = [
     path("evidence/<int:pk>/", evidence_file, name="evidence_file"),
     path("console/triage/", workflow_views.triage_queue, name="triage_queue"),
     path("console/triage/<int:pk>/route/", workflow_views.route_complaint, name="route_complaint"),
+    path("console/triage/<int:pk>/duplicate/", workflow_views.link_duplicate, name="link_duplicate"),
     path("console/triage/<int:pk>/reject/", workflow_views.reject_complaint, name="reject_complaint"),
     path("console/department/", workflow_views.department_inbox, name="department_inbox"),
     path("console/department/<int:pk>/acknowledge/", workflow_views.acknowledge_complaint, name="acknowledge_complaint"),

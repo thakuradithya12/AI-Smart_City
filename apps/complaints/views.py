@@ -17,7 +17,7 @@ from apps.complaints.forms import CitizenRegistrationForm, ReportForm
 from apps.complaints.models import Complaint, Evidence
 from apps.complaints.services import delete_private_files, private_storage, store_citizen_image
 from apps.geography.models import Ward
-from apps.workflow.services import transition
+from apps.workflow.services import potential_duplicates, transition
 from apps.workflow.permissions import can_transition
 from apps.console.forms import AssignComplaintForm, MessageForm, ReasonForm, VerifyForm
 
@@ -106,6 +106,7 @@ def my_complaints(request):
 @login_required
 def complaint_detail(request, pk):
     complaint = get_object_or_404(Complaint.objects.visible_to(request.user), pk=pk)
+    can_review_duplicates = request.user.role == User.Role.TRIAGE_REVIEWER and complaint.status == Complaint.Status.IN_TRIAGE
     status_labels = dict(Complaint.Status.choices)
     timeline = [
         {"kind": "status", "created_at": event.created_at, "label": status_labels.get(event.to_status, event.to_status), "reason": event.reason}
@@ -122,6 +123,8 @@ def complaint_detail(request, pk):
     timeline.sort(key=lambda item: item["created_at"])
     return render(request, "complaints/detail.html", {
         "complaint": complaint,
+        "can_review_duplicates": can_review_duplicates,
+        "duplicate_candidates": potential_duplicates(complaint) if can_review_duplicates else (),
         "timeline": timeline,
         "can_cancel": can_transition(request.user, complaint, Complaint.Status.CANCELLED),
         "can_reply": can_transition(request.user, complaint, Complaint.Status.IN_TRIAGE) and complaint.status == Complaint.Status.INFO_REQUESTED,

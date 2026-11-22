@@ -1,11 +1,19 @@
+from datetime import timedelta
+
+from django.contrib.gis.db.models import GeometryField, PointField
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models import BooleanField, F, Func, Value
+from django.db.models.functions import Cast
 from django.utils import timezone
 
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, ComplaintMessage, Evidence, Resolution, StatusEvent
 from apps.complaints.services import delete_private_files, store_citizen_image
 from apps.geography.models import RoutingRule
+
+DUPLICATE_DISTANCE_METERS = 30
+DUPLICATE_WINDOW_DAYS = 7
 
 # One table controls every valid status transition; later days add console actions through this service.
 TRANSITIONS = {
@@ -36,6 +44,59 @@ def active_routing_rule(complaint):
     ).order_by("-version")
     ward_rule = rules.filter(ward_id=complaint.ward_id).first() if complaint.ward_id else None
     return ward_rule or rules.filter(ward__isnull=True).first()
+
+
+def potential_duplicates(complaint, *, now=None):
+    """Return recent open reports of the same category within a metre-based radius."""
+    if not complaint.pk or not complaint.location:
+        return Complaint.objects.none()
+    current_time = now or timezone.now()
+    # Cast WGS84 points to geography so PostGIS interprets the radius in metres.
+    within_radius = Func(
+        Cast(F("location"), GeometryField(srid=4326, geography=True)),
+        Cast(Value(complaint.location, output_field=PointField(srid=4326)), GeometryField(srid=4326, geography=True)),
+        Value(DUPLICATE_DISTANCE_METERS),
+        function="ST_DWithin",
+        output_field=BooleanField(),
+    )
+    final_statuses = (Complaint.Status.VERIFIED_CLOSED, Complaint.Status.REJECTED, Complaint.Status.CANCELLED)
+    return Complaint.objects.filter(
+        category_id=complaint.category_id,
+        created_at__gte=current_time - timedelta(days=DUPLICATE_WINDOW_DAYS),
+        created_at__lte=current_time,
+    ).exclude(pk=complaint.pk).exclude(status__in=final_statuses).filter(
+        within_radius
+    ).select_related("category", "ward").order_by("-created_at")
+
+
+@transaction.atomic
+def link_duplicate(complaint, candidate_id, actor):
+    if actor is None or not actor.is_authenticated or not actor.is_active or actor.role != "triage_reviewer":
+        raise ValidationError("Only an active triage reviewer can link a duplicate report.")
+    locked = Complaint.objects.select_for_update().get(pk=complaint.pk)
+    if locked.status != Complaint.Status.IN_TRIAGE:
+        raise ValidationError("Only a complaint in triage can be marked as a duplicate.")
+    if locked.duplicate_of_id:
+        raise ValidationError("This complaint already links to a duplicate report.")
+    try:
+        candidate = Complaint.objects.select_for_update().get(pk=candidate_id)
+    except Complaint.DoesNotExist as exc:
+        raise ValidationError("The selected report is no longer available.") from exc
+    if not potential_duplicates(locked).filter(pk=candidate.pk).exists():
+        raise ValidationError("Choose a recent, open report in the same category within 30 metres.")
+
+    locked.duplicate_of = candidate
+    locked.save(update_fields=["duplicate_of"])
+    AuditEvent.objects.create(
+        actor=actor,
+        role=actor.role,
+        action="complaint_duplicate_linked",
+        object_type="Complaint",
+        object_id=str(locked.pk),
+        before={"duplicate_of_id": None},
+        after={"duplicate_of_id": candidate.pk, "public_id": candidate.public_id},
+    )
+    return locked
 
 
 @transaction.atomic

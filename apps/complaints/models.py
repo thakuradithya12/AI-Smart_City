@@ -21,7 +21,8 @@ class ComplaintQuerySet(models.QuerySet):
         if user.role == "citizen":
             return self.filter(citizen=user)
         if user.role in {"department_official", "supervisor"}:
-            return self.filter(department=user.department)
+            # Staff without a department must never inherit visibility over unassigned reports.
+            return self.filter(department_id=user.department_id) if user.department_id else self.none()
         if user.role == "field_worker":
             return self.filter(assignee=user)
         return self.none()

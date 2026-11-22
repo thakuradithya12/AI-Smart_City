@@ -28,13 +28,13 @@ Reports are accepted only inside an active configured ward. No owner-supplied pi
 
 | Role | Page | Main actions |
 | --- | --- | --- |
-| Triage reviewer | `/console/triage/` | Review the queue, request information, route to a department, or reject with a reason. |
+| Triage reviewer | `/console/triage/` and complaint detail | Review the queue, request information, route to a department, reject with a reason, and review/link nearby duplicate candidates. |
 | Department official | `/console/department/` | Acknowledge, transfer with a reason, and assign to a worker in the department. |
 | Field worker | `/console/field/` | View assigned work only, start it, upload before/after evidence, and submit a work note. |
 | Supervisor | Complaint detail and department screens | Reassign, verify a work claim, dispute/reopen with a reason, and choose an eligible assignee. |
 | Admin | `/admin/` | Manage users and configuration. Workflow events remain append-only through the application ORM. |
 
-The sequence is submit → triage → route → acknowledge → assign → work in progress → pending verification → verified or reopened. The work-done claim is not itself a verified closure. The server enforces status and role rules for every action.
+The sequence is submit → triage → route → acknowledge → assign → work in progress → pending verification → verified or reopened. The department inbox shows reports only after a triage reviewer routes them; dashboards update on page load, so reload after another role changes a report. The work-done claim is not itself a verified closure. The server enforces status and role rules for every action.
 
 ## Local demo data
 

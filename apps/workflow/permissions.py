@@ -16,3 +16,14 @@ def allowed_transition_targets(user, complaint):
 
 def can_transition(user, complaint, to_status):
     return to_status in allowed_transition_targets(user, complaint)
+
+
+def can_link_duplicate(user, complaint):
+    """Only an active triage reviewer may link a candidate during triage."""
+    return bool(
+        user.is_authenticated
+        and user.is_active
+        and user.role == "triage_reviewer"
+        and complaint.status == Complaint.Status.IN_TRIAGE
+        and Complaint.objects.visible_to(user).filter(pk=complaint.pk).exists()
+    )

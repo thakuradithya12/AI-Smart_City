@@ -56,6 +56,99 @@ def test_triage_queue_scopes_role_and_hides_citizen_email(client, console_setup)
 
 
 @pytest.mark.django_db
+def test_duplicate_candidates_use_category_open_status_distance_and_seven_day_window(client, console_setup):
+    setup = console_setup
+    complaint = make_complaint(setup, public_id="CON-DUPLICATE-SOURCE")
+    near = make_complaint(setup, public_id="CON-DUPLICATE-NEAR")
+    near.location = Point(0.00025, 0, srid=4326)
+    near.save(update_fields=["location"])
+    far = make_complaint(setup, public_id="CON-DUPLICATE-FAR")
+    far.location = Point(0.001, 0, srid=4326)
+    far.save(update_fields=["location"])
+    old = make_complaint(setup, public_id="CON-DUPLICATE-OLD")
+    old.created_at = timezone.now() - timedelta(days=8)
+    old.save(update_fields=["created_at"])
+    make_complaint(setup, status=Complaint.Status.VERIFIED_CLOSED, public_id="CON-DUPLICATE-CLOSED")
+    different_category = Category.objects.create(name="other-duplicate-category")
+    other_category = Complaint.objects.create(
+        public_id="CON-DUPLICATE-CATEGORY",
+        citizen=setup["citizen"],
+        category=different_category,
+        location=Point(0.0001, 0, srid=4326),
+        ward=setup["ward"],
+        consent_at="2026-01-01T00:00:00Z",
+    )
+
+    client.force_login(setup["reviewer"])
+    response = client.get(reverse("complaint_detail", args=[complaint.pk]))
+
+    assert response.status_code == 200
+    assert b"CON-DUPLICATE-NEAR" in response.content
+    assert b"CON-DUPLICATE-FAR" not in response.content
+    assert b"CON-DUPLICATE-OLD" not in response.content
+    assert b"CON-DUPLICATE-CLOSED" not in response.content
+    assert other_category.public_id.encode() not in response.content
+
+
+@pytest.mark.django_db
+def test_triage_reviewer_can_link_near_duplicate_without_hiding_report(client, console_setup):
+    setup = console_setup
+    complaint = make_complaint(setup, public_id="CON-DUPLICATE-LINK-SOURCE")
+    candidate = make_complaint(setup, public_id="CON-DUPLICATE-LINK-TARGET")
+    candidate.location = Point(0.0001, 0, srid=4326)
+    candidate.save(update_fields=["location"])
+    client.force_login(setup["reviewer"])
+
+    response = client.post(
+        reverse("link_duplicate", args=[complaint.pk]),
+        {"duplicate_of": candidate.pk},
+    )
+
+    assert response.status_code == 302
+    complaint.refresh_from_db()
+    assert complaint.duplicate_of == candidate
+    assert complaint.status == Complaint.Status.IN_TRIAGE
+    assert AuditEvent.objects.filter(
+        action="complaint_duplicate_linked",
+        object_id=str(complaint.pk),
+        after__duplicate_of_id=candidate.pk,
+    ).exists()
+    client.force_login(setup["citizen"])
+    assert client.get(reverse("complaint_detail", args=[complaint.pk])).status_code == 200
+
+
+@pytest.mark.django_db
+def test_duplicate_link_refuses_an_out_of_radius_report(client, console_setup):
+    setup = console_setup
+    complaint = make_complaint(setup, public_id="CON-DUPLICATE-INVALID-SOURCE")
+    far = make_complaint(setup, public_id="CON-DUPLICATE-INVALID-TARGET")
+    far.location = Point(0.001, 0, srid=4326)
+    far.save(update_fields=["location"])
+    client.force_login(setup["reviewer"])
+
+    response = client.post(reverse("link_duplicate", args=[complaint.pk]), {"duplicate_of": far.pk})
+
+    assert response.status_code == 302
+    complaint.refresh_from_db()
+    assert complaint.duplicate_of is None
+    assert not AuditEvent.objects.filter(action="complaint_duplicate_linked", object_id=str(complaint.pk)).exists()
+
+
+@pytest.mark.django_db
+def test_citizen_cannot_use_triage_duplicate_link_action(client, console_setup):
+    setup = console_setup
+    complaint = make_complaint(setup, public_id="CON-DUPLICATE-ACCESS-SOURCE")
+    candidate = make_complaint(setup, public_id="CON-DUPLICATE-ACCESS-TARGET")
+    client.force_login(setup["citizen"])
+
+    response = client.post(reverse("link_duplicate", args=[complaint.pk]), {"duplicate_of": candidate.pk})
+
+    assert response.status_code == 404
+    complaint.refresh_from_db()
+    assert complaint.duplicate_of is None
+
+
+@pytest.mark.django_db
 def test_triage_routes_from_ward_category_rule_and_audits(client, console_setup):
     complaint = make_complaint(console_setup)
     client.force_login(console_setup["official"])
@@ -232,6 +325,27 @@ def test_department_inbox_is_scoped_and_acknowledges(client, console_setup):
 
     client.force_login(console_setup["other_official"])
     assert client.post(reverse("acknowledge_complaint", args=[own.pk])).status_code == 404
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("role", [User.Role.DEPARTMENT_OFFICIAL, User.Role.SUPERVISOR])
+def test_department_staff_without_department_cannot_see_unassigned_complaints(client, console_setup, role):
+    setup = console_setup
+    complaint = make_complaint(setup, public_id=f"CON-NOD-{role}")
+    staff = User.objects.create_user(
+        email=f"unassigned-{role}@example.test",
+        password="Strong!Password982",
+        name="Unassigned Staff",
+        role=role,
+        department=None,
+    )
+
+    assert not Complaint.objects.visible_to(staff).filter(pk=complaint.pk).exists()
+    client.force_login(staff)
+    assert client.get(reverse("complaint_detail", args=[complaint.pk])).status_code == 404
+    dashboard = client.get(reverse("dashboard"))
+    assert dashboard.status_code == 200
+    assert dashboard.context["total_count"] == 0
 
 
 @pytest.mark.django_db

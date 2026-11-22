@@ -32,7 +32,7 @@ These decisions were supplied by the project owner on 2026-11-18. They are bindi
 ## Current Day 1 applicability
 
 - Local-only work is authorized. Public deployment is blocked because no domain/server was supplied.
-- Centre coordinates and hand-drawn ward polygons remain absent. Build generic geography support only; do not seed a fictitious ward or claim the location flow is operational.
+- Centre coordinates and authoritative pilot ward polygons remain absent. Do not create pilot geography or claim real service coverage. The owner later explicitly requested a local demo area in Telangana; `seed_demo` therefore creates a clearly labeled synthetic central-Hyderabad square for local workflow demonstrations only. It is not an authoritative ward or pilot boundary.
 - The six default categories and AI policy above supersede any assumption that the user confirmed another category list.
 
 ## Rejection reason clarification

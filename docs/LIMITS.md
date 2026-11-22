@@ -2,8 +2,9 @@
 
 This list distinguishes implemented local behavior from missing project inputs and acceptance evidence.
 
-- **Pilot geography is not configured.** The project owner has not provided centre coordinates or authoritative ward boundaries. Synthetic polygons are test fixtures only. No pilot area or location-specific service availability is claimed.
+- **Pilot geography is not configured.** The project owner has not provided centre coordinates or authoritative ward boundaries. The local database contains a synthetic central-Hyderabad demo square only; it is not an administrative ward boundary, pilot geography, or evidence of service availability.
 - **AI category suggestion is not delivered.** The requested owner-photo directory has been prepared at `ml/data/<category>/`, but no image files or grouping manifest are present yet. A read-only dataset preflight exists; there is no trained model, ONNX export, worker, measured evaluation, or AI suggestion in the reviewer UI. No performance metrics are claimed. Public datasets were not downloaded or used.
+- **No live push updates are configured.** The server-rendered dashboard reads current database state on each page load. Users must refresh after a reviewer routes a complaint; no websocket, background notification, or auto-refresh feature is part of v1.
 - **Production deployment is not delivered.** No public domain/server was supplied. Local production-setting checks do not constitute HTTPS deployment.
 - **GitHub CI status is unverified.** Local Compose checks pass, but no remote Actions result was obtained.
 - **Uptime and error tracking are not configured.** No provider was chosen or connected; live monitoring cannot be verified without a deployed environment and owner-approved service/account.

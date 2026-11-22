@@ -7,6 +7,20 @@
 - Rebuilt and restarted the Docker web image, then reseeded the local database with output suppressed so passwords were not exposed. Database verification shows bounds `(78.3867, 17.285, 78.5867, 17.485)`, the Hyderabad center and an interior point are covered, Bengaluru is outside, and the ward source says synthetic/not pilot data.
 - Docker Compose checks passed: migration check reported `No changes detected`; all `61` tests passed; Ruff passed; Bandit reported no issues across 1,455 lines; pip-audit found no known vulnerabilities. `compileall` and `git diff --check` also passed. An initial check invocation returned errors; a clean full rerun passed.
 
+## 2026-11-22 — Complete local v1 backlog items
+
+- Audited the project limits and corrected stale docs: README, clarifications, limits, and roadmap now distinguish the synthetic Hyderabad demo area from pilot ward data. Added the missing v1 specification and the required deferred-work/owner-input register.
+- Implemented the optional duplicate review: same category, open status, within 30 geography metres, created within the last seven days. The triage detail page shows candidates; only an active triage reviewer can link one. Linking is audited and does not change status or hide either report.
+- Added tests for near/far distance, category, age, final statuses, link audit, citizen denial, and the cross-role route-to-department visibility sequence.
+- Final Docker gate before the null-department access fix: `No changes detected`; `65 passed in 67.64s`; Ruff passed; Bandit 0 findings across 1,535 lines; pip-audit found no known vulnerabilities. The later gate is recorded below.
+- External release items remain recorded in [`docs/PARKING_LOT.md`](docs/PARKING_LOT.md): production host/domain, authoritative pilot polygons, licensed AI photos plus manifest, Git remote/CI, production operations, and physical-device acceptance. They cannot be truthfully completed from this local workspace without the required owner environment/data.
+
+## 2026-11-22 — Close department null-scope access gap
+
+- Full access-control audit found that a department official or supervisor with `department_id=NULL` was scoped using `department IS NULL`, which could expose unassigned complaint details/dashboard rows. Changed the visibility queryset to fail closed when no department is assigned and added tests for both roles.
+- Final Docker gate after the permission helper change: `No changes detected`; `67 passed in 67.57s`; Ruff passed; Bandit reported no issues across 1,544 lines; pip-audit found no known vulnerabilities.
+- Rebuilt the exact serving image; production `check --deploy` exited 0 with only documented `security.W005`/`W021` HSTS warnings; `collectstatic` copied 152 files and post-processed 446. Landing returned 200 and signed-out workspace, triage, and department routes returned expected 302 redirects. `git diff --check` passed.
+
 ## 2026-11-22 — Verify citizen-to-department routing
 
 - Investigated the screenshots against the live PostGIS database. `ASC-2026-000001` exists for the citizen, is inside Demo Ward, and has an active pothole routing rule to Demo Department — Roads. It remains `in_triage` with no department because no triage reviewer has routed it yet; that matches the human-review workflow and is why the department account correctly sees zero complaints.
