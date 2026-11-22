@@ -93,6 +93,15 @@
 | Change | Implemented, not runtime-verified | Added four plain-language error templates and a test URLconf/test covering 400, 403, 404 and 500 handler rendering under `DEBUG=False`. |
 | Syntax check | Passed | Python `ast.parse` parsed `tests/error_urls.py` and `tests/test_error_pages.py`. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V8 category routing default
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | `Category.default_department` appeared in the model/admin/seed, while `active_routing_rule()` and `route_complaint()` only selected `RoutingRule` records. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_console_workflow.py -k category_default_department` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Change | Implemented, not runtime-verified | Routing now falls back to `Category.default_department` only when no active ward or global rule exists. The audit records `routing_source=category_default`, `routing_rule_version=0`; a regression test verifies fallback routing and audit fields. |
+| Syntax check | Passed | Python `ast.parse` parsed `apps/workflow/services.py` and `tests/test_console_workflow.py`. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |

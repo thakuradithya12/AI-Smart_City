@@ -16,7 +16,7 @@ Citizens submit civic reports with a category, optional description, photo, and 
 ## Workflow rules
 
 1. Submission creates the citizen report and photo evidence, confirms consent, checks the pin against an active local ward, and enters `in_triage`. Registration does not depend on AI, SMS, email, geocoding, or map tiles.
-2. A reviewer routes using an active category/ward rule or records a reason for an override. The routing rule version is audited. The department sees the complaint only after routing.
+2. A reviewer routes using an active ward/category rule first, then the category's configured default department if no rule applies; the latter is audited with routing source `category_default` and reserved version `0`. Overrides require a reason. The department sees the complaint only after routing.
 3. Department acknowledgement and assignment precede field work. Field completion is a claim; verification is a separate outcome.
 4. A citizen or supervisor may verify or dispute the fix. Disputes reopen the work with a reason. Citizen silence never closes a report.
 5. Only the workflow service writes statuses. Status events and audit events are append-only through application operations.

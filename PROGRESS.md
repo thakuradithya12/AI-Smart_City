@@ -297,3 +297,8 @@
 
 - Confirmed no custom error templates existed; added 400/403/404/500 pages and tests that exercise each Django error handler with `DEBUG=False` using a dedicated test URLconf.
 - `python -m pytest -q tests/test_error_pages.py` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Error-page rendering remains unverified; see `docs/TEST_REPORT.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V8
+
+- Reproduced the unused `Category.default_department`. Routing now prefers active ward/category rules and falls back to that department only when no active rule applies; the audit records source `category_default` and reserved version `0`. Added a routing/audit regression test and documented the fallback.
+- `python -m pytest -q tests/test_console_workflow.py -k category_default_department` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Runtime routing is not verified; see `docs/TEST_REPORT.md`.

@@ -101,15 +101,24 @@ def link_duplicate(complaint, candidate_id, actor):
 
 @transaction.atomic
 def route_complaint(complaint, actor, department_override=None, reason=None):
-    locked = Complaint.objects.select_for_update().select_related("category").get(pk=complaint.pk)
+    locked = Complaint.objects.select_for_update().select_related("category__default_department").get(pk=complaint.pk)
     if locked.status != Complaint.Status.IN_TRIAGE:
         raise ValidationError("Only complaints in triage can be routed.")
     rule = active_routing_rule(locked)
-    if rule is None:
+    if rule is not None:
+        policy_department = rule.department
+        rule_version = rule.version
+        routing_source = "routing_rule"
+    elif locked.category.default_department_id:
+        # Version zero marks the category-level fallback; it is not a persisted RoutingRule row.
+        policy_department = locked.category.default_department
+        rule_version = 0
+        routing_source = "category_default"
+    else:
         raise ValidationError("No active ward or category routing rule is configured.")
-    department = department_override or rule.department
+    department = department_override or policy_department
     reason = (reason or "").strip()
-    overridden = department.pk != rule.department_id
+    overridden = department.pk != policy_department.pk
     if overridden and not reason:
         raise ValidationError("A reason is required when overriding the routing rule.")
     if actor.role == "admin" and not reason:
@@ -121,7 +130,8 @@ def route_complaint(complaint, actor, department_override=None, reason=None):
         actor=actor,
         reason=reason if overridden or actor.role == "admin" else None,
         department=department,
-        rule_version=rule.version,
+        rule_version=rule_version,
+        routing_source=routing_source,
     )
     AuditEvent.objects.create(
         actor=actor,
@@ -131,7 +141,8 @@ def route_complaint(complaint, actor, department_override=None, reason=None):
         object_id=str(locked.pk),
         after={
             "department_id": department.pk,
-            "routing_rule_version": rule.version,
+            "routing_rule_version": rule_version,
+            "routing_source": routing_source,
             "overridden": overridden,
         },
         reason=reason if overridden or actor.role == "admin" else "",
@@ -210,7 +221,7 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
         raise ValidationError("An administrator override requires a reason.")
     if (locked.status, to_status) == ("in_triage", "rejected") and not reason:
         raise ValidationError("A rejection reason is required.")
-    if (locked.status, to_status) == ("in_triage", "routed") and not data.get("rule_version"):
+    if (locked.status, to_status) == ("in_triage", "routed") and data.get("rule_version") is None:
         raise ValidationError("A routing rule version is required.")
     if (locked.status, to_status) in {("acknowledged", "assigned"), ("reopened", "assigned")}:
         assignee = data.get("assignee")
@@ -293,6 +304,8 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
         after["assignee_id"] = data["assignee"].pk
     if "rule_version" in data:
         after["routing_rule_version"] = data["rule_version"]
+    if "routing_source" in data:
+        after["routing_source"] = data["routing_source"]
     if resolution_after:
         after["resolution"] = resolution_after
     before = {"status": previous, "department_id": previous_department_id}
