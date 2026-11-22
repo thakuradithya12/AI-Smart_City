@@ -58,6 +58,13 @@ def test_triage_queue_scopes_role_and_hides_citizen_email(client, console_setup)
 @pytest.mark.django_db
 def test_triage_routes_from_ward_category_rule_and_audits(client, console_setup):
     complaint = make_complaint(console_setup)
+    client.force_login(console_setup["official"])
+    dashboard = client.get(reverse("dashboard"))
+    assert dashboard.context["total_count"] == 0
+    assert b"New citizen reports enter triage first" in dashboard.content
+    inbox = client.get(reverse("department_inbox"))
+    assert complaint.public_id.encode() not in inbox.content
+
     client.force_login(console_setup["reviewer"])
     response = client.post(reverse("route_complaint", args=[complaint.pk]), {})
     assert response.status_code == 302
@@ -69,6 +76,13 @@ def test_triage_routes_from_ward_category_rule_and_audits(client, console_setup)
     status_event = StatusEvent.objects.get(complaint=complaint)
     assert status_event.from_status == Complaint.Status.IN_TRIAGE
     assert status_event.to_status == Complaint.Status.ROUTED
+
+    client.force_login(console_setup["official"])
+    dashboard = client.get(reverse("dashboard"))
+    assert dashboard.context["total_count"] == 1
+    assert complaint.public_id.encode() in dashboard.content
+    inbox = client.get(reverse("department_inbox"))
+    assert complaint.public_id.encode() in inbox.content
 
 
 @pytest.mark.django_db

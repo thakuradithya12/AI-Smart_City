@@ -1,5 +1,14 @@
 # Test report
 
+## 2026-11-22 — Citizen-to-department routing visibility
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Live complaint state | Confirmed | `ASC-2026-000001` is `in_triage`, has no department yet, belongs to Demo Ward, and has an active pothole rule targeting Demo Department — Roads. The department dashboard's zero is correct until a triage reviewer routes it. |
+| Cross-role routing visibility | Passed | Regression test verifies a department official cannot see an untriaged report, then sees it on both dashboard and inbox immediately after the triage reviewer routes it. |
+| Full Docker checks | Passed | `No changes detected`; `61 passed in 75.34s`; Ruff passed; Bandit reported no issues; pip-audit found no known vulnerabilities. |
+| Dashboard guidance | Updated | Empty states now explain triage routing, assignment and role-specific visibility. |
+
 ## 2026-11-22 — Landing, auth, map and interaction regression
 
 | Check | Result | Evidence |

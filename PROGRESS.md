@@ -7,6 +7,13 @@
 - Rebuilt and restarted the Docker web image, then reseeded the local database with output suppressed so passwords were not exposed. Database verification shows bounds `(78.3867, 17.285, 78.5867, 17.485)`, the Hyderabad center and an interior point are covered, Bengaluru is outside, and the ward source says synthetic/not pilot data.
 - Docker Compose checks passed: migration check reported `No changes detected`; all `61` tests passed; Ruff passed; Bandit reported no issues across 1,455 lines; pip-audit found no known vulnerabilities. `compileall` and `git diff --check` also passed. An initial check invocation returned errors; a clean full rerun passed.
 
+## 2026-11-22 — Verify citizen-to-department routing
+
+- Investigated the screenshots against the live PostGIS database. `ASC-2026-000001` exists for the citizen, is inside Demo Ward, and has an active pothole routing rule to Demo Department — Roads. It remains `in_triage` with no department because no triage reviewer has routed it yet; that matches the human-review workflow and is why the department account correctly sees zero complaints.
+- Fixed misleading empty-state guidance on the department dashboard and inbox: new reports first enter triage and appear to the department after a reviewer routes them. Empty filtered inboxes now explain that no complaints match the selected status.
+- Expanded the route regression test across roles: the department sees no untriaged complaint; after the reviewer routes via the active ward/category rule, the complaint and count appear on the department dashboard and inbox.
+- Docker Compose checks passed: `No changes detected`; `61 passed`; Ruff passed; Bandit found no issues; pip-audit found no known vulnerabilities. Rebuilt and restarted the local web image; `/workspace/` and `/console/department/` both returned the expected signed-out HTTP 302 redirect.
+
 ## 2026-11-22 — Repair public sign-in and landing/report interactions
 
 - Reproduced the landing sign-in defect: click changed the address to `/#login` and did not open the Django login route. Registration/login then redirected to the landing mockup instead of the authenticated workspace. Updated both CTAs and redirects; authenticated Overview/brand links now return to `/workspace/`.

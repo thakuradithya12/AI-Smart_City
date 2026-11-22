@@ -22,7 +22,7 @@
     {% if complaint.due_at %}<p class="card-copy">Due {{ complaint.due_at|date:"M j, Y" }}{% if complaint.is_overdue %} <span class="badge overdue">Overdue</span>{% endif %}</p>{% endif %}
   </article>
   {% empty %}
-  <div class="empty-state card-spaced"><h2>No complaints to show yet</h2><p>When a report is submitted or routed to your team, it will appear here.</p>{% if request.user.role == "citizen" %}<a class="button" href="{% url 'report' %}">Report an issue</a>{% elif queue_url_name %}<a class="button" href="{% url queue_url_name %}">Open your work queue</a>{% endif %}</div>
+  <div class="empty-state card-spaced"><h2>No complaints to show yet</h2><p>{% if request.user.role == "department_official" or request.user.role == "supervisor" %}New citizen reports enter triage first. They appear here after a reviewer routes them to your department.{% elif request.user.role == "field_worker" %}Tasks appear here after your department assigns them to you.{% elif request.user.role == "triage_reviewer" or request.user.role == "admin" %}New citizen reports appear here after submission and can be reviewed in the triage queue.{% else %}Reports you submit will appear here so you can follow their progress.{% endif %}</p>{% if request.user.role == "citizen" %}<a class="button" href="{% url 'report' %}">Report an issue</a>{% elif queue_url_name %}<a class="button" href="{% url queue_url_name %}">Open your work queue</a>{% endif %}</div>
   {% endfor %}
 </section>
 {% endblock %}

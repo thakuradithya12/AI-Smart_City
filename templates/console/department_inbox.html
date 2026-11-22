@@ -16,5 +16,5 @@
     <form method="post" action="{% url 'assign_complaint' complaint.pk %}">{% csrf_token %}<label for="worker-{{ complaint.pk }}">Assign field worker</label><select id="worker-{{ complaint.pk }}" name="assignee" required><option value="">Choose an active worker</option>{% for worker in complaint.department.users.all %}{% if worker.role == "field_worker" and worker.is_active %}<option value="{{ worker.pk }}">{{ worker.name }}</option>{% endif %}{% endfor %}</select><button type="submit">Assign work</button></form>
   {% elif complaint.status == "resolved_pending_verification" %}<div class="notice">Work has been marked complete and is awaiting an independent verification.</div>{% endif %}
 </article>
-{% empty %}<div class="empty-state"><h2>Your inbox is clear</h2><p>Complaints routed to your department will appear here.</p></div>{% endfor %}
+{% empty %}<div class="empty-state">{% if selected_status %}<h2>No complaints match this status</h2><p>Try a different status filter to see other routed work.</p>{% else %}<h2>No complaints routed to your department yet</h2><p>New citizen reports first enter triage. They appear here after a reviewer routes them to {{ request.user.department.name|default:"your department" }}.</p>{% endif %}</div>{% endfor %}
 {% endblock %}
