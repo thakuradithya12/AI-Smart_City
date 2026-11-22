@@ -7,46 +7,46 @@ description: "Structured, light-mode civic-tech operations console prioritizing 
 
 CivicOps is a municipal infrastructure operations platform built for clarity under operational load. It serves two distinct experiences—an approachable public/citizen portal and a high-density, role-aware operations console for City Admins, Department Officers, Field Officers, and Supervisors.
 
-The design style is a **modern civic-tech operations console**: clean white and soft neutral surfaces, crisp 1px borders, minimal elevation, strong typographic hierarchy, and restrained semantic color. Every screen is structured so its user immediately understands what is happening, what requires attention, and what action should happen next.
+The design style is a **grounded civic service interface**: warm stone surfaces, deep evergreen structure, restrained terracotta actions, crisp borders, minimal elevation, and strong typography. Avoid gradient-heavy or generic AI styling. Every screen is structured so users understand what is happening and what action comes next.
 
 ## Colors
 
-The palette anchors on authoritative **Deep Navy (`#172B4D`)** for navigation, headings, and structural emphasis, paired with **Civic Blue (`#3D6FB6`)** for primary actions and active states over a **Soft Slate (`#F5F7FA`)** canvas and **Pure White (`#FFFFFF`)** surfaces.
+The palette anchors on **Deep Evergreen (`#183B32`)** for navigation, headings, and structural emphasis, paired with **Terracotta (`#B75D3B`)** for primary actions over a **Warm Stone (`#F4F2EA`)** canvas and **Soft Porcelain (`#FFFDF8`)** surfaces.
 
-- **Primary (`#172B4D`) & Primary Action (`#3D6FB6`):** Navy grounds the navigation shell and primary typography; Civic Blue drives primary buttons, active links, and selected states.
-- **Surfaces (`#FFFFFF`, `#F5F7FA`):** Light mode is primary. Crisp white cards sit on a muted `#F5F7FA` application background with subtle `#E2E8F0` borders.
-- **Semantic Status Colors:** Success (`#15803D`), Warning (`#D97706`), and Error/Critical (`#DC2626`) are reserved strictly for operational states (resolved, approaching SLA, breached/critical) and must always be paired with text labels and icons—never color alone.
+- **Primary (`#183B32`) & Primary Action (`#B75D3B`):** Evergreen grounds the navigation shell and primary typography; terracotta marks primary buttons and active states.
+- **Surfaces (`#FFFDF8`, `#F4F2EA`):** Light mode uses warm porcelain surfaces over stone with subtle green-gray borders.
+- **Semantic Status Colors:** Success (`#236D4A`), Warning (`#A76620`), and Error/Critical (`#A84437`) are reserved for operational states and are always paired with text labels—never color alone.
 
 ```yaml
 colors:
-  primary: "#172B4D"
+  primary: "#183B32"
   on-primary: "#FFFFFF"
-  primary-action: "#3D6FB6"
+  primary-action: "#B75D3B"
   on-primary-action: "#FFFFFF"
-  primary-action-container: "#E8F0FB"
-  on-primary-action-container: "#172B4D"
-  app-background: "#F5F7FA"
-  surface: "#FFFFFF"
-  on-surface: "#0F172A"
-  surface-container-low: "#F8FAFC"
-  surface-container: "#F1F5F9"
-  surface-container-high: "#E2E8F0"
-  on-surface-variant: "#475569"
-  secondary-text: "#475569"
-  outline: "#CBD5E1"
-  outline-variant: "#E2E8F0"
-  success: "#15803D"
+  primary-action-container: "#F3E4DC"
+  on-primary-action-container: "#6D3626"
+  app-background: "#F4F2EA"
+  surface: "#FFFDF8"
+  on-surface: "#182620"
+  surface-container-low: "#F9F7F0"
+  surface-container: "#ECEAE1"
+  surface-container-high: "#DEDCD2"
+  on-surface-variant: "#59665E"
+  secondary-text: "#59665E"
+  outline: "#C9D4CC"
+  outline-variant: "#DFE4DA"
+  success: "#236D4A"
   on-success: "#FFFFFF"
-  success-container: "#DCFCE7"
-  on-success-container: "#14532D"
-  warning: "#D97706"
-  on-warning: "#0F172A"
-  warning-container: "#FEF3C7"
-  on-warning-container: "#78350F"
-  error: "#DC2626"
+  success-container: "#E1EFE6"
+  on-success-container: "#194D35"
+  warning: "#A76620"
+  on-warning: "#182620"
+  warning-container: "#F8EBD5"
+  on-warning-container: "#754817"
+  error: "#A84437"
   on-error: "#FFFFFF"
-  error-container: "#FEE2E2"
-  on-error-container: "#7F1D1D"
+  error-container: "#F7E1DD"
+  on-error-container: "#742F28"
 ```
 
 ## Typography

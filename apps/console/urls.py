@@ -2,15 +2,27 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import path
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 from pathlib import Path
 from django.conf import settings
 from apps.complaints.views import complaint_detail, evidence_file, my_complaints, register, report
 from apps.accounts.models import User
-from apps.complaints.models import Complaint
+from apps.complaints.models import Complaint, StatusEvent
 from . import views as workflow_views
 
 def home(request):
-    return ui_showcase(request, "public_landing_civicops")
+    status_labels = dict(Complaint.Status.choices)
+    activity = StatusEvent.objects.select_related("complaint__category", "complaint__ward").order_by("-created_at")[:3]
+    updates = [
+        {
+            "category": event.complaint.category.name,
+            "ward": event.complaint.ward.name if event.complaint.ward_id else "Service area",
+            "status": status_labels.get(event.to_status, event.to_status.replace("_", " ").title()),
+            "created_at": event.created_at,
+        }
+        for event in activity
+    ]
+    return ui_showcase(request, "public_landing_civicops", updates=updates)
 
 @login_required
 def dashboard(request):
@@ -31,7 +43,7 @@ def dashboard(request):
         context["queue_url_name"] = "field_tasks"
     return render(request, "home.html", context)
 
-def ui_showcase(request, screen=""):
+def ui_showcase(request, screen="", updates=None):
     # Serve supplied static mockups directly so every design is viewable without backend data.
     root = Path(settings.BASE_DIR) / "docs" / "ui_reference"
     screens = sorted(path.parent.name for path in root.glob("*/code.html"))
@@ -40,12 +52,13 @@ def ui_showcase(request, screen=""):
             from django.http import Http404
             raise Http404
         html = (root / screen / "code.html").read_text(encoding="utf-8")
-        # Keep every supplied design reachable from within each standalone mockup.
-        nav = '<nav style="position:fixed;z-index:99999;right:12px;top:12px;background:#172b4d;padding:10px 14px;border-radius:8px;font:14px system-ui"><a style="color:white;text-decoration:none" href="/ui-showcase/">← All screens</a></nav>'
-        html = html.replace("</body>", nav + "</body>")
+        # Keep the temporary showcase navigation below the designed footer so it never overlaps the page header.
+        nav = '<a aria-label="Return to all supplied screens" style="display:inline-flex;align-items:center;min-height:38px;padding:7px 12px;border:1px solid #c9d4cc;border-radius:6px;color:#234c3d;text-decoration:none;white-space:nowrap" href="/ui-showcase/">← All screens</a>'
+        html = html.replace("<!-- LOCAL-UPDATES -->", render_to_string("public_updates.html", {"updates": updates or []}))
+        html = html.replace("<!-- SHOWCASE-BACK-LINK -->", nav)
         return HttpResponse(html)
     links = "".join(f'<li><a href="{screen}/">{screen.replace("_", " ")}</a></li>' for screen in screens)
-    return HttpResponse(f'<!doctype html><meta name="viewport" content="width=device-width"><title>UI Showcase</title><style>body{{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 20px;background:#f5f7fa;color:#172b4d}}ul{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;padding:0;list-style:none}}a{{display:block;padding:16px;background:white;border:1px solid #e2e8f0;border-radius:8px;color:#3d6fb6;text-decoration:none;text-transform:capitalize}}</style><h1>CivicOps UI Showcase</h1><p>All {len(screens)} supplied screen designs</p><ul>{links}</ul>')
+    return HttpResponse(f'<!doctype html><meta name="viewport" content="width=device-width"><title>UI Showcase</title><style>body{{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 20px;background:#f4f2ea;color:#183b32}}ul{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;padding:0;list-style:none}}a{{display:block;padding:16px;background:#fffdf8;border:1px solid #dfe4da;border-radius:8px;color:#b75d3b;text-decoration:none;text-transform:capitalize}}</style><h1>CivicOps UI Showcase</h1><p>All {len(screens)} supplied screen designs</p><ul>{links}</ul>')
 
 urlpatterns = [
     path("ui-showcase/", ui_showcase, name="ui_showcase"),

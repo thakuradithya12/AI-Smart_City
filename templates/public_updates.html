@@ -1,0 +1,25 @@
+<section class="local-updates" aria-labelledby="local-updates-title">
+  <div class="local-updates__inner">
+    <div class="local-updates__intro">
+      <h2 id="local-updates-title">Recent local reports</h2>
+      <p>Latest category, ward and workflow status. Personal details and exact pins stay private.</p>
+    </div>
+    {% if updates %}
+      <ol class="local-updates__list">
+        {% for update in updates %}
+          <li class="local-update">
+            <span class="local-update__marker" aria-hidden="true"></span>
+            <div class="local-update__main">
+              <strong>{{ update.category }}</strong>
+              <span>{{ update.ward }}</span>
+            </div>
+            <span class="local-update__status">{{ update.status }}</span>
+            <time class="local-update__time" datetime="{{ update.created_at|date:'c' }}">{{ update.created_at|date:"M j · H:i" }}</time>
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <div class="local-updates__empty">New reports will appear here after they enter the city review process.</div>
+    {% endif %}
+  </div>
+</section>

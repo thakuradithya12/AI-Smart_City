@@ -1,22 +1,22 @@
 :root {
   color-scheme: light;
-  --navy: #172b4d;
-  --blue: #3d6fb6;
-  --blue-soft: #e8f0fb;
-  --ink: #0f172a;
-  --muted: #475569;
-  --canvas: #f5f7fa;
-  --surface: #fff;
-  --surface-low: #f8fafc;
-  --surface-mid: #f1f5f9;
-  --line: #e2e8f0;
-  --line-strong: #cbd5e1;
-  --green: #15803d;
-  --green-soft: #dcfce7;
-  --amber: #92400e;
-  --amber-soft: #fef3c7;
-  --red: #b91c1c;
-  --red-soft: #fee2e2;
+  --navy: #183b32;
+  --blue: #b75d3b;
+  --blue-soft: #f3e4dc;
+  --ink: #182620;
+  --muted: #59665e;
+  --canvas: #f4f2ea;
+  --surface: #fffdf8;
+  --surface-low: #f9f7f0;
+  --surface-mid: #eceae1;
+  --line: #dfe4da;
+  --line-strong: #c9d4cc;
+  --green: #236d4a;
+  --green-soft: #e1efe6;
+  --amber: #754817;
+  --amber-soft: #f8ebd5;
+  --red: #a84437;
+  --red-soft: #f7e1dd;
   font-family: Inter, "Segoe UI", system-ui, sans-serif;
   background: var(--canvas);
   color: var(--ink);
@@ -30,14 +30,14 @@ a { color: var(--blue); text-decoration: none; }
 a:hover { color: var(--navy); text-decoration: underline; }
 button, input, select, textarea { font: inherit; }
 button, .button { min-height: 42px; }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid #4b8065; outline-offset: 2px; }
 .skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; padding: .75rem 1rem; background: white; }
 .skip-link:focus-visible { left: .75rem; top: .75rem; }
 .form-error-summary { margin: 0 0 1rem; padding: .9rem 1rem; border: 1px solid #fecaca; border-radius: 8px; background: #fef2f2; color: #991b1b; }
 .form-error-summary h2 { margin: 0; color: #7f1d1d; font-size: 1rem; }
 .form-error-summary ul { margin: .5rem 0 0; padding-left: 1.25rem; }
 .form-error-summary a { color: #7f1d1d; text-decoration: underline; }
-.form-error-summary:focus { outline: 3px solid #1d4ed8; outline-offset: 2px; }
+.form-error-summary:focus { outline: 3px solid #4b8065; outline-offset: 2px; }
 
 .site-header { position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
 .header-inner { max-width: 1440px; min-height: 64px; margin: auto; padding: .65rem clamp(1rem, 3vw, 2.5rem); display: flex; align-items: center; gap: 1.5rem; }
@@ -92,14 +92,14 @@ p { margin-top: .5rem; }
 .button-quiet:hover { background: var(--surface-mid); color: var(--navy); }
 
 .badge { display: inline-flex; align-items: center; gap: .3rem; min-height: 24px; padding: .15rem .55rem; border-radius: 999px; background: var(--surface-mid); color: #334155; font-size: 11px; font-weight: 700; white-space: nowrap; }
-.status-submitted, .status-in_triage, .status-info_requested { background: #e0f2fe; color: #075985; }
+.status-submitted, .status-in_triage, .status-info_requested { background: #f3e4dc; color: #6d3626; }
 .status-routed, .status-acknowledged, .status-assigned, .status-reopened { background: var(--blue-soft); color: var(--navy); }
 .status-in_progress, .status-resolved_pending_verification { background: var(--amber-soft); color: var(--amber); }
 .status-verified_closed { background: var(--green-soft); color: #14532d; }
 .status-rejected, .status-cancelled { background: var(--red-soft); color: #7f1d1d; }
 .overdue { background: var(--red-soft); color: #7f1d1d; }
 
-.notice { margin: 0 0 1rem; padding: .85rem 1rem; border: 1px solid #bfdbfe; border-radius: 8px; background: #eff6ff; color: var(--navy); }
+.notice { margin: 0 0 1rem; padding: .85rem 1rem; border: 1px solid #c9d4cc; border-radius: 8px; background: #f9f7f0; color: var(--navy); }
 .notice.success { border-color: #bbf7d0; background: var(--green-soft); color: #14532d; }
 .notice.error, .errorlist { border-color: #fecaca; background: #fef2f2; color: #991b1b; }
 .emergency { padding: .9rem 1rem; border-left: 3px solid #dc2626; border-radius: 6px; background: #fef2f2; color: #7f1d1d; }

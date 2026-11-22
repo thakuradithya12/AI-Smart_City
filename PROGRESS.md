@@ -1,5 +1,13 @@
 # Progress
 
+## 2026-11-23 — Refresh public landing UI
+
+- Reworked the public landing page and shared application palette from navy/blue to deep evergreen, warm stone and terracotta, enlarged the CivicOps mark, and changed the header to a three-column layout with a compact mobile breakpoint.
+- Removed the floating top-right showcase control; its temporary "All screens" link now sits in the page footer. Updated the screen index page to the same palette.
+- Filled the landing-page whitespace with a live recent-report activity list sourced from status events. It shows category, ward, status and timestamp only; no names, descriptions or exact coordinates. Empty state is database-backed and does not invent activity.
+- Updated the public area label to Telangana demo area. Rebuilt the `web` image; browser preview verified at 1280×720 with document height exactly 720px, no vertical overflow, the update feed and footer visible, and no browser console errors. The feed displayed actual database content: pothole · Demo Ward · In triage · Nov 22 · 13:23.
+- `docker compose exec web python manage.py check` reported `System check identified no issues (0 silenced)`. `git diff --check` passed. No test suite was run for this UI-only task.
+
 ## 2026-11-22 — Keep local demo coverage in Telangana
 
 - Changed `seed_demo` to always place its synthetic demo area in central Hyderabad, Telangana; removed latitude/longitude overrides so the command cannot seed this demo ward in another state. Its source is explicitly labeled synthetic and not pilot data.
