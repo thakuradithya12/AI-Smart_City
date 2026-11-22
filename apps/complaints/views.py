@@ -24,12 +24,12 @@ from apps.console.forms import AssignComplaintForm, MessageForm, ReasonForm, Ver
 
 def register(request):
     if request.user.is_authenticated:
-        return redirect("home")
+        return redirect("dashboard")
     form = CitizenRegistrationForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         user = form.save()
         login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-        return redirect("home")
+        return redirect("dashboard")
     return render(request, "complaints/register.html", {"form": form})
 
 

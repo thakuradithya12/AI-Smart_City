@@ -14,12 +14,12 @@
   <a class="skip-link" href="#main-content">Skip to main content</a>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="{% if request.user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}" aria-label="AI Smart City home">
+      <a class="brand" href="{% if request.user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'home' %}{% endif %}" aria-label="AI Smart City home">
         <span class="brand-mark" aria-hidden="true">ASC</span><span>AI Smart City<small>Civic service portal</small></span>
       </a>
       {% if request.user.is_authenticated %}
       <nav class="primary-nav" aria-label="Main navigation">
-        <a href="{% url 'home' %}"{% if request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %}>Overview</a>
+        <a href="{% url 'dashboard' %}"{% if request.resolver_match.url_name == 'dashboard' %} aria-current="page"{% endif %}>Overview</a>
         {% if request.user.role == "citizen" %}
           <a href="{% url 'report' %}"{% if request.resolver_match.url_name == 'report' %} aria-current="page"{% endif %}>Report an issue</a>
           <a href="{% url 'my_complaints' %}"{% if request.resolver_match.url_name == 'my_complaints' %} aria-current="page"{% endif %}>My complaints</a>

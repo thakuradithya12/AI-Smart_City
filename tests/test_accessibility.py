@@ -1,5 +1,6 @@
 import re
 from datetime import date
+from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
@@ -10,6 +11,20 @@ from django.utils import timezone
 from apps.accounts.models import User
 from apps.complaints.models import Complaint
 from apps.geography.models import Category, Department, Ward
+
+
+class _AnchorParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links = []
+        self.ids = set()
+
+    def handle_starttag(self, tag, attrs):
+        attributes = dict(attrs)
+        if "id" in attributes:
+            self.ids.add(attributes["id"])
+        if tag == "a" and "href" in attributes:
+            self.links.append(attributes["href"])
 
 
 def _luminance(color):
@@ -127,3 +142,38 @@ def test_keyboard_focus_indicator_meets_three_to_one_contrast():
     assert "summary:focus-visible" in css
     for background in ("#ffffff", "#f5f7fa"):
         assert _contrast_ratio(focus_color, background) >= 3
+
+
+@pytest.mark.django_db
+def test_landing_navigation_targets_real_pages_and_existing_sections(client):
+    response = client.get(reverse("home"))
+
+    assert response.status_code == 200
+    parser = _AnchorParser()
+    parser.feed(response.content.decode())
+    assert "/accounts/login/" in parser.links
+    assert "/complaints/new/" in parser.links
+    assert "/accounts/login/?next=/complaints/" in parser.links
+    assert all(link[1:] in parser.ids for link in parser.links if link.startswith("#"))
+    assert not any("#login" == link or "#report" == link for link in parser.links)
+
+
+def test_report_map_assets_are_vendored_and_location_button_has_status_fallback():
+    project_root = Path(__file__).resolve().parents[1]
+
+    assert (project_root / "static/vendor/bootstrap/bootstrap.min.css.map").is_file()
+    assert (project_root / "static/vendor/bootstrap/bootstrap.bundle.min.js.map").is_file()
+    assert (project_root / "static/vendor/leaflet/leaflet.js").is_file()
+    assert (project_root / "static/vendor/leaflet/leaflet.css").is_file()
+    assert (project_root / "static/vendor/leaflet/leaflet.js.map").is_file()
+    for image_name in ("layers.png", "layers-2x.png", "marker-icon.png", "marker-icon-2x.png", "marker-shadow.png"):
+        assert (project_root / "static/vendor/leaflet/images" / image_name).is_file()
+    map_script = (project_root / "static/js/report-map.js").read_text(encoding="utf-8")
+    report_template = (project_root / "templates/complaints/report.html").read_text(encoding="utf-8")
+    base_settings = (project_root / "config/settings/base.py").read_text(encoding="utf-8")
+    assert "navigator.geolocation.getCurrentPosition" in map_script
+    assert "Location access was denied" in map_script
+    assert 'L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png"' in map_script
+    assert 'tiles.on("tileerror"' in map_script
+    assert 'id="location-status" class="subtle" role="status" aria-live="polite"' in report_template
+    assert 'SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"' in base_settings

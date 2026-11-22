@@ -104,7 +104,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
     <!-- Public Top Navigation -->
     <header class="bg-surface border-b border-outline-variant sticky top-0 z-20">
       <div class="max-w-7xl mx-auto px-xl h-16 flex items-center justify-between gap-lg">
-        <a href="#top" class="flex items-center gap-sm">
+        <a href="/" class="flex items-center gap-sm" aria-label="CivicOps home">
           <div class="w-8 h-8 rounded bg-primary-action flex items-center justify-center shrink-0">
             <i data-lucide="landmark" class="w-4 h-4 text-on-primary-action" aria-hidden="true"></i>
           </div>
@@ -112,15 +112,12 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
         </a>
 
         <nav aria-label="Public navigation" class="hidden md:flex items-center gap-xl">
-          <a href="#public-issues" class="font-label text-label-md text-secondary-text hover:text-primary">Public issues map</a>
           <a href="#how-it-works" class="font-label text-label-md text-secondary-text hover:text-primary">How it works</a>
-          <a href="#help" class="font-label text-label-md text-secondary-text hover:text-primary">Help &amp; FAQ</a>
-          <a href="#contact" class="font-label text-label-md text-secondary-text hover:text-primary">Contact</a>
         </nav>
 
         <div class="flex items-center gap-sm">
-          <a href="#login" class="px-md py-sm rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">Sign in</a>
-          <a href="#report" class="px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">Report an issue</a>
+          <a href="/accounts/login/" class="px-md py-sm rounded border border-outline bg-surface font-label text-label-md text-primary hover:bg-surface-container-low">Sign in</a>
+          <a href="/complaints/new/" class="px-lg py-sm rounded bg-primary-action text-on-primary-action font-label text-label-md hover:bg-primary">Report an issue</a>
         </div>
       </div>
     </header>
@@ -141,40 +138,24 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
               Submit potholes, water leaks, streetlight outages, or drainage blockages in under two minutes. Every report is routed to the responsible city department and verified before closure.
             </p>
             <div class="flex flex-wrap items-center gap-md pt-xs">
-              <a href="#report" class="inline-flex items-center gap-sm px-xl py-md rounded bg-primary-action text-on-primary-action font-label text-title-md hover:bg-primary">
+              <a href="/complaints/new/" class="inline-flex items-center gap-sm px-xl py-md rounded bg-primary-action text-on-primary-action font-label text-title-md hover:bg-primary">
                 <i data-lucide="plus-circle" class="w-4 h-4" aria-hidden="true"></i>
                 <span>Report an issue</span>
               </a>
-              <a href="#public-issues" class="inline-flex items-center gap-sm px-xl py-md rounded border border-outline bg-surface text-primary font-label text-title-md hover:bg-surface-container-low">
-                <i data-lucide="map" class="w-4 h-4 text-primary-action" aria-hidden="true"></i>
-                <span>View public issues map</span>
+              <a href="#how-it-works" class="inline-flex items-center gap-sm px-xl py-md rounded border border-outline bg-surface text-primary font-label text-title-md hover:bg-surface-container-low">
+                <i data-lucide="list-checks" class="w-4 h-4 text-primary-action" aria-hidden="true"></i>
+                <span>How it works</span>
               </a>
             </div>
           </div>
 
-          <!-- Quick Track Card -->
+          <!-- Complaint details are private to the signed-in citizen. -->
           <div class="lg:col-span-5 bg-surface-container-low border border-outline-variant rounded-md p-xl flex flex-col gap-lg">
             <div>
-              <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Track a submitted report</h2>
-              <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Enter your reference ID to check live repair status.</p>
+              <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-primary">Track your reports</h2>
+              <p data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text mt-xs">Sign in to see your reports, status history, messages and repair evidence.</p>
             </div>
-            <form id="track-form" class="flex flex-col gap-md">
-              <div>
-                <label for="track-id" class="block font-label text-label-md text-primary mb-xs">Complaint reference ID</label>
-                <input id="track-id" type="text" value="CMP-2026-04182" placeholder="e.g., CMP-2026-04182" class="w-full rounded border border-outline-variant bg-surface px-md py-sm font-mono text-mono-sm text-primary">
-              </div>
-              <button type="submit" class="w-full py-sm px-lg rounded bg-primary text-on-primary font-label text-label-md hover:bg-primary-action">
-                Check status
-              </button>
-            </form>
-            <div id="track-result" class="bg-surface border border-outline-variant rounded p-md flex flex-col gap-xs">
-              <div class="flex items-center justify-between">
-                <span class="font-mono text-mono-sm text-primary-action">CMP-2026-04182</span>
-                <span class="px-sm py-0.5 rounded-full bg-primary-action-container text-on-primary-action-container font-label text-label-sm">Work in progress</span>
-              </div>
-              <div class="font-label text-label-md text-primary">Water leak at Oak St &amp; 4th Ave</div>
-              <div class="font-body text-body-sm text-secondary-text">Assigned to Water &amp; Sewer · Crew on site</div>
-            </div>
+            <a href="/accounts/login/?next=/complaints/" class="w-full py-sm px-lg rounded bg-primary text-on-primary font-label text-label-md hover:bg-primary-action text-center">Sign in to track reports</a>
           </div>
         </div>
       </section>
@@ -227,10 +208,9 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-md">
         <span data-design-text-token="body-sm" class="font-body text-body-sm text-secondary-text">CivicOps Municipal Operations Platform · Sample Public Portal</span>
         <div class="flex items-center gap-lg font-label text-label-md text-secondary-text">
-          <a href="#about" class="hover:text-primary">About</a>
-          <a href="#privacy" class="hover:text-primary">Privacy policy</a>
-          <a href="#terms" class="hover:text-primary">Terms of service</a>
-          <a href="#contact" class="hover:text-primary">Support</a>
+          <a href="#how-it-works" class="hover:text-primary">How it works</a>
+          <a href="/accounts/login/" class="hover:text-primary">Sign in</a>
+          <a href="/complaints/new/" class="hover:text-primary">Report an issue</a>
         </div>
       </div>
     </footer>

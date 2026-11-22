@@ -1,5 +1,16 @@
 # Test report
 
+## 2026-11-22 — Landing, auth, map and interaction regression
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Full Compose gate | Passed | Migration check `No changes detected`; `61 passed in 100.44s`; Ruff passed; Bandit 0 findings across 1,457 scanned lines; `pip-audit` found no known vulnerabilities. |
+| Production static manifest build | Passed | `docker compose up -d --build web`; `collectstatic` copied 152 files and post-processed 446. |
+| Login/navigation browser walkthrough | Passed | Landing sign-in reaches login when signed out; sign-in after authentication goes to `/workspace/`; valid local test login reaches the workspace; Sign out returns to the login page. |
+| Report map browser walkthrough | Passed locally | Leaflet controls and basemap render; clicking the map changes the coordinate fields. No report was submitted. Geolocation permission was not requested. |
+| OpenStreetMap response policy | Passed locally | The prior browser showed 403 blocked tiles. Switched to the canonical tile host and verified the running response header is `strict-origin-when-cross-origin`; map tiles then rendered. This is local browser evidence, not production traffic acceptance. |
+| Scope | Partial manual interaction coverage | Landing/auth/citizen navigation and report-map interactions were exercised in-browser. Role-specific complaint actions remain covered by the automated lifecycle tests rather than manual clicks in this walkthrough. |
+
 ## 2026-11-21 — Phase 6 local acceptance
 
 **Verified code commit:** `e806d63799ebb374d644b1746465d2ae858769b7` (the uploaded ZIP was untracked and excluded; tracked source was clean).

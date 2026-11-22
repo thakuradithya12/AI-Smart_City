@@ -1,5 +1,16 @@
 # Progress
 
+## 2026-11-22 — Repair public sign-in and landing/report interactions
+
+- Reproduced the landing sign-in defect: click changed the address to `/#login` and did not open the Django login route. Registration/login then redirected to the landing mockup instead of the authenticated workspace. Updated both CTAs and redirects; authenticated Overview/brand links now return to `/workspace/`.
+- Removed public-map, FAQ/contact, and legal-placeholder links from the landing because those routes are not implemented in the frozen scope. Replaced the fake tracking form/sample complaint with a scoped sign-in link to the citizen's own complaint list.
+- Browser review had shown an empty map. Found the Leaflet assets absent from the project; corrected the checked-in official Leaflet 1.9.4 integrity value and extended the vendor script to download all CSS-referenced images. The first production image rebuild then exposed missing `layers.png` and `layers-2x.png`; added both and the vendor script verified JS/CSS hashes, PNG signatures, and library licences.
+- Added an accessible live location status and permission/error fallback to the report form. Added regression tests for real landing hrefs, successful auth redirects, and all required Leaflet files.
+- First full run identified one failed registration redirect assertion (the POST-success branch had not been changed); corrected it. The follow-up full Compose suite passed 60 tests, Ruff passed, Bandit had zero findings, and pip-audit reported no known vulnerabilities.
+- Final map audit found HTTP 403 tiles because Django's actual local response used `Referrer-Policy: same-origin`; the app also used OSM subdomains. Switched to the canonical tile host, configured the origin-only cross-origin referrer policy in shared settings, and added an accessible fallback on tile errors. OSM's official asset policy is recorded in [`DECISIONS.md`](DECISIONS.md).
+- Final verification: Docker Compose checks — `No changes detected`; `61 passed in 100.44s`; Ruff clean; Bandit 0 findings across 1,457 scanned lines; pip-audit found no known vulnerabilities. Docker production-style image build passed `collectstatic` (152 files copied, 446 post-processed). Container response reports `Referrer-Policy: strict-origin-when-cross-origin`.
+- Browser click-through confirmed signed-out landing Sign in opens `/accounts/login/`, valid test sign-in opens `/workspace/`, signed-in Sign in goes directly to workspace, Sign out returns to login, and the report map renders real basemap tiles; clicking the map updates latitude/longitude fields. No complaint was submitted. The browser geolocation action was not invoked because it requests access to precise device location.
+
 ## 2026-11-21 — Phase 6 local acceptance and handoff
 
 - Reran the integrated Docker gate after accessibility fixes and local commit `e806d63799ebb374d644b1746465d2ae858769b7`: migrations consistent; post-commit 58 tests passed in 57.76s; Ruff clean; Bandit 0 findings across 1,453 lines; pip-audit clean. Production Django check exited 0 with the two documented short-HSTS warnings. Five local routes were smoke-tested; workspace redirected to login.

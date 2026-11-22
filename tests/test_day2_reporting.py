@@ -81,12 +81,24 @@ def test_registration_weak_password_rejected(client):
 def test_registration_and_login(client):
     response = client.post(reverse("register"), {"email": "new@example.test", "name": "New Citizen", "password1": "Good!Password982", "password2": "Good!Password982"})
     assert response.status_code == 302
+    assert response.url == reverse("dashboard")
     user = User.objects.get(email="new@example.test")
     assert user.role == User.Role.CITIZEN
     client.logout()
     response = client.post(reverse("login"), {"username": user.email, "password": "Good!Password982"})
     assert response.status_code == 302
+    assert response.url == reverse("dashboard")
     assert str(user.pk) == client.session.get("_auth_user_id")
+
+
+@pytest.mark.django_db
+def test_authenticated_user_visiting_login_is_sent_to_workspace(client, citizen):
+    client.force_login(citizen)
+
+    response = client.get(reverse("login"))
+
+    assert response.status_code == 302
+    assert response.url == reverse("dashboard")
 
 
 @pytest.mark.django_db
