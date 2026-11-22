@@ -43,6 +43,14 @@
 | Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_accounts.py -k password_reset` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
 | Change | Implemented, not runtime-verified | Added styled reset form/done/confirm/complete/email templates, safe dev console email, production SMTP environment settings and a focused legacy-staff reset test. No provider credentials were added. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V2 legacy email uniqueness
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | `UserManager._create_user()` called `normalize_email()`, which only normalizes the domain; the new-citizen form has no email field because accounts are phone-based. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_accounts.py -k email_accounts` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Change | Implemented, not runtime-verified | Lowercase and trim legacy manager emails; added an atomic-safe preflight data migration and case-insensitive database uniqueness; added a focused duplicate test. Migration application and current-data collision state are not verified. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |

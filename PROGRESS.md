@@ -268,3 +268,8 @@
 - Reproduced missing reset templates/email settings from source; added styled Django password-reset pages, environment-backed SMTP settings, and a focused legacy-staff email test. Files: `config/settings/{base,dev,prod}.py`, `.env.example`, `templates/registration/password_reset_*`, `tests/test_accounts.py`.
 - `python -m pytest -q tests/test_accounts.py -k password_reset` exited 2 before assertions (`ModuleNotFoundError: No module named 'django'`); `makemigrations --check --dry-run` has the same environment blocker. Runtime result: not verified.
 - New citizen phone-account recovery remains unavailable without an owner-approved phone verification route; see `docs/LIMITS.md` and D4.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V2
+
+- Reproduced the manager's domain-only email normalization and confirmed citizen registration has no email field. Added lowercase normalization for legacy staff email creation, a migration that refuses case-collision groups without changing users, a `LOWER(email)` unique constraint, and a regression test.
+- `python -m pytest -q tests/test_accounts.py -k email_accounts` exited 2 during import (`ModuleNotFoundError: No module named 'django'`); migration generation/application is not verified. See `docs/TEST_REPORT.md` and `docs/LIMITS.md`.

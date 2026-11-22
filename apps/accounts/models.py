@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.functions import Lower
 
 from apps.accounts.phone_numbers import normalize_phone_number
 
@@ -18,7 +19,7 @@ class UserManager(BaseUserManager):
                 raise ValueError("A valid Indian mobile number is required") from exc
         elif email:
             # Keep previously provisioned staff and fixtures usable during phone migration.
-            normalized_email = self.normalize_email(email)
+            normalized_email = self.normalize_email(email.strip()).lower()
         else:
             raise ValueError("A phone number is required")
         extra_fields.setdefault("username", normalized_phone or normalized_email)
@@ -56,6 +57,11 @@ class User(AbstractUser):
     USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = ["name"]
     objects = UserManager()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(Lower("email"), name="user_email_case_insensitive_unique")
+        ]
 
     def __str__(self):
         return self.name or self.phone_number or self.email or str(self.pk)
