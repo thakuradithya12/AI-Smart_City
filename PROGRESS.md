@@ -282,3 +282,8 @@
 
 - Reproduced a plain `ModelAdmin` for a `MultiPolygonField`; switched `WardAdmin` to Django 5.2 `GISModelAdmin` and added an inheritance regression test. Verified the API against official Django 5.2 GeoDjango admin docs.
 - `python -m pytest -q tests/test_geography_admin.py` exited 2 before assertions because Django is not installed. Runtime GIS editor behavior is not verified; see `docs/TEST_REPORT.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V5
+
+- Reproduced unordered `.first()` ward selection. Added `active_ward_for_point()` to refuse multi-ward matches and wired it into report submission before image storage; added a duplicate-active-polygon regression test.
+- `python -m pytest -q tests/test_day2_reporting.py -k overlapping_active_wards` exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). PostGIS behavior is not verified; see `docs/TEST_REPORT.md`.

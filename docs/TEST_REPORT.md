@@ -66,6 +66,15 @@
 | Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_geography_admin.py` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
 | Change | Implemented, not runtime-verified | `WardAdmin` now inherits Django 5.2 `GISModelAdmin`; added a focused inheritance test. API confirmed against official Django 5.2 docs on 2026-11-23. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V5 overlapping wards
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Confirmed from source | Report lookup used `active_on().filter(boundary__covers=point).first()` with no ordering or ambiguity check. |
+| Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_day2_reporting.py -k overlapping_active_wards` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
+| Change | Implemented, not runtime-verified | New `active_ward_for_point()` returns a sole match and refuses multiple active matches; report creation fails closed before image storage. Added an overlapping-ward end-to-end regression test. |
+| Syntax check | Passed | Python `ast.parse` parsed `apps/geography/services.py`, `apps/complaints/views.py`, and `tests/test_day2_reporting.py`. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |

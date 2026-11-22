@@ -178,6 +178,34 @@ def test_outside_ward_fails_without_complaint(client, citizen, ward, category):
 
 
 @pytest.mark.django_db
+def test_overlapping_active_wards_refuse_ambiguous_report(client, citizen, ward, category):
+    polygon = Polygon(((-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)))
+    Ward.objects.create(
+        name="Overlapping Test Ward",
+        boundary=MultiPolygon(polygon, srid=4326),
+        source="overlap regression fixture",
+        effective_from="2026-01-01",
+    )
+    client.force_login(citizen)
+
+    response = client.post(
+        reverse("report"),
+        {
+            "category": category.pk,
+            "latitude": "0",
+            "longitude": "0",
+            "consent": "on",
+            "pin_confirmed": "on",
+            "photo": SimpleUploadedFile("overlap.jpg", make_image(), content_type="image/jpeg"),
+        },
+    )
+
+    assert response.status_code == 200
+    assert "multiple active wards" in response.content.decode().lower()
+    assert not Complaint.objects.exists()
+
+
+@pytest.mark.django_db
 @pytest.mark.parametrize("effective_from,effective_to", [("2027-01-01", None), ("2020-01-01", "2020-12-31")])
 def test_report_rejects_pin_in_ward_outside_effective_dates(client, citizen, category, effective_from, effective_to):
     polygon = Polygon(((-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)))

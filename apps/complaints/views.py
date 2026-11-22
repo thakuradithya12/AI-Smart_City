@@ -16,7 +16,7 @@ from apps.audit.models import AuditEvent
 from apps.complaints.forms import CitizenRegistrationForm, ReportForm
 from apps.complaints.models import Complaint, Evidence
 from apps.complaints.services import delete_private_files, private_storage, store_citizen_image
-from apps.geography.models import Ward
+from apps.geography.services import active_ward_for_point
 from apps.workflow.services import potential_duplicates, transition
 from apps.workflow.permissions import can_transition
 from apps.console.forms import AssignComplaintForm, MessageForm, ReasonForm, VerifyForm
@@ -58,8 +58,14 @@ def report(request):
         longitude = float(form.cleaned_data["longitude"])
         latitude = float(form.cleaned_data["latitude"])
         point = Point(longitude, latitude, srid=4326)
-        # Only locally supplied ward polygons decide jurisdiction; no ward means fail closed.
-        ward = Ward.objects.active_on().filter(boundary__covers=point).first()
+        # Only one active local ward may claim the confirmed pin; ambiguous jurisdiction fails closed.
+        try:
+            ward = active_ward_for_point(point)
+        except ValidationError as exc:
+            form.add_error(None, " ".join(exc.messages))
+            ward = None
+        if form.errors:
+            return render(request, "complaints/report.html", {"form": form})
         if ward is None:
             form.add_error(None, "That pin is outside the supported area. Please choose a location inside a supported ward.")
         else:
