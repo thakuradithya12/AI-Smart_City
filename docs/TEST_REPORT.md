@@ -1,5 +1,19 @@
 # Test report
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.1 current-HEAD baseline
+
+**Code under test:** `61c37fa1e2aed79423969c5e59418c75d8afc3f4` (captured before this report edit). No checks below passed in this session; Docker/Python environment access was unavailable.
+
+| Command | Exit | Exact observed result |
+| --- | ---: | --- |
+| `docker compose run --rm checks` | 1 | `permission denied while trying to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine` |
+| `python --version` | 0 | `Python 3.15.0` (not the repository's Python 3.12 runtime) |
+| `python manage.py check --deploy --settings=config.settings.prod` | 1 | Traceback ends `ModuleNotFoundError: No module named 'django'` |
+| `.python-runtime\python.exe` existence check | n/a | `PYTHON_312_RUNTIME_NOT_FOUND` |
+| `docker compose build web` | 1 | `open C:\Users\thaku\.docker\buildx\.lock: Access is denied.` |
+
+**Counts:** pytest/Ruff/Bandit/pip-audit and migration results: not run; Docker image build: not built. The older 67-test and static-scan results below are historical and do not verify this HEAD. No remote or public deployment check was possible.
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |
