@@ -257,3 +257,8 @@
 - Rotated the local Django signing key without exposing it; `.env` is untracked. PostgreSQL role password rotation is pending because the local Docker/PostGIS engine is unavailable.
 - Removed the specified caches and uploaded ZIP; preserved `private_media/`. Added `*.zip` ignore and full-history Gitleaks v3 CI scan (`fetch-depth: 0`); official action version checked 2026-11-23.
 - No local history scan ran: Gitleaks is not installed and no Git remote is configured. See `docs/LIMITS.md` and `docs/TEST_REPORT.md`; 0.3 acceptance remains partial.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.4
+
+- Confirmed `actions/checkout@v6` and `actions/setup-python@v5` exist in official release histories; added dated evidence and outstanding owner inputs to `docs/DECISIONS_NEEDED.md`.
+- `git remote -v` returned no rows. No remote was invented and no push/CI result is claimed; owner must provide an owner-controlled repo URL and authenticated remote setup. See `docs/TEST_REPORT.md`.

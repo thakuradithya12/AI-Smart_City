@@ -27,6 +27,14 @@
 | Full-history secret scan | Not verified | No `gitleaks`, `trufflehog`, or `git-secrets` executable is installed; no Git remote exists. CI now checks out full history and invokes Gitleaks Action v3. |
 | Secret scan action version | Source-verified | Official `gitleaks/gitleaks-action` README/releases were checked 2026-11-23; v3 exists and uses Node 24. No CI run is claimed. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.4 remote and CI
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Configured Git remotes | None | `git remote -v` produced no output (exit 0). No push or remote CI run was attempted. |
+| Existing action tags | Source-verified | Official release pages confirm `actions/checkout@v6.0.0` and `actions/setup-python@v5.6.0` on 2026-11-23. |
+| Green Actions run | Not verified | Requires owner-controlled GitHub repository URL and authenticated remote setup; see `docs/DECISIONS_NEEDED.md`. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |
