@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}AI Smart City · Local civic reports{% endblock %}
+{% block content %}
+<section class="page-heading landing-hero" aria-labelledby="landing-title">
+  <div>
+    <p class="eyebrow">Civic service portal</p>
+    <h1 id="landing-title">Help your neighbourhood get the attention it needs.</h1>
+    <p>Report civic issues, follow their progress, and see how service teams respond.</p>
+  </div>
+  <div class="landing-actions">
+    <a class="button" href="{% url 'register' %}">Create an account</a>
+    <a class="button button-secondary" href="{% url 'login' %}">Sign in</a>
+  </div>
+</section>
+<section class="panel landing-steps" aria-labelledby="steps-title">
+  <p class="eyebrow">How it works</p>
+  <h2 id="steps-title">From report to verified resolution</h2>
+  <ol>
+    <li><strong>Report an issue</strong><span>Add a category, photo, and confirmed map pin.</span></li>
+    <li><strong>Follow the review</strong><span>Track status updates as the responsible team is identified.</span></li>
+    <li><strong>Confirm the outcome</strong><span>Review the reported fix and tell us if the problem remains.</span></li>
+  </ol>
+</section>
+<section class="panel landing-updates" aria-labelledby="updates-title">
+  <p class="eyebrow">Public updates</p>
+  <h2 id="updates-title">Recent service activity</h2>
+  {% for update in updates %}
+  <article class="card card-spaced">
+    <div class="card-head"><h3>{{ update.category }} · {{ update.ward }}</h3><span class="badge">{{ update.status }}</span></div>
+    <time class="muted" datetime="{{ update.created_at|date:'c' }}">{{ update.created_at|date:"M j, Y · H:i" }}</time>
+  </article>
+  {% empty %}
+  <p class="muted">No public activity to show yet.</p>
+  {% endfor %}
+</section>
+<p class="emergency">This platform is not an emergency service. Contact local emergency services for urgent danger.</p>
+{% endblock %}

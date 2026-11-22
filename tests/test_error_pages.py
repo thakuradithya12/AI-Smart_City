@@ -24,3 +24,13 @@ def test_custom_error_templates_render(client, path, status, heading):
     assert response.status_code == status
     assert heading.encode() in response.content
     assert f"{status}.html" in [template.name for template in response.templates]
+
+
+def test_public_landing_uses_template_and_archive_files_are_not_routed(client, settings, tmp_path):
+    settings.BASE_DIR = tmp_path
+
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert b"Recent service activity" in response.content
+    assert client.get("/ui-showcase/").status_code == 404
