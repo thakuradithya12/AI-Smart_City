@@ -51,6 +51,13 @@
 | Focused test attempt | Not run to assertions | `python -m pytest -q tests/test_accounts.py -k email_accounts` exited 2 during collection: `ModuleNotFoundError: No module named 'django'`. |
 | Change | Implemented, not runtime-verified | Lowercase and trim legacy manager emails; added an atomic-safe preflight data migration and case-insensitive database uniqueness; added a focused duplicate test. Migration application and current-data collision state are not verified. |
 
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V3 Bootstrap use
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Suspected defect reproduction | Closed as not unused | `templates/base.html` loads `vendor/bootstrap/bootstrap.min.css`; live templates use `.card` and `.badge`; Bootstrap's `.card` flex layout remains in effect because `site.css` does not override `display`. `site.css` styles those components further. No Bootstrap JS is loaded. |
+| Change | None | Removing the stylesheet would alter component layout; therefore no asset or page change is justified by this suspicion. No screenshot comparison was needed because no UI was changed. |
+
 ## 2026-11-22 — Final local backlog and access-control pass
 
 | Check | Result | Evidence |

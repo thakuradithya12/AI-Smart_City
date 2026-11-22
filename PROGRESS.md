@@ -273,3 +273,7 @@
 
 - Reproduced the manager's domain-only email normalization and confirmed citizen registration has no email field. Added lowercase normalization for legacy staff email creation, a migration that refuses case-collision groups without changing users, a `LOWER(email)` unique constraint, and a regression test.
 - `python -m pytest -q tests/test_accounts.py -k email_accounts` exited 2 during import (`ModuleNotFoundError: No module named 'django'`); migration generation/application is not verified. See `docs/TEST_REPORT.md` and `docs/LIMITS.md`.
+
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V3
+
+- Source check disproved that Bootstrap CSS is entirely unused: the shared base loads it, live templates use its `.card` and `.badge` components, and the base card flex behavior is not replaced by `site.css`. No UI change was warranted; Bootstrap JavaScript is not loaded. Evidence is recorded in `docs/TEST_REPORT.md`.
