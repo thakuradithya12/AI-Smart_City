@@ -334,3 +334,10 @@
 - Added a regression covering department-official POST denial and direct transition refusal; role-matrix coverage derives its allowed roles from `TRANSITIONS`.
 - Runtime tests not run; unverified until CI.
 
+## 2026-11-23 — ROADMAP_V2 task 1.1
+
+- Added audited reassignment for active assigned/in-progress complaints; status stays unchanged and the citizen timeline shows a neutral entry. Existing reopened-to-assigned flow remains a state transition.
+- Added tests for supervisor, department official and admin roles, department/active-worker/reason/status checks, and old-worker task/evidence access.
+- `python -m py_compile ...` and `git diff --check` exited 0. `pytest` and `makemigrations --check --dry-run` could not run: local Python has no Django; Docker checks could not connect to Docker Desktop.
+- Runtime and concurrent-database behavior remain unverified; details in `docs/TEST_REPORT.md`.
+

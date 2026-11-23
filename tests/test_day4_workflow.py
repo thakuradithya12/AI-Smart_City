@@ -12,7 +12,7 @@ from apps.accounts.models import User
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, Resolution, StatusEvent
 from apps.complaints.services import delete_private_files, private_storage
-from apps.workflow.services import add_field_evidence, transition
+from apps.workflow.services import add_field_evidence, reassign_complaint, transition
 from apps.geography.models import Category, Department, RoutingRule, Ward
 
 
@@ -31,6 +31,7 @@ def day4_setup(db):
     official = User.objects.create_user(email="d4-official@example.test", password="Strong!Password982", name="Day Four Official", role=User.Role.DEPARTMENT_OFFICIAL, department=department)
     supervisor = User.objects.create_user(email="d4-supervisor@example.test", password="Strong!Password982", name="Day Four Supervisor", role=User.Role.SUPERVISOR, department=department)
     other_supervisor = User.objects.create_user(email="d4-other-supervisor@example.test", password="Strong!Password982", name="Other Supervisor", role=User.Role.SUPERVISOR, department=other_department)
+    admin = User.objects.create_user(email="d4-admin@example.test", password="Strong!Password982", name="Day Four Admin", role=User.Role.ADMIN)
     worker = User.objects.create_user(email="d4-worker@example.test", password="Strong!Password982", name="Day Four Worker", role=User.Role.FIELD_WORKER, department=department)
     other_worker = User.objects.create_user(email="d4-other-worker@example.test", password="Strong!Password982", name="Other Worker", role=User.Role.FIELD_WORKER, department=other_department)
     square = Polygon(((-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)))
@@ -158,6 +159,88 @@ def test_other_department_supervisor_cannot_verify_or_reassign(client, day4_setu
     client.force_login(setup["other_supervisor"])
     assert client.post(reverse("verify_resolution", args=[complaint.pk]), {"method": "site_review"}).status_code == 404
     assert client.post(reverse("supervisor_reassign", args=[complaint.pk]), {"assignee": setup["other_worker"].pk}).status_code == 404
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("role", [User.Role.SUPERVISOR, User.Role.DEPARTMENT_OFFICIAL, User.Role.ADMIN])
+@pytest.mark.parametrize("status", [Complaint.Status.ASSIGNED, Complaint.Status.IN_PROGRESS])
+def test_authorized_staff_can_reassign_without_changing_status(day4_setup, role, status):
+    setup = day4_setup
+    actor = setup["admin"] if role == User.Role.ADMIN else (
+        setup["official"] if role == User.Role.DEPARTMENT_OFFICIAL else setup["supervisor"]
+    )
+    replacement = User.objects.create_user(
+        email=f"replacement-{role}-{status}@example.test", password="Strong!Password982",
+        name="Replacement Worker", role=User.Role.FIELD_WORKER, department=setup["department"],
+    )
+    complaint = Complaint.objects.create(
+        public_id=f"REASSIGN-{role}-{status}", citizen=setup["citizen"], category=setup["category"],
+        location=Point(0, 0, srid=4326), ward=setup["ward"], department=setup["department"],
+        assignee=setup["worker"], status=status, consent_at="2026-01-01T00:00:00Z",
+    )
+    before_events = complaint.status_events.count()
+    reassign_complaint(complaint, actor, replacement, "Worker unavailable for this task")
+    complaint.refresh_from_db()
+    assert complaint.status == status
+    assert complaint.assignee == replacement
+    assert complaint.status_events.count() == before_events
+    audit = AuditEvent.objects.get(action="complaint_reassigned", object_id=str(complaint.pk))
+    assert audit.before == {"assignee_id": setup["worker"].pk}
+    assert audit.after == {"assignee_id": replacement.pk}
+    assert audit.reason == "Worker unavailable for this task"
+
+
+@pytest.mark.django_db
+def test_reassignment_rejects_invalid_actor_reason_worker_and_terminal_status(day4_setup):
+    setup = day4_setup
+    replacement = User.objects.create_user(
+        email="inactive-replacement@example.test", password="Strong!Password982", name="Inactive",
+        role=User.Role.FIELD_WORKER, department=setup["department"], is_active=False,
+    )
+    wrong_department_worker = setup["other_worker"]
+    complaint = Complaint.objects.create(
+        public_id="REASSIGN-INVALID", citizen=setup["citizen"], category=setup["category"],
+        location=Point(0, 0, srid=4326), ward=setup["ward"], department=setup["department"],
+        assignee=setup["worker"], status=Complaint.Status.ASSIGNED, consent_at="2026-01-01T00:00:00Z",
+    )
+    for worker, reason in ((replacement, "valid reason"), (wrong_department_worker, "valid reason"),
+                           (setup["worker"], "no")):
+        with pytest.raises(ValidationError):
+            reassign_complaint(complaint, setup["supervisor"], worker, reason)
+    with pytest.raises(ValidationError):
+        reassign_complaint(complaint, setup["reviewer"], setup["worker"], "valid reason")
+    complaint.status = Complaint.Status.VERIFIED_CLOSED
+    complaint.save(update_fields=["status"])
+    with pytest.raises(ValidationError):
+        reassign_complaint(complaint, setup["supervisor"], setup["worker"], "valid reason")
+
+
+@pytest.mark.django_db
+def test_reassignment_endpoint_hides_task_and_evidence_from_previous_worker(client, day4_setup):
+    setup = day4_setup
+    replacement = User.objects.create_user(
+        email="new-worker@example.test", password="Strong!Password982", name="New Worker",
+        role=User.Role.FIELD_WORKER, department=setup["department"],
+    )
+    complaint = Complaint.objects.create(
+        public_id="REASSIGN-VISIBILITY", citizen=setup["citizen"], category=setup["category"],
+        location=Point(0, 0, srid=4326), ward=setup["ward"], department=setup["department"],
+        assignee=setup["worker"], status=Complaint.Status.IN_PROGRESS, consent_at="2026-01-01T00:00:00Z",
+    )
+    evidence = complaint.evidence.create(kind="field_before", original_path="private/original.jpg",
+        display_path="private/display.jpg", sha256="a" * 64, uploaded_by=setup["worker"])
+    client.force_login(setup["official"])
+    response = client.post(reverse("supervisor_reassign", args=[complaint.pk]), {
+        "assignee": replacement.pk, "reason": "Worker unavailable for this task",
+    })
+    assert response.status_code == 302
+    client.force_login(setup["worker"])
+    assert client.get(reverse("field_task_detail", args=[complaint.pk])).status_code == 404
+    assert client.get(reverse("evidence_file", args=[evidence.pk])).status_code == 404
+    client.force_login(setup["citizen"])
+    detail = client.get(reverse("complaint_detail", args=[complaint.pk]))
+    assert b"Work assignment updated" in detail.content
+    assert b"New Worker" not in detail.content
 
 
 @pytest.mark.django_db

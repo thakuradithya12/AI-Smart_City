@@ -421,6 +421,15 @@ Reran the complete check service on **2026-11-21** against the Phase 2 worktree 
 
 The first run produced one failed **test expectation** because its shared fixture still contained a valid older ward rule. The service correctly chose that ward-specific rule. The fixture was corrected to make every ward-specific rule future-dated; the rerun passed all 49 tests. No routing service defect was found.
 
+### ROADMAP_V2 task 1.1 attempt (2026-11-23)
+
+- `python -m py_compile tests/test_day4_workflow.py apps/workflow/services.py apps/console/views.py apps/complaints/views.py` — exit 0.
+- `git diff --check` — exit 0.
+- `python -m pytest tests/test_day4_workflow.py -q` — exit 2 during collection: `ModuleNotFoundError: No module named 'django'`.
+- `docker compose run --rm checks python -m pytest tests/test_day4_workflow.py -q` — exit 1: Docker API pipe unavailable (`dockerDesktopLinuxEngine`).
+- `python manage.py makemigrations --check --dry-run` — exit 1: `ModuleNotFoundError: No module named 'django'`.
+- Test and migration behavior are **not verified** in this workspace. No CI run was available.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit found no issues in 1,453 lines; pip-audit found no known vulnerabilities. `migrate --check` exited 0. Repeated `check --deploy` exited 0 with only the two documented HSTS warnings, and the four container-local HTTP smoke requests each returned 200. This rerun includes the prior workflow, authorization, evidence, and UI-route regression coverage.

@@ -136,8 +136,19 @@ def complaint_detail(request, pk):
         {"kind": "evidence", "created_at": evidence.uploaded_at, "label": evidence.get_kind_display(), "evidence": evidence}
         for evidence in complaint.evidence.all()
     )
+    timeline.extend(
+        {"kind": "assignment", "created_at": event.created_at}
+        for event in AuditEvent.objects.filter(
+            action="complaint_reassigned", object_type="Complaint", object_id=str(complaint.pk)
+        )
+    )
     timeline.sort(key=lambda item: item["created_at"])
-    can_reassign = can_transition(request.user, complaint, Complaint.Status.ASSIGNED) and request.user.role == User.Role.SUPERVISOR
+    can_reassign = (
+        (complaint.status in {Complaint.Status.ASSIGNED, Complaint.Status.IN_PROGRESS}
+         and request.user.role in {User.Role.SUPERVISOR, User.Role.DEPARTMENT_OFFICIAL, User.Role.ADMIN}
+         and (request.user.role == User.Role.ADMIN or request.user.department_id == complaint.department_id))
+        or (complaint.status == Complaint.Status.REOPENED and request.user.role == User.Role.SUPERVISOR)
+    )
     field_workers = User.objects.none()
     if can_reassign and complaint.department_id:
         field_workers = User.objects.filter(
@@ -158,7 +169,7 @@ def complaint_detail(request, pk):
         "can_reassign": can_reassign,
         "field_workers": field_workers,
         "verify_form": VerifyForm(), "reason_form": ReasonForm(), "message_form": MessageForm(),
-        "assign_form": AssignComplaintForm(department=complaint.department) if request.user.role == User.Role.SUPERVISOR else None,
+        "assign_form": AssignComplaintForm(department=complaint.department) if can_reassign else None,
     })
 
 

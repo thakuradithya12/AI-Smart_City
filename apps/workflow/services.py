@@ -139,6 +139,47 @@ def route_complaint(complaint, actor, department_override=None, reason=None):
     return locked
 
 
+@transaction.atomic
+def reassign_complaint(complaint, actor, assignee, reason):
+    """Change the responsible worker without changing complaint status."""
+    locked = Complaint.objects.select_for_update().get(pk=complaint.pk)
+    reason = (reason or "").strip()
+    if actor is None or not actor.is_authenticated or not actor.is_active:
+        raise ValidationError("An active staff member is required to reassign work.")
+    if actor.role not in {"supervisor", "department_official", "admin"}:
+        raise ValidationError("Only a supervisor, department official, or admin may reassign work.")
+    if not Complaint.objects.visible_to(actor).filter(pk=locked.pk).exists():
+        raise ValidationError("This user cannot act on this complaint.")
+    if locked.status not in {Complaint.Status.ASSIGNED, Complaint.Status.IN_PROGRESS}:
+        raise ValidationError("Only assigned or in-progress complaints can be reassigned.")
+    if not locked.department_id:
+        raise ValidationError("The complaint must have a department before reassignment.")
+    if actor.role != "admin" and actor.department_id != locked.department_id:
+        raise ValidationError("The complaint must belong to your department.")
+    if not 5 <= len(reason) <= 500:
+        raise ValidationError("A reassignment reason of 5 to 500 characters is required.")
+    if (assignee.role != "field_worker" or not assignee.is_active
+            or assignee.department_id != locked.department_id):
+        raise ValidationError("Choose an active field worker from the complaint department.")
+    if locked.assignee_id == assignee.pk:
+        raise ValidationError("Choose a different field worker.")
+
+    previous_assignee_id = locked.assignee_id
+    locked.assignee = assignee
+    locked.save(update_fields=["assignee"])
+    AuditEvent.objects.create(
+        actor=actor,
+        role=actor.role,
+        action="complaint_reassigned",
+        object_type="Complaint",
+        object_id=str(locked.pk),
+        before={"assignee_id": previous_assignee_id},
+        after={"assignee_id": assignee.pk},
+        reason=reason,
+    )
+    return locked
+
+
 def add_field_evidence(complaint, actor, upload, kind):
     paths = []
     try:

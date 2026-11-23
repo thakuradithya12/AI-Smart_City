@@ -6,12 +6,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.models import User
 from apps.complaints.models import Complaint
+from apps.audit.models import AuditEvent
 from apps.geography.models import Department, Ward
 from apps.workflow.permissions import can_link_duplicate, can_transition
 from apps.workflow.services import (
     add_field_evidence,
     link_duplicate as link_duplicate_service,
     route_complaint as route_complaint_service,
+    reassign_complaint as reassign_complaint_service,
     transition,
 )
 
@@ -308,11 +310,27 @@ def citizen_reply(request, pk):
 @login_required
 def supervisor_reassign(request, pk):
     complaint = get_object_or_404(Complaint.objects.visible_to(request.user), pk=pk)
-    if request.method != "POST" or request.user.role != User.Role.SUPERVISOR or not can_transition(request.user, complaint, Complaint.Status.ASSIGNED):
+    if (request.method == "POST" and request.user.role == User.Role.SUPERVISOR
+            and can_transition(request.user, complaint, Complaint.Status.ASSIGNED)
+            and complaint.status == Complaint.Status.REOPENED):
+        form = AssignComplaintForm(request.POST, department=complaint.department)
+        if not form.is_valid():
+            messages.error(request, "Choose an active field worker from this department.")
+            return redirect("complaint_detail", pk=pk)
+        transition(complaint, Complaint.Status.ASSIGNED, actor=request.user, assignee=form.cleaned_data["assignee"])
+        return redirect("complaint_detail", pk=pk)
+    if (request.method != "POST"
+            or request.user.role not in {User.Role.SUPERVISOR, User.Role.DEPARTMENT_OFFICIAL, User.Role.ADMIN}
+        or complaint.status not in {Complaint.Status.ASSIGNED, Complaint.Status.IN_PROGRESS}
+            or (request.user.role != User.Role.ADMIN and request.user.department_id != complaint.department_id)):
         raise Http404
     form = AssignComplaintForm(request.POST, department=complaint.department)
-    if not form.is_valid():
+    reason_form = ReasonForm(request.POST)
+    if not form.is_valid() or not reason_form.is_valid():
         messages.error(request, "Choose an active field worker from this department.")
         return redirect("complaint_detail", pk=pk)
-    transition(complaint, Complaint.Status.ASSIGNED, actor=request.user, assignee=form.cleaned_data["assignee"])
+    try:
+        reassign_complaint_service(complaint, request.user, form.cleaned_data["assignee"], reason_form.cleaned_data["reason"])
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
     return redirect("complaint_detail", pk=pk)
