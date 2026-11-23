@@ -11,6 +11,7 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.base import ContentFile
 from django.test import override_settings
 from django.urls import reverse
 
@@ -59,16 +60,81 @@ def test_corrupt_image_rejected():
 
 
 @pytest.mark.django_db
+def test_image_pixel_limit_rejected(monkeypatch):
+    monkeypatch.setattr("apps.complaints.services.MAX_IMAGE_PIXELS", 100)
+    with pytest.raises(ValidationError, match="dimensions are too large"):
+        store_citizen_image(SimpleUploadedFile("large.jpg", make_image(size=(12, 10)), content_type="image/jpeg"))
+
+
+@pytest.mark.django_db
 def test_original_hash_and_exif_free_display():
     exif = Image.Exif()
     exif[270] = "private caption"
     raw = make_image(exif=exif)
-    original, display, digest = store_citizen_image(SimpleUploadedFile("photo.jpg", raw, content_type="image/jpeg"))
+    original, display, thumbnail, digest = store_citizen_image(SimpleUploadedFile("photo.jpg", raw, content_type="image/jpeg"))
     assert private_storage.open(original, "rb").read() == raw
     assert digest == hashlib.sha256(raw).hexdigest()
     with Image.open(private_storage.open(display, "rb")) as image:
         assert not image.getexif()
-    delete_private_files((original, display))
+        assert max(image.size) <= 1600
+    with Image.open(private_storage.open(thumbnail, "rb")) as image:
+        assert not image.getexif()
+        assert max(image.size) <= 320
+    delete_private_files((original, display, thumbnail))
+
+
+@pytest.mark.django_db
+def test_display_copy_uses_configured_max_edge(settings):
+    settings.EVIDENCE_DISPLAY_MAX_EDGE = 8
+    raw = make_image(size=(30, 20))
+    original, display, thumbnail, _digest = store_citizen_image(
+        SimpleUploadedFile("large.jpg", raw, content_type="image/jpeg")
+    )
+    with Image.open(private_storage.open(display, "rb")) as image:
+        assert image.size == (8, 5)
+    delete_private_files((original, display, thumbnail))
+
+
+@pytest.mark.django_db
+@override_settings(REPORT_MAX_PHOTOS=2)
+def test_report_accepts_multiple_citizen_photos(client, citizen, ward, category):
+    client.force_login(citizen)
+    response = client.post(reverse("report"), {
+        "category": category.pk, "latitude": "0", "longitude": "0", "consent": "on",
+        "pin_confirmed": "on", "photo": [
+            SimpleUploadedFile("first.jpg", make_image(), content_type="image/jpeg"),
+            SimpleUploadedFile("second.jpg", make_image(format="PNG"), content_type="image/png"),
+        ],
+    })
+    assert response.status_code == 302
+    evidence = list(Complaint.objects.get().evidence.filter(kind=Evidence.Kind.CITIZEN))
+    assert len(evidence) == 2
+    delete_private_files(path for item in evidence for path in (item.original_path, item.display_path, item.thumbnail_path))
+
+
+@pytest.mark.django_db
+@override_settings(REPORT_MAX_PHOTOS=1)
+def test_report_rejects_more_than_configured_citizen_photo_limit(client, citizen, category):
+    client.force_login(citizen)
+    response = client.post(reverse("report"), {
+        "category": category.pk, "latitude": "0", "longitude": "0", "consent": "on",
+        "pin_confirmed": "on", "photo": [
+            SimpleUploadedFile("first.jpg", make_image(), content_type="image/jpeg"),
+            SimpleUploadedFile("second.jpg", make_image(), content_type="image/jpeg"),
+        ],
+    })
+    assert response.status_code == 200
+    assert not Complaint.objects.exists()
+
+
+@pytest.mark.django_db
+def test_media_reconcile_reports_orphan_without_deleting_it():
+    orphan = private_storage.save("display/reconcile-orphan.jpg", ContentFile(b"kept"))
+    output = StringIO()
+    call_command("media_reconcile", stdout=output)
+    assert orphan in output.getvalue()
+    assert private_storage.exists(orphan)
+    private_storage.delete(orphan)
 
 
 @pytest.mark.django_db
@@ -124,6 +190,28 @@ def test_evidence_response_has_private_safe_headers_and_never_opens_original(
     assert response["X-Content-Type-Options"] == "nosniff"
     assert response["Content-Disposition"] == "inline"
     assert opened == [evidence.display_path]
+
+
+@pytest.mark.django_db
+def test_deactivated_account_cannot_fetch_evidence(client, citizen, ward, category, monkeypatch):
+    complaint = Complaint.objects.create(
+        citizen=citizen, category=category, location=Point(0, 0, srid=4326), ward=ward,
+        consent_at="2026-01-01T00:00:00Z",
+    )
+    evidence = Evidence.objects.create(
+        complaint=complaint, kind=Evidence.Kind.CITIZEN, original_path="original/secret.jpg",
+        display_path="display/secret.jpg", sha256="b" * 64, uploaded_by=citizen,
+    )
+    inactive = User.objects.create_user(
+        email="inactive-evidence@example.test", password="Strong!Password123", name="Inactive",
+        is_active=False,
+    )
+    opened = []
+    monkeypatch.setattr("apps.complaints.views.private_storage.open", lambda *args: opened.append(args))
+    client.force_login(inactive)
+    response = client.get(reverse("evidence_file", args=[evidence.pk]))
+    assert response.status_code != 200
+    assert opened == []
 
 
 @pytest.mark.django_db
@@ -200,7 +288,7 @@ def test_report_creates_complaint_evidence_and_events(client, citizen, ward, cat
     assert complaint.status_events.count() == 1
     assert AuditEvent.objects.filter(object_id=str(complaint.pk)).count() == 2
     evidence = complaint.evidence.get()
-    delete_private_files((evidence.original_path, evidence.display_path))
+    delete_private_files((evidence.original_path, evidence.display_path, evidence.thumbnail_path))
 
 
 @pytest.mark.django_db
@@ -337,12 +425,17 @@ def test_validation_failure_after_storage_removes_private_files(client, citizen,
         display_before = set(private_storage.listdir("display")[1])
     except FileNotFoundError:
         display_before = set()
+    try:
+        thumbnail_before = set(private_storage.listdir("thumbnail")[1])
+    except FileNotFoundError:
+        thumbnail_before = set()
     response = client.post(reverse("report"), {"category": category.pk, "latitude": "0", "longitude": "0", "consent": "on", "pin_confirmed": "on", "photo": SimpleUploadedFile("test.jpg", make_image(), content_type="image/jpeg")})
     assert response.status_code == 200
     assert not Complaint.objects.exists()
     assert not Evidence.objects.exists()
     assert set(private_storage.listdir("original")[1]) == original_before
     assert set(private_storage.listdir("display")[1]) == display_before
+    assert set(private_storage.listdir("thumbnail")[1]) == thumbnail_before
 
 
 @pytest.mark.django_db
@@ -356,7 +449,7 @@ def test_other_citizen_cannot_view_detail_or_photo(client, citizen, ward, catego
     client.force_login(stranger)
     assert client.get(reverse("complaint_detail", args=[complaint.pk])).status_code == 404
     assert client.get(reverse("evidence_file", args=[evidence.pk])).status_code == 404
-    delete_private_files((evidence.original_path, evidence.display_path))
+    delete_private_files((evidence.original_path, evidence.display_path, evidence.thumbnail_path))
 
 
 @pytest.mark.django_db

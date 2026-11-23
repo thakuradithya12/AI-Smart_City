@@ -75,6 +75,7 @@ class Evidence(models.Model):
     kind = models.CharField(max_length=24, choices=Kind.choices)
     original_path = models.CharField(max_length=500)
     display_path = models.CharField(max_length=500)
+    thumbnail_path = models.CharField(max_length=500, blank=True, default="")
     sha256 = models.CharField(max_length=64)
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     uploaded_at = models.DateTimeField(default=timezone.now)

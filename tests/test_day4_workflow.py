@@ -97,7 +97,7 @@ def test_four_user_full_lifecycle_separates_claim_and_verification(client, day4_
     assert claim_audit.after["resolution"]["claim_note"] == "Repaired the damaged road surface."
     assert verify_audit.after["resolution"]["verified_by_id"] == setup["supervisor"].pk
     for evidence in complaint.evidence.all():
-        delete_private_files((evidence.original_path, evidence.display_path))
+        delete_private_files((evidence.original_path, evidence.display_path, evidence.thumbnail_path))
 
 
 @pytest.mark.django_db
@@ -144,7 +144,34 @@ def test_worker_cannot_see_unassigned_complaint_or_evidence(client, day4_setup):
     assert client.get(reverse("complaint_detail", args=[complaint.pk])).status_code == 404
     assert client.get(reverse("field_task_detail", args=[complaint.pk])).status_code == 404
     assert client.get(reverse("evidence_file", args=[evidence.pk])).status_code == 404
-    delete_private_files((evidence.original_path, evidence.display_path))
+    delete_private_files((evidence.original_path, evidence.display_path, evidence.thumbnail_path))
+
+
+@pytest.mark.django_db
+def test_evidence_display_is_authorized_for_each_role_that_can_see_the_complaint(
+    client, day4_setup, monkeypatch
+):
+    setup = day4_setup
+    complaint = Complaint.objects.create(
+        public_id="EVIDENCE-ROLE-MATRIX", citizen=setup["citizen"], category=setup["category"],
+        location=Point(0, 0, srid=4326), ward=setup["ward"], department=setup["department"],
+        assignee=setup["worker"], status=Complaint.Status.ASSIGNED, consent_at="2026-01-01T00:00:00Z",
+    )
+    evidence = complaint.evidence.create(
+        kind="citizen", original_path="original/private.jpg", display_path="display/private.jpg",
+        sha256="c" * 64, uploaded_by=setup["citizen"],
+    )
+    opened = []
+    monkeypatch.setattr(
+        "apps.complaints.views.private_storage.open",
+        lambda path, mode: (opened.append(path), io.BytesIO(b"display"))[1],
+    )
+    for actor in (setup["citizen"], setup["reviewer"], setup["official"], setup["supervisor"], setup["worker"], setup["admin"]):
+        client.force_login(actor)
+        response = client.get(reverse("evidence_file", args=[evidence.pk]))
+        assert response.status_code == 200
+        response.close()
+    assert opened == [evidence.display_path] * 6
 
 
 @pytest.mark.django_db
@@ -324,6 +351,7 @@ def test_field_evidence_and_private_files_roll_back_when_audit_write_fails(day4_
 
     originals_before = stored_names("original")
     displays_before = stored_names("display")
+    thumbnails_before = stored_names("thumbnail")
     original_save = AuditEvent.save
 
     def fail_evidence_audit(self, *args, **kwargs):
@@ -338,6 +366,7 @@ def test_field_evidence_and_private_files_roll_back_when_audit_write_fails(day4_
     assert not complaint.evidence.exists()
     assert stored_names("original") == originals_before
     assert stored_names("display") == displays_before
+    assert stored_names("thumbnail") == thumbnails_before
 
 
 @pytest.mark.django_db

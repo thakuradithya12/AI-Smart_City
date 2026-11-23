@@ -198,13 +198,14 @@ def add_field_evidence(complaint, actor, upload, kind):
             if kind not in {Evidence.Kind.FIELD_BEFORE, Evidence.Kind.FIELD_AFTER}:
                 raise ValidationError("Choose a before or after work photo.")
 
-            original_path, display_path, digest = store_citizen_image(upload)
-            paths.extend((original_path, display_path))
+            original_path, display_path, thumbnail_path, digest = store_citizen_image(upload)
+            paths.extend((original_path, display_path, thumbnail_path))
             evidence = Evidence.objects.create(
                 complaint=locked,
                 kind=kind,
                 original_path=original_path,
                 display_path=display_path,
+                thumbnail_path=thumbnail_path,
                 sha256=digest,
                 uploaded_by=actor,
             )

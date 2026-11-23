@@ -28,7 +28,7 @@ The project stores WGS84 points and uses an effective ward boundary to decide ju
 
 ## Privacy and safety
 
-Complaint photos are private and served only after the same complaint visibility check. The platform is not an emergency service. New citizen accounts store a unique Indian mobile number and name for sign-in and association of reports with the citizen; the number is not SMS-verified. No citizen email or government ID is collected. Existing staff email identifiers remain available only until an administrator assigns those accounts a phone number. AI, when delivered, may suggest a category to a human reviewer only.
+Complaint originals are private, unchanged, and never served; display copies and thumbnails are re-encoded without EXIF and served only after the same complaint visibility check. The report flow accepts up to the configured photo limit (default three), 8 MB per image. The display copy long edge defaults to 1600 pixels and remains configurable. The platform is not an emergency service. New citizen accounts store a unique Indian mobile number and name for sign-in and association of reports with the citizen; the number is not SMS-verified. No citizen email or government ID is collected. Existing staff email identifiers remain available only until an administrator assigns those accounts a phone number. AI, when delivered, may suggest a category to a human reviewer only.
 
 ## v1 exclusions
 

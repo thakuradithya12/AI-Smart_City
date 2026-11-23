@@ -364,3 +364,10 @@
 - Added a reversible PostgreSQL trigger migration rejecting UPDATE/DELETE on status and audit event tables; added raw SQL mutation tests for both tables.
 - Python compilation and diff checks run before commit. Migration application, raw SQL rejection, and Django flush/teardown behavior remain unverified because PostgreSQL/Docker are unavailable.
 
+## 2026-11-23 — ROADMAP_V2 task 1.8
+
+- Added configurable display downscaling, EXIF-free thumbnails, multiple citizen photos, stored thumbnail paths, and report-only `media_reconcile`. Evidence responses remain private and open only display copies.
+- Added tests for configured image size, thumbnail EXIF/size, pixel caps, multi-photo limits, deactivated-account evidence denial, and non-destructive reconciliation.
+- Settings default to three photos and a 1600-pixel display edge; display-edge production confirmation is recorded in `docs/DECISIONS_NEEDED.md`.
+- Python compilation and diff checks run before commit. Image/database behavior remains unverified because Django/Docker are unavailable.
+

@@ -22,6 +22,7 @@ These questions block only the roadmap tasks that depend on them. Defaults are p
 | D8 | SLA values by category and escalation levels | 3.2, 3.4 | Keep `default_due_hours`; no escalation until values are supplied. |
 | D9 | Native Telugu and Hindi translation reviewers | 7 | English only until reviewers are available. |
 | D10 | Submission deadline date and cut line | Scheduling | Owner supplies the actual date; do not infer it from the roadmap's “deadline is close” wording. |
+| Evidence derivative setting | Confirm the proposed 1600-pixel display-image long edge before production | 1.8 / production | Configured as `EVIDENCE_DISPLAY_MAX_EDGE=1600`; original bytes remain private and unchanged. |
 | API auth | Authentication choice for `/api/v1/` | 6.1 | Do not build the API before owner choice; session or token auth as selected by owner. |
 | V10 | May a `department_official` mark work done (`in_progress` → `resolved_pending_verification`), or is that action reserved for `field_worker`? | 0.5 V10 alignment | **Recommended:** field worker only. The role matrix assigns evidence and the work claim to field workers, while department officials acknowledge/assign; aligning the transition table to the existing view preserves that division. |
 | 1.3 / V10 | Confirm whether `department_official` may mark work done | 1.3 | **Pending owner decision.** Current behavior and transition matrix keep this action field-worker-only; no role expansion made. |

@@ -37,7 +37,7 @@
     <label for="id_description">Describe the issue <span class="subtle">(optional)</span></label>
     {{ form.description }}{{ form.description.errors }}
 
-    <label for="id_photo">Photo evidence <span class="subtle">(JPEG, PNG or WebP · maximum 8 MB)</span></label>
+    <label for="id_photo">Photo evidence <span class="subtle">(JPEG, PNG or WebP · up to {{ max_photos }} photos · 8 MB each)</span></label>
     {{ form.photo }}{{ form.photo.errors }}
 
     <fieldset>

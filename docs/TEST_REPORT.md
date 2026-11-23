@@ -434,24 +434,36 @@ The first run produced one failed **test expectation** because its shared fixtur
 
 - Added command tests for aged and fresh information requests, idempotence, system audit/status records, and the triage timeout marker.
 - The command default is 14 days, configurable with `INFO_REQUEST_TIMEOUT_DAYS`.
-- Python compilation and `git diff --check` are required before commit; Django test and migration execution are unavailable because Django is missing locally and Docker Desktop's engine pipe is unavailable.
+- `python -m py_compile apps/complaints/management/__init__.py apps/complaints/management/commands/__init__.py apps/complaints/management/commands/expire_info_requests.py apps/console/views.py tests/test_info_request_expiry.py` — exit 0.
+- `git diff --check` — exit 0.
+- `python manage.py makemigrations --check --dry-run` — exit 1: `ModuleNotFoundError: No module named 'django'`. Focused Django tests were not executable in this workspace.
 - Functional behavior remains **not verified** in this workspace; no CI result is available.
 
 ### ROADMAP_V2 task 1.3 (2026-11-23)
 
 - Blocked on the owner decision recorded as D-V10 in `docs/DECISIONS_NEEDED.md` (department official work-done authority).
-- Existing policy remains field-worker-only; no code or test was changed. Runtime matrix tests cannot be run here because Django and the Docker engine are unavailable.
+- Existing policy remains field-worker-only; no code or test was changed. `git diff --check` — exit 0. `python manage.py makemigrations --check --dry-run` — exit 1 (`ModuleNotFoundError: No module named 'django'`). Runtime matrix tests were not run because Django/Docker are unavailable.
 
 ### ROADMAP_V2 task 1.4 attempt (2026-11-23)
 
 - Added transition matrix and endpoint tests for admin cancellation of an active complaint, reason recording, and `admin_override` audit.
-- `python -m py_compile` and `git diff --check` are run before commit. Django tests and `makemigrations --check --dry-run` remain unavailable because Django is missing locally and Docker Desktop's engine pipe is unavailable.
+- `python -m py_compile apps/workflow/services.py apps/console/views.py apps/complaints/views.py apps/console/urls.py tests/test_workflow_transitions.py tests/test_console_workflow.py tests/test_day4_workflow.py` — exit 0; `git diff --check` — exit 0.
+- `python -m pytest tests/test_workflow_transitions.py tests/test_console_workflow.py -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
 - Workflow behavior remains **not verified** in this workspace; no CI result is available.
 
 ### ROADMAP_V2 task 1.5 attempt (2026-11-23)
 
 - Added raw SQL `UPDATE` and `DELETE` attempts against both append-only tables; each expects a database error. Migration defines reversible PostgreSQL triggers.
-- Python compilation and `git diff --check` are run before commit. PostgreSQL migration application, trigger assertions, and test database teardown are **not verified** because the Docker engine/database is unavailable and local Django is missing.
+- `python -m py_compile apps/audit/migrations/0002_append_only_database_triggers.py tests/test_workflow_transitions.py` — exit 0; `git diff --check` — exit 0.
+- `python -m pytest tests/test_workflow_transitions.py -k database_triggers -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
+- PostgreSQL migration application, raw SQL trigger assertions, and test database teardown are **not verified** because the Docker engine/database is unavailable.
+
+### ROADMAP_V2 task 1.8 attempt (2026-11-23)
+
+- Added evidence tests for original-byte/hash preservation, display/thumbnail downscaling and EXIF stripping, pixel limit, configured photo count, and a report-only reconciliation command. Response tests assert private caching, `nosniff`, inline disposition, and that only the display path is opened; authorization is covered for all complaint-visible roles and a deactivated account is denied.
+- `python -m py_compile apps/complaints/models.py apps/complaints/migrations/0003_evidence_thumbnail_path.py apps/complaints/services.py apps/complaints/forms.py apps/complaints/views.py apps/complaints/management/commands/media_reconcile.py apps/workflow/services.py config/settings/base.py tests/test_day2_reporting.py tests/test_day4_workflow.py` — exit 0; `git diff --check` — exit 0.
+- `python -m pytest tests/test_day2_reporting.py -k 'multiple_citizen_photos or configured_max_edge or original_hash_and_exif_free_display or reconcile or deactivated_account' -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
+- Django image/upload tests and migration application are **not verified** because local Django and the Docker engine are unavailable.
 
 ### Independent integrated rerun
 

@@ -3,6 +3,7 @@ import re
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
+from django.conf import settings
 from django.contrib.auth.password_validation import validate_password
 
 from apps.accounts.models import User
@@ -78,19 +79,45 @@ class PhoneAuthenticationForm(AuthenticationForm):
             return re.sub(r"\s+", "", identifier).casefold()
 
 
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleImageField(forms.ImageField):
+    widget = MultipleFileInput
+
+    def __init__(self, *args, max_files=3, **kwargs):
+        self.max_files = max_files
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        uploads = data if isinstance(data, (list, tuple)) else ([data] if data else [])
+        if len(uploads) > self.max_files:
+            raise ValidationError(f"Choose no more than {self.max_files} photos.")
+        if not uploads:
+            return super().clean(None, initial)
+        return [super(MultipleImageField, self).clean(upload, None) for upload in uploads]
+
+
 class ReportForm(forms.Form):
     category = forms.ModelChoiceField(queryset=Category.objects.all())
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={"rows": 4}))
-    photo = forms.ImageField(
-        widget=forms.ClearableFileInput(
-            attrs={"accept": "image/jpeg,image/png,image/webp", "capture": "environment"}
-        )
+    photo = MultipleImageField(
+        max_files=3,
+        widget=MultipleFileInput(attrs={
+            "accept": "image/jpeg,image/png,image/webp",
+            "capture": "environment",
+        }),
     )
     latitude = forms.DecimalField(min_value=-90, max_value=90, max_digits=10, decimal_places=7)
     longitude = forms.DecimalField(min_value=-180, max_value=180, max_digits=10, decimal_places=7)
     gps_accuracy_m = forms.DecimalField(required=False, min_value=0, max_digits=10, decimal_places=2)
     consent = forms.BooleanField(label="I agree to the privacy notice.")
     pin_confirmed = forms.BooleanField(label="I confirm this pin marks the problem location.")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["photo"].max_files = getattr(settings, "REPORT_MAX_PHOTOS", 3)
 
 
 class ComplaintQueryForm(forms.Form):

@@ -66,15 +66,13 @@ def report(request):
             form.add_error(None, " ".join(exc.messages))
             ward = None
         if form.errors:
-            return render(request, "complaints/report.html", {"form": form})
+            return render(request, "complaints/report.html", {"form": form, "max_photos": getattr(settings, "REPORT_MAX_PHOTOS", 3)})
         if ward is None:
             form.add_error(None, "That pin is outside the supported area. Please choose a location inside a supported ward.")
         else:
             paths = []
             try:
                 with transaction.atomic():
-                    original_path, display_path, image_hash = store_citizen_image(form.cleaned_data["photo"])
-                    paths.extend((original_path, display_path))
                     category = form.cleaned_data["category"]
                     complaint = Complaint.objects.create(
                         citizen=request.user, category=category,
@@ -85,8 +83,18 @@ def report(request):
                     )
                     complaint.public_id = f"ASC-{timezone.localdate():%Y}-{complaint.pk:06d}"
                     complaint.save(update_fields=["public_id"])
-                    Evidence.objects.create(complaint=complaint, kind=Evidence.Kind.CITIZEN,
-                        original_path=original_path, display_path=display_path, sha256=image_hash, uploaded_by=request.user)
+                    for photo in form.cleaned_data["photo"]:
+                        original_path, display_path, thumbnail_path, image_hash = store_citizen_image(photo)
+                        paths.extend((original_path, display_path, thumbnail_path))
+                        Evidence.objects.create(
+                            complaint=complaint,
+                            kind=Evidence.Kind.CITIZEN,
+                            original_path=original_path,
+                            display_path=display_path,
+                            thumbnail_path=thumbnail_path,
+                            sha256=image_hash,
+                            uploaded_by=request.user,
+                        )
                     AuditEvent.objects.create(actor=request.user, role=request.user.role, action="complaint_submitted",
                         object_type="Complaint", object_id=str(complaint.pk), after={"status": "submitted", "ward": ward.pk})
                     transition(complaint, Complaint.Status.IN_TRIAGE, actor=None)
@@ -99,7 +107,7 @@ def report(request):
                 raise
             else:
                 return redirect("complaint_detail", pk=complaint.pk)
-    return render(request, "complaints/report.html", {"form": form})
+    return render(request, "complaints/report.html", {"form": form, "max_photos": getattr(settings, "REPORT_MAX_PHOTOS", 3)})
 
 
 @login_required
