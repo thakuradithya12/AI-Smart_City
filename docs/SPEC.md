@@ -34,8 +34,11 @@ Complaint photos are private and served only after the same complaint visibility
 
 The owner authorized roadmap scope on 2026-11-23, lifting the v1 exclusions for in-app/email notifications, public transparency views, SLA monitoring/escalation, multilingual UI, and a versioned JSON API. These are gated roadmap work, not claims of delivery; each retains its roadmap decision and acceptance requirements. Public data defaults to category, ward, status and counts only, with no photos, text, names, person-linked IDs or exact pins unless the owner approves otherwise.
 
-Mobile app/PWA, SMS/WhatsApp/phone integrations, push notifications, autonomous AI decisions, municipal system integration, multi-city tenant screens, payment, social login, and other work outside the recommended submission cut remain excluded from this delivery. See [`ROADMAP_V2.md`](../ROADMAP_V2.md) for sequencing and later-phase boundaries.
+Mobile app/PWA, SMS/WhatsApp/phone integrations, push notifications, autonomous AI decisions, municipal system integration, multi-city tenant screens, payment, social login, and other work outside the recommended submission cut remain excluded from this delivery. See [`ROADMAP_V2.md`](ROADMAP_V2.md) for sequencing and later-phase boundaries.
 
 ## Delivery state
 
 The local Django/PostGIS workflow and automated suite are implemented. External release gates and undelivered AI inputs are itemized in [`LIMITS.md`](LIMITS.md) and [`PARKING_LOT.md`](PARKING_LOT.md). Local test results are recorded in [`TEST_REPORT.md`](TEST_REPORT.md); local passing checks do not claim public deployment or pilot acceptance.
+
+
+

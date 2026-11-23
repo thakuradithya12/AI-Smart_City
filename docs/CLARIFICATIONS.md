@@ -2,9 +2,9 @@
 
 ## 2026-11-23 — Roadmap V2 scope amendment
 
-The owner requested that the agent execute `ROADMAP_V2.md` completely. This is the owner's confirmation of roadmap decision D11 and amends the frozen v1 exclusions for the roadmap's gated work: in-app/email notifications; public transparency/map views; multilingual UI; SLA monitoring/escalation; and a versioned JSON API. These are authorized scope, not evidence they are implemented. They remain subject to D4, D7–D9, the API-authentication decision, and the roadmap's acceptance gates. SMS, push, and phone integrations remain excluded. The recommended submission cut in roadmap section 4 still determines which authorized work is attempted before delivery; later items must be labelled roadmap/not delivered.
+The owner requested that the agent execute `docs/ROADMAP_V2.md` completely. This is the owner's confirmation of roadmap decision D11 and amends the frozen v1 exclusions for the roadmap's gated work: in-app/email notifications; public transparency/map views; multilingual UI; SLA monitoring/escalation; and a versioned JSON API. These are authorized scope, not evidence they are implemented. They remain subject to D4, D7–D9, the API-authentication decision, and the roadmap's acceptance gates. SMS, push, and phone integrations remain excluded. The recommended submission cut in roadmap section 4 still determines which authorized work is attempted before delivery; later items must be labelled roadmap/not delivered.
 
-Public transparency uses the roadmap's safe defaults until the owner decides otherwise: counts, categories, wards and statuses only; no photos, text, names, person-linked identifiers or exact pins. The file is located at repository root (`ROADMAP_V2.md`), although the pasted execution brief refers to `docs/ROADMAP_V2.md`.
+Public transparency uses the roadmap's safe defaults until the owner decides otherwise: counts, categories, wards and statuses only; no photos, text, names, person-linked identifiers or exact pins. The file is located at `docs/ROADMAP_V2.md`.
 
 These decisions were supplied by the project owner on 2026-11-18. They are binding additions to the repository-root `AGENTS.md`. Do not ask these questions again. Where an input remains a placeholder, preserve it as unresolved; do not invent a value.
 
@@ -45,3 +45,6 @@ These decisions were supplied by the project owner on 2026-11-18. They are bindi
 ## Rejection reason clarification
 
 - Agent assumption (owner approved 2026-11-19): reasons are required free text, 5 to 500 characters. For triage rejection (`in_triage -> rejected`), this replaces section 8's reason-code requirement; do not add a fixed code list.
+
+
+

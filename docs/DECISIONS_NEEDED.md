@@ -1,6 +1,6 @@
 # Decisions and inputs still needed from the owner
 
-These questions block only the roadmap tasks that depend on them. Defaults are proposals from `ROADMAP_V2.md`, not decisions made on the owner's behalf.
+These questions block only the roadmap tasks that depend on them. Defaults are proposals from `docs/ROADMAP_V2.md`, not decisions made on the owner's behalf.
 
 | ID | Needed input | Blocks | Recommended default |
 | --- | --- | --- | --- |
@@ -22,3 +22,6 @@ These questions block only the roadmap tasks that depend on them. Defaults are p
 No Git remote is configured (`git remote -v` returned no rows). To run remote CI, the owner needs to create or identify the owner-controlled GitHub repository, provide its clone URL, and configure authenticated Git access in this workspace (or configure the remote and push personally). Then push the reviewed commit and provide/record the Actions run URL and SHA. No remote URL, credential or CI result has been invented.
 
 The workflow's `actions/checkout@v6` tag and the existing `actions/setup-python@v5` tag were checked against the official repositories' release pages on 2026-11-23. Sources: [checkout v6.0.0](https://github.com/actions/checkout/releases/tag/v6.0.0), [setup-python v5.6.0](https://github.com/actions/setup-python/releases/tag/v5.6.0).
+
+
+

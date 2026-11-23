@@ -49,7 +49,7 @@ Core ideas that must be visible in the code:
 
 ## 3. Scope (owner-amended 2026-11-23)
 
-The owner authorized execution of the repository's `ROADMAP_V2.md` on 2026-11-23. This supersedes the v1 exclusions below only for roadmap work and only where the roadmap acceptance gates and owner decisions are satisfied. The recommended submission cut in roadmap section 4 still governs sequencing; post-cut items remain roadmap work, not delivered features.
+The owner authorized execution of the repository's `docs/ROADMAP_V2.md` on 2026-11-23. This supersedes the v1 exclusions below only for roadmap work and only where the roadmap acceptance gates and owner decisions are satisfied. The recommended submission cut in roadmap section 4 still governs sequencing; post-cut items remain roadmap work, not delivered features.
 
 ### In scope (version 1, website)
 
@@ -364,3 +364,4 @@ Do not install unvetted community plugins that request broad permissions on a pr
 
 **Final prompt (Day 7):**
 > Do not add features. Check every item in section 14 against the repository and the live site. Produce a table of item, status and evidence link. Mark anything unproven as not done and add it to docs/LIMITS.md.
+
