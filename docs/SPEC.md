@@ -28,7 +28,7 @@ The project stores WGS84 points and uses an effective ward boundary to decide ju
 
 ## Privacy and safety
 
-Complaint photos are private and served only after the same complaint visibility check. The platform is not an emergency service. New citizen accounts use a unique Indian mobile number and name; no email, OTP or government ID is collected. Existing staff email identifiers remain available only until an administrator assigns those accounts a phone number. AI, when delivered, may suggest a category to a human reviewer only.
+Complaint photos are private and served only after the same complaint visibility check. The platform is not an emergency service. New citizen accounts store a unique Indian mobile number and name for sign-in and association of reports with the citizen; the number is not SMS-verified. No citizen email or government ID is collected. Existing staff email identifiers remain available only until an administrator assigns those accounts a phone number. AI, when delivered, may suggest a category to a human reviewer only.
 
 ## v1 exclusions
 

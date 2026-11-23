@@ -1,5 +1,13 @@
 # Decisions and inputs still needed from the owner
 
+## Phone login provenance
+
+- `git log -S` results: `61c37fa` introduced both `PhoneOrLegacyEmailBackend` and `PhoneAuthenticationForm`; phone-related history also includes `9066970` and `e806d63`.
+- The introducing commit adds `User.phone_number` as nullable and unique through migration `0002`; phone number is stored on each citizen account.
+- Citizen registration collects phone number (not email); the report form does not collect it, while report consent says the account phone number is stored with report data.
+- Templates/docs mention phone-based registration and login; tests include `test_user_can_authenticate_with_normalized_phone_number`, but legacy email case login and Axes case-normalization coverage are not confirmed.
+- `docs/SPEC.md` and `docs/PRIVACY.md` must describe what phone data is stored; SPEC now does, and PRIVACY should state account phone is retained for sign-in and complaint contact association, with no SMS verification.
+
 These questions block only the roadmap tasks that depend on them. Defaults are proposals from `docs/ROADMAP_V2.md`, not decisions made on the owner's behalf.
 
 | ID | Needed input | Blocks | Recommended default |
