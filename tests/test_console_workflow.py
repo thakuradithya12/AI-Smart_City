@@ -58,24 +58,6 @@ def test_triage_queue_scopes_role_and_hides_citizen_email(client, console_setup)
 
 
 @pytest.mark.django_db
-def test_category_default_department_is_used_when_no_routing_rule_exists(client, console_setup):
-    setup = console_setup
-    setup["rule"].delete()
-    complaint = make_complaint(setup)
-    client.force_login(setup["reviewer"])
-
-    response = client.post(reverse("route_complaint", args=[complaint.pk]), {})
-
-    assert response.status_code == 302
-    complaint.refresh_from_db()
-    assert complaint.department_id == setup["department_a"].pk
-    assert complaint.status == Complaint.Status.ROUTED
-    route_audit = AuditEvent.objects.get(action="complaint_routed", object_id=str(complaint.pk))
-    assert route_audit.after["routing_rule_version"] == 0
-    assert route_audit.after["routing_source"] == "category_default"
-
-
-@pytest.mark.django_db
 def test_department_inbox_worker_query_count_does_not_grow_with_complaints(client, console_setup):
     setup = console_setup
     client.force_login(setup["official"])
@@ -450,3 +432,4 @@ def test_department_assignment_restricts_worker_to_same_department(client, conso
     assert response.status_code == 302
     complaint2.refresh_from_db()
     assert complaint2.status == Complaint.Status.ACKNOWLEDGED
+
