@@ -413,3 +413,7 @@
 - Removed the unused Bootstrap stylesheet from the shared base template after checking live templates for Bootstrap layout/control classes. Kept vendor files intact. Added regression coverage for no Bootstrap request and expected tokens.
 - CSS source is 14,782 bytes. Screenshot comparison at 360/768/1280 is not verified: Django and Docker are unavailable.
 - `python -m py_compile tests/test_error_pages.py` and `git diff --check` — see task entry in `docs/TEST_REPORT.md`.
+### ROADMAP_V2 task 2.3 attempt (2026-11-23)
+
+- Map implementation is held at the D6 owner choice (OSM demo traffic or keyed provider); recorded the dependency in `docs/DECISIONS_NEEDED.md` and proceeded to independent work as instructed.
+- No map code or tests changed. `git diff --check` — see task entry in `docs/TEST_REPORT.md`.

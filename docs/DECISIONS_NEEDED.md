@@ -32,6 +32,10 @@ The owner has not supplied retention periods or an approved deletion process. Ta
 ### D2 status — task 1.12
 
 The owner has not supplied a pilot centre or authoritative boundary source/effective dates. Generic GeoJSON loading and synthetic-geometry validation are implemented, but no real pilot ward or inside/outside pilot point test is included. A database exclusion constraint is also not added because the PostGIS extension availability could not be checked without the database container; Python model validation and the import command check polygon interiors.
+
+### D6 status — task 2.3
+
+The owner has not selected OSM demo tiles or a keyed tile provider. Task 2.3 is dependent on that choice and includes publishing the tile policy, so map panels and tile requests remain unchanged. Revisit once the provider and intended traffic are confirmed; the task's unrelated UI work may proceed independently.
 | API auth | Authentication choice for `/api/v1/` | 6.1 | Do not build the API before owner choice; session or token auth as selected by owner. |
 | V10 | May a `department_official` mark work done (`in_progress` → `resolved_pending_verification`), or is that action reserved for `field_worker`? | 0.5 V10 alignment | **Recommended:** field worker only. The role matrix assigns evidence and the work claim to field workers, while department officials acknowledge/assign; aligning the transition table to the existing view preserves that division. |
 | 1.3 / V10 | Confirm whether `department_official` may mark work done | 1.3 | **Pending owner decision.** Current behavior and transition matrix keep this action field-worker-only; no role expansion made. |

@@ -389,6 +389,11 @@ The owner-selected path was checked directly: the five category folders were emp
 - `python -m pytest tests/test_error_pages.py -k 'design_system' -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`).
 - Source inspection found no Bootstrap layout/control classes in live templates; removed its base stylesheet reference. Screenshot comparison at 360/768/1280 and browser verification remain not verified because Django and Docker are unavailable. CSS source size: 14,782 bytes.
 
+### ROADMAP_V2 task 2.3 attempt (2026-11-23)
+
+- D6 map tile provider is unresolved. Per the roadmap stop condition, no tile or map changes were made; this task is not implemented pending owner input.
+- `git diff --check` — exit 0. No tests apply to this documentation-only decision record.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran Compose checks for Phase 4 intake plus Phases 0–3: `No changes detected`; `54 passed in 60.80s`; Ruff passed; Bandit found no issues across 1,453 lines; pip-audit found no known vulnerabilities. The real-data preflight again exited 1 as designed: zero images in the five folders and no manifest. `migrate --check` and production `check --deploy` exited 0; only the documented HSTS warnings remain. Container-local landing, showcase, login and workspace requests all returned HTTP 200. This verifies the existing backend and intake preflight, not classifier quality or model behavior.
