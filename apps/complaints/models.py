@@ -28,6 +28,12 @@ class ComplaintQuerySet(models.QuerySet):
         return self.none()
 
 class Complaint(models.Model):
+    class Priority(models.TextChoices):
+        LOW = "low", "Low"
+        NORMAL = "normal", "Normal"
+        HIGH = "high", "High"
+        URGENT = "urgent", "Urgent"
+
     class Status(models.TextChoices):
         SUBMITTED = "submitted", "Submitted"
         IN_TRIAGE = "in_triage", "In triage"
@@ -55,6 +61,10 @@ class Complaint(models.Model):
     status = models.CharField(max_length=40, choices=Status.choices, default=Status.SUBMITTED)
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.PROTECT, related_name="assigned_complaints")
     due_at = models.DateTimeField(null=True, blank=True)
+    # Priority is set by a human reviewer; the AI suggestion flow never writes it.
+    priority = models.CharField(max_length=12, choices=Priority.choices, default=Priority.NORMAL)
+    sla_paused_at = models.DateTimeField(null=True, blank=True)
+    sla_breached_at = models.DateTimeField(null=True, blank=True)
     consent_at = models.DateTimeField()
     created_at = models.DateTimeField(default=timezone.now)
     duplicate_of = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
@@ -66,6 +76,7 @@ class Complaint(models.Model):
             models.Index(fields=["department", "status"], name="complaint_dept_status_idx"),
             models.Index(fields=["ward", "status"], name="complaint_ward_status_idx"),
             models.Index(fields=["created_at"], name="complaint_created_idx"),
+            models.Index(fields=["sla_breached_at", "due_at"], name="complaint_sla_due_idx"),
         ]
 
     @property

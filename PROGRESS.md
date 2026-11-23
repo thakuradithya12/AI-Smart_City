@@ -445,8 +445,13 @@
 ### ROADMAP_V2 task 3.3 (2026-11-23)
 
 - Added PostgreSQL advisory-lock scheduler, maintenance intervals, scheduler heartbeat, health endpoint visibility, and dev/prod Compose services.
-- Jobs are skipped until their commands exist; `check_sla` and `purge_expired` are follow-on dependencies in the owner sequence (3.2 and privacy task 1.9). Scheduler acceptance remains pending until both are implemented and overlap/kill-restart behavior is exercised against PostgreSQL.
+- Jobs are skipped until their commands exist; `check_sla` is now supplied by task 3.2. Scheduler acceptance remains pending for the privacy task 1.9 `purge_expired` prerequisite and PostgreSQL overlap/kill-restart verification.
 - Exact static and collection checks are in `docs/TEST_REPORT.md`.
+
+### ROADMAP_V2 task 3.2 (2026-11-23)
+
+- Added reviewer-set priority, an SLA breach timestamp, pause/resume accounting around information requests, and an idempotent `check_sla` command. Breaches are audited and notify supervisors in the complaint's department; no status transition or escalation is performed.
+- Tests cover pause/resume, priority authorization/audit, breach idempotency, and paused/terminal exclusions. Runtime tests and migration checks remain unverified because Django is unavailable.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.

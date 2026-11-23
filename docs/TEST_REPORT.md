@@ -38,10 +38,17 @@
 ## 2026-11-23 — ROADMAP_V2 task 3.3 (implementation in progress)
 
 - Added a single-process scheduler protected by a session-scoped PostgreSQL advisory lock, periodic jobs, graceful unlock on normal exit, and a shared heartbeat read by `/healthz/`. Compose includes the scheduler in development and production.
-- `check_sla` and `purge_expired` are registered as future jobs and skipped until those commands are implemented; therefore the scheduler task acceptance is not complete yet.
+- `check_sla` is supplied by task 3.2. `purge_expired` remains a dependency on the privacy task 1.9 work. PostgreSQL overlap and process kill/restart acceptance remain unverified.
 - `python -m py_compile apps/scheduler/apps.py apps/scheduler/models.py apps/scheduler/migrations/0001_initial.py apps/scheduler/management/commands/run_scheduler.py config/views.py config/settings/base.py tests/test_scheduler.py tests/test_observability.py` — exit 0.
 - `docker compose config -q` — exit 0. `git diff --check` — exit 0.
 - `python -m pytest tests/test_scheduler.py tests/test_observability.py -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). PostgreSQL overlap and process kill/restart integration tests remain unverified because the Docker engine is unavailable.
+
+## 2026-11-23 — ROADMAP_V2 task 3.2
+
+- Added a reviewer-set priority field/service with reasoned audit entries, pause/resume of due time while information is requested, an idempotent audited SLA breach marker, and supervisor in-app notifications. The marker never changes complaint status and no escalation chain is implemented under D8.
+- Added tests for priority permissions/audit, pause/resume duration, SLA idempotency, supervisor notification, and paused/final states.
+- `python -m py_compile apps/complaints/models.py apps/complaints/migrations/0006_complaint_sla_fields.py apps/complaints/management/commands/check_sla.py apps/workflow/services.py tests/test_sla.py` — exit 0.
+- `python -m pytest tests/test_sla.py tests/test_notifications.py tests/test_day4_workflow.py -q` — exit 1 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` is likewise unavailable for that reason. PostgreSQL/Docker integration checks were not run.
 
 ## Static risk notes for unverified Phase 0 commits
 

@@ -11,10 +11,77 @@ from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, ComplaintMessage, Evidence, Resolution, StatusEvent
 from apps.complaints.services import delete_private_files, store_citizen_image
 from apps.geography.models import RoutingRule
-from apps.notifications.services import notify_assigned_worker, notify_transition
+from apps.notifications.services import (
+    notify_assigned_worker,
+    notify_overdue_supervisors,
+    notify_transition,
+)
 
 DUPLICATE_DISTANCE_METERS = 30
 DUPLICATE_WINDOW_DAYS = 7
+
+
+@transaction.atomic
+def flag_sla_breach(complaint, *, now=None):
+    """Record one audited SLA breach and notify supervisors without changing status."""
+    current_time = now or timezone.now()
+    if (
+        not complaint.due_at
+        or complaint.due_at > current_time
+        or complaint.sla_paused_at
+        or complaint.sla_breached_at
+        or complaint.status in {
+            Complaint.Status.INFO_REQUESTED,
+            Complaint.Status.VERIFIED_CLOSED,
+            Complaint.Status.REJECTED,
+            Complaint.Status.CANCELLED,
+        }
+    ):
+        return False
+    complaint.sla_breached_at = current_time
+    complaint.save(update_fields=["sla_breached_at"])
+    AuditEvent.objects.create(
+        actor=None,
+        role="system",
+        action="sla_breached",
+        object_type="Complaint",
+        object_id=str(complaint.pk),
+        before={"sla_breached_at": None},
+        after={"sla_breached_at": current_time.isoformat()},
+        reason="The complaint due time passed while the SLA clock was active.",
+    )
+    notify_overdue_supervisors(complaint)
+    return True
+
+
+@transaction.atomic
+def set_complaint_priority(complaint, actor, priority, *, reason):
+    if not actor or not actor.is_authenticated or not actor.is_active or actor.role not in {"triage_reviewer", "admin"}:
+        raise ValidationError("Only an active reviewer or administrator can set complaint priority.")
+    if priority not in Complaint.Priority.values:
+        raise ValidationError("Choose a supported priority.")
+    cleaned_reason = (reason or "").strip()
+    if len(cleaned_reason) < 5 or len(cleaned_reason) > 500:
+        raise ValidationError("A priority reason of 5 to 500 characters is required.")
+    locked = Complaint.objects.select_for_update().get(pk=complaint.pk)
+    if locked.status not in {Complaint.Status.SUBMITTED, Complaint.Status.IN_TRIAGE}:
+        raise ValidationError("Priority can only be set before department acknowledgement.")
+    previous = locked.priority
+    if previous == priority:
+        return locked
+    locked.priority = priority
+    locked.save(update_fields=["priority"])
+    AuditEvent.objects.create(
+        actor=actor,
+        role=actor.role,
+        action="complaint_priority_changed",
+        object_type="Complaint",
+        object_id=str(locked.pk),
+        before={"priority": previous},
+        after={"priority": priority},
+        reason=cleaned_reason,
+    )
+    return locked
 
 # One table controls every valid status transition; later days add console actions through this service.
 TRANSITIONS = {
@@ -271,6 +338,16 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
 
     previous = locked.status
     previous_department_id = locked.department_id
+    transition_time = timezone.now()
+    if previous != Complaint.Status.INFO_REQUESTED:
+        # Flag an elapsed active clock before any transition can hide it in a paused or terminal state.
+        flag_sla_breach(locked, now=transition_time)
+    if to_status == Complaint.Status.INFO_REQUESTED:
+        locked.sla_paused_at = transition_time
+    elif previous == Complaint.Status.INFO_REQUESTED and to_status == Complaint.Status.IN_TRIAGE:
+        if locked.sla_paused_at and locked.due_at:
+            locked.due_at += transition_time - locked.sla_paused_at
+        locked.sla_paused_at = None
     resolution_before = None
     resolution_after = None
     locked.status = to_status
