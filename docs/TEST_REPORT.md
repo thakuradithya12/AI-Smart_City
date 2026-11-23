@@ -1,5 +1,94 @@
 # Test report
 
+## Static risk notes for unverified Phase 0 commits
+
+These notes are based on the named `git show` diffs. No runtime verification is implied. Any item marked **not confirmed** needs a later executable test or owner/environment evidence.
+
+### V1 — `204d1f0` password reset
+
+- **Files/behavior:** `.env.example`, `config/settings/{base,dev,prod}.py`, reset templates, `tests/test_accounts.py`; adds Django password-reset UI, development console email, and production SMTP configuration read from environment variables.
+- **Migration:** No.
+- **Risk:** A malformed/missing SMTP environment may prevent delivery; new phone-only citizen accounts have no email recovery path. No credentials appear in the diff. The generic done page says instructions were sent. **Not confirmed:** actual enumeration behavior/runtime delivery; the test diff focuses on a legacy staff account and did not run.
+
+### V2 — `9066970` email normalization
+
+- **Files/behavior:** `apps/accounts/models.py`, migration `0003_user_email_case_insensitive_unique.py`, `tests/test_accounts.py`; trims/lowercases manager-created email identifiers and adds `LOWER(email)` uniqueness.
+- **Migration:** Yes. Existing case-insensitive collision groups raise `RuntimeError` before row updates; it does not merge accounts. Unique emails are lowercased. Reverse data operation is `RunPython.noop`, so the lowercase transformations are **not reversible**; reversing schema constraint alone cannot restore original casing.
+- **Risk:** Deploy is blocked if legacy collision groups exist and requires owner cleanup. **Not confirmed:** test coverage for `A@x.com`/`a@x.com` registration and login behavior; migration tests/current database collision state were not confirmed from the diff and no test ran.
+
+### V3 — `715ce36` Bootstrap use review
+
+- **Files/behavior:** `PROGRESS.md`, `docs/TEST_REPORT.md`; no application behavior change. The recorded source review says base loads Bootstrap CSS and live templates use `.card` and `.badge`.
+- **Migration:** No.
+- **Risk:** Removing Bootstrap later could change layout. **Not confirmed:** independent grep/test evidence in this session; commit changes only record the conclusion and contain no grep output.
+
+### V4 — `0504b53` GIS ward admin
+
+- **Files/behavior:** `apps/geography/admin.py`, `tests/test_geography_admin.py`; WardAdmin changes from `ModelAdmin` to `GISModelAdmin` for polygon editing.
+- **Migration:** No.
+- **Risk:** Admin widget behavior depends on GIS-capable Django deployment configuration. **Not confirmed:** admin page/widget runtime behavior; added test was not run.
+
+### V5 — `8620490` overlapping active wards
+
+- **Files/behavior:** `apps/geography/services.py`, `apps/complaints/views.py`, `tests/test_day2_reporting.py`; ward lookup raises validation error when two active boundaries cover a pin.
+- **Migration:** No.
+- **Risk:** Citizen submission is refused with “This pin is covered by multiple active wards. Please contact support while the service area is reviewed.” No admin alert, log, or resolution workflow is added in this diff; support must identify overlap separately. **Not confirmed:** actual rendered error, logging/admin visibility, and test runtime.
+
+### V6 — `6d6e3c6` category labels
+
+- **Files/behavior:** `apps/geography/models.py`, complaint/console/home templates, `apps/console/urls.py`, `tests/test_geography_admin.py`; adds a computed `display_label` property that replaces underscores and title-cases the stored name, and switches render sites to it.
+- **Migration:** No; it is a property, not a database field, so existing rows need no data default. **Not confirmed:** `seed_demo` runtime behavior; the diff does not edit the seed command.
+- **Risk:** Acronyms/brand capitalization and multiword labels may be displayed mechanically; stored slugs remain unchanged.
+
+### V7 — `1b72e72` custom error pages
+
+- **Files/behavior:** four error templates, `tests/error_urls.py`, `tests/test_error_pages.py`; adds custom 400/403/404/500 rendering.
+- **Migration:** No.
+- **Risk:** Template errors or configured handler wiring could interfere with error responses. **Not confirmed:** production handler invocation or test results; the commit adds tests but they did not run.
+
+### V8 — `0020030` category-default routing
+
+- **Files/behavior:** `apps/workflow/services.py`, `docs/SPEC.md`, `tests/test_console_workflow.py`; routing prefers an active `RoutingRule`, otherwise uses `Category.default_department` when configured.
+- **Migration:** No.
+- **Audit/version behavior:** The fallback passes `rule_version=0` and `routing_source="category_default"` through `transition()`. `transition()` rejects only a missing (`None`) rule version, so zero is accepted; the status/audit payload records `routing_rule_version: 0`, and the separate routing audit records source `category_default` and version `0`. If neither rule nor category default exists, routing raises `ValidationError` and refuses.
+- **Risk:** Version zero is a reserved sentinel, not a persisted rule version; consumers that assume every routed complaint references a real `RoutingRule` could misinterpret it. This is explicitly documented in the routing audit, but downstream consumers were not inspected. **Not confirmed:** transition/service integration runtime and full audit persistence; test was not run.
+
+### V9 — `f2e6cb6` query scaling
+
+- **Files/behavior:** complaint/console views, complaint/department templates, `tests/test_console_workflow.py`; preloads department workers and complaint related objects/messages to reduce per-row lookups.
+- **Migration:** No.
+- **Risk:** Prefetch/select-related changes may affect missing/null relationship cases or query ordering; query-count expectations may be backend-sensitive. **Not confirmed:** measured query counts or page output; tests did not run.
+
+### V11 — `89c14c1` report photo hints
+
+- **Files/behavior:** `apps/complaints/forms.py`, `tests/test_day2_reporting.py`; adds browser `accept` and camera `capture` hints to file input.
+- **Migration:** No.
+- **Risk:** These are client hints, not server-side validation; browser behavior varies. **Not confirmed:** rendered attributes at runtime; test did not run.
+
+### V12 — `13223da` evidence response headers
+
+- **Files/behavior:** `apps/complaints/views.py`, `tests/test_day2_reporting.py`; adds private `max-age=300`, `nosniff`, inline disposition and a display-path-only assertion.
+- **Migration:** No.
+- **Risk:** Private caching retains sensitive display images in an authorized user's browser cache for up to five minutes. **Not confirmed:** tests for owner, other citizen, assigned worker, unassigned worker, deactivated user, and absence of any original-file route; the committed test only constructs a citizen-owned complaint and checks headers/path access, and it did not run.
+
+### V13 — `0c9327b` landing archive decoupling
+
+- **Files/behavior:** `apps/console/urls.py`, `templates/landing.html`, `static/css/site.css`, `tests/test_error_pages.py`; homepage renders a Django template, authenticated requests go to dashboard, showcase URLs are removed.
+- **Migration:** No.
+- **Risk:** Landing template links or route reverse names may break; public updates depend on status-event data. **Not confirmed:** production-settings 404, all landing links resolving, no external origins, or content privacy assertions; the added test did not run.
+
+### 0.3 — `d7f41bd` local hygiene and secret scan workflow
+
+- **Files/behavior:** `.github/workflows/ci.yml`, `.gitignore`, docs; configures full-history checkout and Gitleaks Action v3, ignores ZIP files, and records local secret rotation/hygiene.
+- **Migration:** No.
+- **Risk:** CI may fail because action configuration/permissions or history scanning differs from assumptions. Local PostgreSQL password rotation and full-history scan were not completed. **Not confirmed:** actual key/DB rotation state, Gitleaks findings, or workflow execution.
+
+### 0.4 — `eb3a32e` remote/CI records
+
+- **Files/behavior:** `docs/DECISIONS_NEEDED.md`, `docs/DECISIONS.md`, `docs/TEST_REPORT.md`, `PROGRESS.md`; records missing remote and action-tag claims; no workflow behavior change in this commit.
+- **Migration:** No.
+- **Risk:** CI cannot be evaluated until an owner-controlled remote exists. The documentation cites official release pages for checkout v6.0.0 and setup-python v5.6.0, but their availability was not independently checked in this static review. **Not confirmed:** current action tag availability, remote configuration, or CI run.
+
 ## 2026-11-23 — ROADMAP_V2 Phase 0.1 current-HEAD baseline
 
 **Code under test:** `61c37fa1e2aed79423969c5e59418c75d8afc3f4` (captured before this report edit). No checks below passed in this session; Docker/Python environment access was unavailable.
