@@ -465,6 +465,11 @@ The first run produced one failed **test expectation** because its shared fixtur
 - `python -m pytest tests/test_day2_reporting.py -k 'multiple_citizen_photos or configured_max_edge or original_hash_and_exif_free_display or reconcile or deactivated_account' -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
 - Django image/upload tests and migration application are **not verified** because local Django and the Docker engine are unavailable.
 
+### ROADMAP_V2 task 1.9 (2026-11-23)
+
+- Not implemented: D3 retention periods and the deletion process are owner decisions. The blocker is recorded in `docs/DECISIONS_NEEDED.md`; no data retention values or purge behavior were invented.
+- No code or tests changed for this decision-only commit. `git diff --check` — exit 0. `python manage.py makemigrations --check --dry-run` — exit 1 (`ModuleNotFoundError: No module named 'django'`).
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit found no issues in 1,453 lines; pip-audit found no known vulnerabilities. `migrate --check` exited 0. Repeated `check --deploy` exited 0 with only the two documented HSTS warnings, and the four container-local HTTP smoke requests each returned 200. This rerun includes the prior workflow, authorization, evidence, and UI-route regression coverage.

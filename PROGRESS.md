@@ -371,3 +371,8 @@
 - Settings default to three photos and a 1600-pixel display edge; display-edge production confirmation is recorded in `docs/DECISIONS_NEEDED.md`.
 - Python compilation and diff checks run before commit. Image/database behavior remains unverified because Django/Docker are unavailable.
 
+## 2026-11-23 — ROADMAP_V2 task 1.9
+
+- D3 is unresolved: complaint/photo/account retention periods and the deletion process are owner inputs. Recorded the blocker in `docs/DECISIONS_NEEDED.md`; left privacy deletion/purge behavior unimplemented rather than choosing retention periods.
+- Proceeding to independent task 1.10 as requested. No code tests were added for this decision-only task.
+
