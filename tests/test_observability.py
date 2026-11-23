@@ -126,3 +126,16 @@ def test_production_settings_enforce_csp_by_default():
         env=environment, capture_output=True, text=True, check=True,
     )
     assert result.stdout.strip() == "False"
+
+
+def test_production_email_backend_is_environment_smtp():
+    environment = os.environ.copy()
+    environment.update({
+        "DJANGO_SETTINGS_MODULE": "config.settings.prod",
+        "DJANGO_SECRET_KEY": "test-only-production-settings-key",
+    })
+    result = subprocess.run(
+        [sys.executable, "-c", "from django.conf import settings; print(settings.EMAIL_BACKEND)"],
+        env=environment, capture_output=True, text=True, check=True,
+    )
+    assert result.stdout.strip() == "django.core.mail.backends.smtp.EmailBackend"

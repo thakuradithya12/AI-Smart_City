@@ -25,6 +25,16 @@
 - Browser click-through and ZAP with enforced CSP remain unverified: Django is unavailable to run the site locally; no browser scan was performed.
 - OSM heavy-production-use limitation and all owner decisions are recorded in `docs/LIMITS.md` and `docs/DECISIONS.md`.
 
+## 2026-11-23 — ROADMAP_V2 task 3.1
+
+- Added transactional, deduplicated notification creation for report receipt, information requests, routing, work claimed, verified/closed, reopened and field-worker assignment/reassignment. Added overdue-to-department-supervisor notification service for the following SLA task.
+- Added private in-app inbox, unread badge and mark-read POST action; email command processes at most 500 rows, retries up to three times with increasing delay, skips email-less users while preserving in-app notices, and stores only exception class names.
+- Added tests for every transition recipient, overdue department scoping, inbox IDOR, report-transition rollback, message contents, retry cap/idempotency and SMTP failure isolation.
+- `python -m py_compile apps/notifications/apps.py apps/notifications/models.py apps/notifications/services.py apps/notifications/views.py apps/notifications/urls.py apps/notifications/context_processors.py apps/notifications/admin.py apps/notifications/management/commands/send_notifications.py apps/notifications/migrations/0001_initial.py apps/workflow/services.py config/settings/base.py config/settings/prod.py config/urls.py tests/test_notifications.py tests/test_observability.py` — exit 0.
+- `docker compose config -q` — exit 0. `git diff --check` — exit 0. `python -m ruff check apps/notifications apps/workflow/services.py config/settings/base.py config/settings/prod.py config/urls.py tests/test_notifications.py tests/test_observability.py` — exit 1 (`No module named ruff`).
+- `python -m pytest tests/test_notifications.py tests/test_day4_workflow.py tests/test_observability.py -q` — exit 1 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same reason.
+- Runtime migration, inbox/email behavior and end-to-end workflow remain unverified in this workspace.
+
 ## Static risk notes for unverified Phase 0 commits
 
 These notes are based on the named `git show` diffs. No runtime verification is implied. Any item marked **not confirmed** needs a later executable test or owner/environment evidence.

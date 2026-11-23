@@ -19,6 +19,7 @@
       {% if request.user.is_authenticated %}
       <nav class="primary-nav" aria-label="Main navigation">
         <a href="{% url 'dashboard' %}"{% if request.resolver_match.url_name == 'dashboard' %} aria-current="page"{% endif %}>Overview</a>
+        <a href="{% url 'notifications_inbox' %}"{% if request.resolver_match.url_name == 'notifications_inbox' %} aria-current="page"{% endif %}>Notifications{% if notification_unread_count %} <span class="badge" aria-label="{{ notification_unread_count }} unread">{{ notification_unread_count }}</span>{% endif %}</a>
         {% if request.user.role == "citizen" %}
           <a href="{% url 'report' %}"{% if request.resolver_match.url_name == 'report' %} aria-current="page"{% endif %}>Report an issue</a>
           <a href="{% url 'my_complaints' %}"{% if request.resolver_match.url_name == 'my_complaints' %} aria-current="page"{% endif %}>My complaints</a>

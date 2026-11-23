@@ -13,6 +13,7 @@ INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
     "django.contrib.sessions", "django.contrib.messages", "django.contrib.staticfiles",
     "django.contrib.gis", "axes", "apps.accounts", "apps.geography", "apps.complaints",
+    "apps.notifications",
     "apps.workflow", "apps.audit", "apps.console", "apps.ai_assist",
 ]
 MIDDLEWARE = [
@@ -25,7 +26,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware", "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 ROOT_URLCONF = "config.urls"
-TEMPLATES = [{"BACKEND": "django.template.backends.django.DjangoTemplates", "DIRS": [BASE_DIR / "templates"], "APP_DIRS": True, "OPTIONS": {"context_processors": ["django.template.context_processors.request", "django.contrib.auth.context_processors.auth", "django.contrib.messages.context_processors.messages"]}}]
+TEMPLATES = [{"BACKEND": "django.template.backends.django.DjangoTemplates", "DIRS": [BASE_DIR / "templates"], "APP_DIRS": True, "OPTIONS": {"context_processors": ["django.template.context_processors.request", "django.contrib.auth.context_processors.auth", "django.contrib.messages.context_processors.messages", "apps.notifications.context_processors.notification_badge"]}}]
 WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {"default": {"ENGINE": "django.contrib.gis.db.backends.postgis", "NAME": os.environ.get("POSTGRES_DB", "smart_city"), "USER": os.environ.get("POSTGRES_USER", "smart_city"), "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""), "HOST": os.environ.get("POSTGRES_HOST", "localhost"), "PORT": os.environ.get("POSTGRES_PORT", "5432")}}
 AUTH_USER_MODEL = "accounts.User"
@@ -63,6 +64,11 @@ CLOSED_PHOTO_RETENTION_DAYS = int(os.environ.get("CLOSED_PHOTO_RETENTION_DAYS", 
 REJECTED_CANCELLED_RETENTION_DAYS = int(os.environ.get("REJECTED_CANCELLED_RETENTION_DAYS", "183"))
 INACTIVE_ACCOUNT_RETENTION_DAYS = int(os.environ.get("INACTIVE_ACCOUNT_RETENTION_DAYS", "730"))
 DELETION_REQUEST_DAYS = int(os.environ.get("DELETION_REQUEST_DAYS", "30"))
+SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "http://localhost:8000")
+NOTIFICATION_BATCH_SIZE = int(os.environ.get("NOTIFICATION_BATCH_SIZE", "100"))
+NOTIFICATION_MAX_ATTEMPTS = int(os.environ.get("NOTIFICATION_MAX_ATTEMPTS", "3"))
+NOTIFICATION_RETRY_DELAYS_SECONDS = (60, 300, 1800)
+NOTIFICATION_SEND_LEASE_SECONDS = 600
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"

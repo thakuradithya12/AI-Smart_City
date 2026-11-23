@@ -11,6 +11,7 @@ from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, ComplaintMessage, Evidence, Resolution, StatusEvent
 from apps.complaints.services import delete_private_files, store_citizen_image
 from apps.geography.models import RoutingRule
+from apps.notifications.services import notify_assigned_worker, notify_transition
 
 DUPLICATE_DISTANCE_METERS = 30
 DUPLICATE_WINDOW_DAYS = 7
@@ -173,7 +174,7 @@ def reassign_complaint(complaint, actor, assignee, reason):
     previous_assignee_id = locked.assignee_id
     locked.assignee = assignee
     locked.save(update_fields=["assignee"])
-    AuditEvent.objects.create(
+    assignment_event = AuditEvent.objects.create(
         actor=actor,
         role=actor.role,
         action="admin_override" if actor.role == "admin" else "complaint_reassigned",
@@ -183,6 +184,7 @@ def reassign_complaint(complaint, actor, assignee, reason):
         after={"assignee_id": assignee.pk, **({"operation": "complaint_reassigned"} if actor.role == "admin" else {})},
         reason=reason,
     )
+    notify_assigned_worker(locked, assignment_event)
     return locked
 
 
@@ -331,7 +333,7 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
             "method": resolution.method,
             "outcome": resolution.outcome,
         }
-    StatusEvent.objects.create(complaint=locked, from_status=previous, to_status=to_status, actor=actor, role=role, reason=reason or "")
+    status_event = StatusEvent.objects.create(complaint=locked, from_status=previous, to_status=to_status, actor=actor, role=role, reason=reason or "")
     after = {"status": to_status}
     if (previous, to_status) == ("routed", "in_triage"):
         after["department_id"] = None
@@ -352,4 +354,5 @@ def transition(complaint, to_status, actor=None, reason=None, **data):
     if message_body:
         message = ComplaintMessage.objects.create(complaint=locked, author=actor, body=message_body)
         AuditEvent.objects.create(actor=actor, role=role, action="complaint_message_added", object_type="ComplaintMessage", object_id=str(message.pk), after={"complaint_id": locked.pk, "body": message_body})
+    notify_transition(locked, previous, to_status, status_event)
     return locked

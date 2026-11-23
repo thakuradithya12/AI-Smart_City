@@ -185,6 +185,12 @@ details form { max-width: 680px; padding-top: .25rem; }
 .photo-preview img { width: 120px; height: 90px; object-fit: cover; border: 1px solid var(--line); border-radius: 6px; }
 .report-step[hidden], .report-controls[hidden] { display: none; }
 .report-progress + .report-step { margin-top: .5rem; }
+.notification-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.notification-row:last-child { border-bottom: 0; }
+.notification-row h2 { margin: 0; font-size: 1rem; }
+.notification-row p { margin: .3rem 0; }
+.notification-row time { color: var(--muted); font-size: 12px; }
+.notification-unread { border-left: 3px solid var(--terracotta); padding-left: .8rem; }
 fieldset { min-width: 0; margin: 1.2rem 0; padding: 1rem; border: 1px solid var(--line); border-radius: 8px; }
 legend { padding: 0 .4rem; color: var(--navy); font-weight: 700; }
 .login-shell { max-width: 440px; margin: 3rem auto; }
@@ -216,6 +222,8 @@ legend { padding: 0 .4rem; color: var(--navy); font-weight: 700; }
   .form-grid { grid-template-columns: 1fr; }
   .report-progress { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .report-controls > button { flex: 1; }
+  .notification-row { align-items: flex-start; flex-direction: column; }
+  .notification-row form, .notification-row button { width: 100%; }
   .filters { align-items: stretch; }
   .filters label { flex: 1 1 100%; }
   .filters button { width: 100%; }

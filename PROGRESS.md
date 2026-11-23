@@ -435,3 +435,14 @@
 - Owner selected OSM demo tiles and strict CSP allow-list; tile URL is now setting-driven, CSP is report-only by default in development and enforced by default in production.
 - Recorded D2, D3, D6, D8, D12, D14 and V10 decisions; removed resolved items from `DECISIONS_NEEDED.md`. D3 periods remain provisional pending owner/college confirmation.
 - CSP, setting, tile URL, and retention-default tests added. Manual browser click-through/ZAP and Django tests remain unverified in this environment.
+
+### ROADMAP_V2 task 3.1 (2026-11-23)
+
+- Added recipient-scoped notification outbox/inbox, unread badge and mark-read action; status transition and reassignment hooks create deduplicated rows atomically.
+- Added bounded `send_notifications` batch with generic error recording, retry cap/backoff and in-app-only handling for missing email; email content is public ID, status and complaint link only.
+- Added event-recipient, privacy/IDOR, idempotency, rollback and delivery-failure tests. `py_compile`, Compose and diff-check passed; Django tests/migration check could not run because Django is absent. See `docs/TEST_REPORT.md`.
+# 2026-11-23 — 2.8 CSP default correction
+
+- Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.
+- Evidence: `python -m py_compile ...` exit 0; `git diff --check` exit 0. Focused pytest collection remains unavailable because Django is not installed (exit 1).
+- Next: finish and commit task 3.1 notifications.

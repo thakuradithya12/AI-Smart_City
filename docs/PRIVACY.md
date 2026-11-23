@@ -21,4 +21,4 @@ The periods are configurable through settings. Do not treat them as approved leg
 
 ## Recovery and notifications
 
-The owner-approved plan is an in-app inbox for all roles. Optional citizen email may be used for notifications and recovery. Citizens without email use an admin-assisted reset process. There is no SMS or OTP verification. These account and notification features are being implemented in the roadmap.
+An in-app inbox is available to all roles. Optional citizen email may be used for notifications and recovery. Citizens without email use an admin-assisted reset process. There is no SMS or OTP verification. Optional citizen profile email and admin-assisted recovery are still being implemented.
