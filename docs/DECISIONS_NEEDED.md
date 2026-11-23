@@ -17,7 +17,7 @@ These questions block only the roadmap tasks that depend on them. Defaults are p
 | D3 | Retention periods for complaints, photos and accounts, and deletion process | 1.9 | Propose periods in `docs/PRIVACY.md`; obtain owner approval before production. |
 | D4 | Email/SMTP provider and owner-controlled delivery credentials | 3.1 | Console backend in development; SMTP from environment in production. |
 | D5 | Rights-cleared AI data source and evidence; owner images or an explicitly approved model/data source | 4.x | Owner images in `ml/data/<category>/`, subject to the existing preflight and sufficient grouped examples. |
-| D6 | Map tile provider for intended traffic | 2.3, 8.1 | OSM with attribution for demo traffic only; decide again before real traffic. |
+| D6 | Map tile provider for intended traffic (the choice determines the CSP `img-src` host) | 2.3, 2.8, 8.1 | OSM with attribution for demo traffic only; decide again before real traffic. |
 | D7 | Exact public fields and location coarsening/suppression policy | 5.2 | Counts and statuses only; no photos, text, names, person-linked identifiers or exact pins. |
 | D8 | SLA values by category and escalation levels | 3.2, 3.4 | Keep `default_due_hours`; no escalation until values are supplied. |
 | D9 | Native Telugu and Hindi translation reviewers | 7 | English only until reviewers are available. |
@@ -33,9 +33,11 @@ The owner has not supplied retention periods or an approved deletion process. Ta
 
 The owner has not supplied a pilot centre or authoritative boundary source/effective dates. Generic GeoJSON loading and synthetic-geometry validation are implemented, but no real pilot ward or inside/outside pilot point test is included. A database exclusion constraint is also not added because the PostGIS extension availability could not be checked without the database container; Python model validation and the import command check polygon interiors.
 
-### D6 status — task 2.3
+### D6 status — tasks 2.3 and 2.8
 
-The owner has not selected OSM demo tiles or a keyed tile provider. Task 2.3 is dependent on that choice and includes publishing the tile policy, so map panels and tile requests remain unchanged. Revisit once the provider and intended traffic are confirmed; the task's unrelated UI work may proceed independently.
+**Owner question:** Should the demo and planned deployment use OpenStreetMap tiles (with attribution and demo-scale traffic only) or a keyed tile provider, and what traffic level should the CSP allow? **Recommended default:** OSM for demo traffic only, matching the current report map; choose a keyed provider before real traffic if its terms or expected usage require it.
+
+Task 2.3 map panels and task 2.8 CSP enforcement depend on the answer because the allowed image host follows the tile provider. Keep current tile behavior and defer the new CSP until the host is confirmed. Unrelated UI work can proceed independently.
 | API auth | Authentication choice for `/api/v1/` | 6.1 | Do not build the API before owner choice; session or token auth as selected by owner. |
 | V10 | May a `department_official` mark work done (`in_progress` → `resolved_pending_verification`), or is that action reserved for `field_worker`? | 0.5 V10 alignment | **Recommended:** field worker only. The role matrix assigns evidence and the work claim to field workers, while department officials acknowledge/assign; aligning the transition table to the existing view preserves that division. |
 | 1.3 / V10 | Confirm whether `department_official` may mark work done | 1.3 | **Pending owner decision.** Current behavior and transition matrix keep this action field-worker-only; no role expansion made. |
@@ -46,7 +48,7 @@ The owner has not selected OSM demo tiles or a keyed tile provider. Task 2.3 is 
 
 ## Git remote and CI (Phase 0.4)
 
-No Git remote is configured (`git remote -v` returned no rows). To run remote CI, the owner needs to create or identify the owner-controlled GitHub repository, provide its clone URL, and configure authenticated Git access in this workspace (or configure the remote and push personally). Then push the reviewed commit and provide/record the Actions run URL and SHA. No remote URL, credential or CI result has been invented.
+As of 2026-11-23, `origin` points to the owner-controlled GitHub repository `https://github.com/thakuradithya12/AI-Smart_City`; commit `6b97f7b5bd154654566946e1481e59d047d3a7a5` was pushed to `origin/phase1`. A remote CI run for that SHA has not been verified; record the Actions result when available.
 
 The workflow's `actions/checkout@v6` tag and the existing `actions/setup-python@v5` tag were checked against the official repositories' release pages on 2026-11-23. Sources: [checkout v6.0.0](https://github.com/actions/checkout/releases/tag/v6.0.0), [setup-python v5.6.0](https://github.com/actions/setup-python/releases/tag/v5.6.0).
 

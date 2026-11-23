@@ -423,3 +423,9 @@
 - Reworked reporting into six progressively enhanced steps; added multiple-photo preview and client size feedback, review summary, double-submit guard, bounded optional landmark, and documented that files must be reselected after server errors.
 - Added form/render, landmark persistence and over-limit validation tests; Android/iPhone-class manual run remains not verified because no physical device was available.
 - Python compilation, JS syntax, Django tests, and diff-check results are recorded in `docs/TEST_REPORT.md`.
+- Commit `6b97f7b` was pushed to `origin/phase1` at the requested two-commit cadence; remote CI has not been checked.
+
+### ROADMAP_V2 task 2.8 blocked (2026-11-23)
+
+- CSP `img-src` depends on D6's tile host. Recorded the exact owner question and recommended OSM demo default; no provider policy was guessed.
+- Updated the stale remote-status note: `origin/phase1` accepted `6b97f7b`; no remote CI result was checked.

@@ -8,6 +8,12 @@
 - `python -m pytest tests/test_day2_reporting.py -k 'guided_flow or saves_optional_landmark or landmark_over_limit or photo_input' -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`); Django behavior is not verified.
 - `git diff --check` — exit 0. Manual run on Android and iPhone-class hardware remains not verified; no physical devices were available.
 
+## 2026-11-23 — ROADMAP_V2 task 2.8 blocked by D6
+
+- Did not add CSP middleware because the roadmap says `img-src` must match the owner-selected tile provider; D6 is unresolved. The exact provider/traffic question and OSM demo recommendation are recorded in `docs/DECISIONS_NEEDED.md`.
+- `git push origin phase1` for task 2.4 — exit 0; remote branch advanced from `5ec4072` to `6b97f7b`. Remote CI was not inspected.
+- `git diff --check` — exit 0; no application test applies to this documentation-only blocker.
+
 ## Static risk notes for unverified Phase 0 commits
 
 These notes are based on the named `git show` diffs. No runtime verification is implied. Any item marked **not confirmed** needs a later executable test or owner/environment evidence.
