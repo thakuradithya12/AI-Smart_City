@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from django.contrib.gis.geos import MultiPolygon, Point, Polygon
 from django.core.exceptions import ValidationError
+from django.db import DatabaseError, connection, transaction
 
 from apps.accounts.models import User
 from apps.audit.models import AuditEvent
@@ -160,6 +161,37 @@ def test_admin_can_cancel_stuck_active_complaint_with_audited_reason(workflow_se
     assert complaint.status_events.get(to_status=Complaint.Status.CANCELLED).actor == admin
     audit = AuditEvent.objects.get(action="admin_override", object_id=str(complaint.pk))
     assert audit.reason == "Work is stuck pending review"
+
+
+@pytest.mark.django_db
+def test_database_triggers_reject_raw_status_and_audit_event_mutations(workflow_setup):
+    setup = workflow_setup
+    complaint = Complaint.objects.create(
+        public_id="APPEND-ONLY-DB", citizen=setup["users"][User.Role.CITIZEN],
+        category=setup["category"], location=Point(0, 0, srid=4326), ward=setup["ward"],
+        status=Complaint.Status.IN_TRIAGE, consent_at="2026-01-01T00:00:00Z",
+    )
+    status_event = StatusEvent.objects.create(
+        complaint=complaint, from_status="submitted", to_status="in_triage", actor=None, role="system",
+    )
+    audit_event = AuditEvent.objects.create(
+        actor=None, role="system", action="test", object_type="Complaint",
+        object_id=str(complaint.pk), before={}, after={},
+    )
+    tables_and_ids = (
+        ("complaints_statusevent", status_event.pk),
+        ("audit_auditevent", audit_event.pk),
+    )
+    with connection.cursor() as cursor:
+        for table, event_id in tables_and_ids:
+            quoted_table = connection.ops.quote_name(table)
+            for sql, params in (
+                (f"UPDATE {quoted_table} SET role = %s WHERE id = %s", ["edited", event_id]),
+                (f"DELETE FROM {quoted_table} WHERE id = %s", [event_id]),
+            ):
+                with pytest.raises(DatabaseError):
+                    with transaction.atomic():
+                        cursor.execute(sql, params)
 
 
 @pytest.mark.django_db
