@@ -2,10 +2,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.http import Http404
+from django.db.models import OuterRef, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.models import User
-from apps.complaints.models import Complaint
+from apps.complaints.models import Complaint, StatusEvent
 from apps.audit.models import AuditEvent
 from apps.geography.models import Department, Ward
 from apps.workflow.permissions import can_link_duplicate, can_transition
@@ -43,8 +44,12 @@ def triage_queue(request):
         complaints = complaints.filter(status=status)
     if ward_id and ward_id.isdecimal():
         complaints = complaints.filter(ward_id=ward_id)
+    latest_reason = StatusEvent.objects.filter(complaint_id=OuterRef("pk")).order_by("-created_at", "-pk").values("reason")[:1]
+    complaints = list(complaints.annotate(latest_status_reason=Subquery(latest_reason)).order_by("due_at", "created_at"))
+    for complaint in complaints:
+        complaint.info_request_timed_out = complaint.status == Complaint.Status.IN_TRIAGE and (complaint.latest_status_reason or "").startswith("no reply within ")
     return render(request, "console/triage_queue.html", {
-        "complaints": complaints.order_by("due_at", "created_at"),
+        "complaints": complaints,
         "statuses": Complaint.Status.choices,
         "wards": Ward.objects.order_by("name"),
         "selected_status": status or "",

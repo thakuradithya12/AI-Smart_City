@@ -341,3 +341,9 @@
 - `python -m py_compile ...` and `git diff --check` exited 0. `pytest` and `makemigrations --check --dry-run` could not run: local Python has no Django; Docker checks could not connect to Docker Desktop.
 - Runtime and concurrent-database behavior remain unverified; details in `docs/TEST_REPORT.md`.
 
+## 2026-11-23 — ROADMAP_V2 task 1.2
+
+- Added `expire_info_requests`, with a 14-day default (`INFO_REQUEST_TIMEOUT_DAYS`), latest-event age check, audited transition to triage, and a timed-out marker in the reviewer queue.
+- Added tests for expiry, idempotence, no early expiry, audit/status events, and the queue marker.
+- `py_compile` and `git diff --check` are run before commit. Django tests and migration checks remain unavailable in this workspace; see `docs/TEST_REPORT.md`.
+

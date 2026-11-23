@@ -430,6 +430,13 @@ The first run produced one failed **test expectation** because its shared fixtur
 - `python manage.py makemigrations --check --dry-run` — exit 1: `ModuleNotFoundError: No module named 'django'`.
 - Test and migration behavior are **not verified** in this workspace. No CI run was available.
 
+### ROADMAP_V2 task 1.2 attempt (2026-11-23)
+
+- Added command tests for aged and fresh information requests, idempotence, system audit/status records, and the triage timeout marker.
+- The command default is 14 days, configurable with `INFO_REQUEST_TIMEOUT_DAYS`.
+- Python compilation and `git diff --check` are required before commit; Django test and migration execution are unavailable because Django is missing locally and Docker Desktop's engine pipe is unavailable.
+- Functional behavior remains **not verified** in this workspace; no CI result is available.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit found no issues in 1,453 lines; pip-audit found no known vulnerabilities. `migrate --check` exited 0. Repeated `check --deploy` exited 0 with only the two documented HSTS warnings, and the four container-local HTTP smoke requests each returned 200. This rerun includes the prior workflow, authorization, evidence, and UI-route regression coverage.
