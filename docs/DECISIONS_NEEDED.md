@@ -23,6 +23,7 @@ These questions block only the roadmap tasks that depend on them. Defaults are p
 | D9 | Native Telugu and Hindi translation reviewers | 7 | English only until reviewers are available. |
 | D10 | Submission deadline date and cut line | Scheduling | Owner supplies the actual date; do not infer it from the roadmap's “deadline is close” wording. |
 | Evidence derivative setting | Confirm the proposed 1600-pixel display-image long edge before production | 1.8 / production | Configured as `EVIDENCE_DISPLAY_MAX_EDGE=1600`; original bytes remain private and unchanged. |
+| D14 | Approve maximum session age/idle timeout | 1.14 | Pending owner input. SameSite is explicitly `Lax`; session age remains Django's current default until an idle timeout is approved. |
 
 ### D3 status — task 1.9
 

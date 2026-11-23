@@ -492,6 +492,15 @@ The first run produced one failed **test expectation** because its shared fixtur
 - `python -m pytest tests/test_ward_import.py tests/test_geography_admin.py -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
 - Django/PostGIS tests and migration consistency are **not verified** because local Django and Docker are unavailable.
 
+### ROADMAP_V2 task 1.14 attempt (2026-11-23)
+
+- Added health endpoint success/failure tests, generated request ID response and JSON log tests, explicit cookie SameSite tests, and a subprocess check that production remains `DEBUG=False` even with `DJANGO_DEBUG=True`. Existing custom error page tests remain in `tests/test_error_pages.py`.
+- `SESSION_COOKIE_AGE` remains the framework default pending owner decision D14.
+- `python -m py_compile config/logging.py config/middleware.py config/views.py config/urls.py config/settings/base.py tests/test_observability.py` — exit 0; `git diff --check` — exit 0.
+- `python -m pytest tests/test_observability.py tests/test_error_pages.py -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
+- `docker compose config -q` — exit 0. `docker compose -f docker-compose.prod.yml config -q` — exit 1 because required `.env` values `APP_IMAGE` and `DOMAIN` are unset.
+- Django tests and production `check --deploy` are **not verified** in this workspace.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit found no issues in 1,453 lines; pip-audit found no known vulnerabilities. `migrate --check` exited 0. Repeated `check --deploy` exited 0 with only the two documented HSTS warnings, and the four container-local HTTP smoke requests each returned 200. This rerun includes the prior workflow, authorization, evidence, and UI-route regression coverage.

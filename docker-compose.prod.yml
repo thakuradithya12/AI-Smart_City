@@ -35,7 +35,7 @@ services:
         - CMD
         - python
         - -c
-        - "import urllib.request; r=urllib.request.Request('http://127.0.0.1:8000/accounts/login/', headers={'Host': '${DOMAIN}', 'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(r, timeout=5)"
+        - "import urllib.request; r=urllib.request.Request('http://127.0.0.1:8000/healthz/', headers={'Host': '${DOMAIN}', 'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(r, timeout=5)"
       interval: 15s
       timeout: 8s
       retries: 5
@@ -61,7 +61,7 @@ services:
         - CMD
         - python
         - -c
-        - "import urllib.request; r=urllib.request.Request('http://127.0.0.1:8000/accounts/login/', headers={'Host': '${DOMAIN}', 'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(r, timeout=5)"
+        - "import urllib.request; r=urllib.request.Request('http://127.0.0.1:8000/healthz/', headers={'Host': '${DOMAIN}', 'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(r, timeout=5)"
       interval: 5s
       timeout: 8s
       retries: 12

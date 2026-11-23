@@ -395,3 +395,9 @@
 - D2 pilot coordinates and authoritative ward source remain pending; no pilot polygon or known-point test was invented. `btree_gist` could not be verified without Docker/PostGIS, so no database exclusion constraint was added.
 - Python compilation and diff checks run before commit. Django/PostGIS tests and migrations remain unavailable.
 
+## 2026-11-23 — ROADMAP_V2 task 1.14
+
+- Added JSON stdout logging, generated request IDs, public database-only `/healthz/`, explicit SameSite settings, and changed Compose web/candidate healthchecks to use the endpoint. Production settings continue to force `DEBUG=False`; custom error templates already existed and have regression coverage.
+- Session idle age needs owner approval (D14); retained the framework default and recorded the pending input rather than choosing a timeout.
+- Added health, request ID, log format, cookie policy, and production DEBUG tests. Python compilation and diff checks run before commit; Django tests/Compose checks remain unavailable.
+
