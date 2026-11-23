@@ -55,7 +55,8 @@ LIST_PAGE_SIZE = int(os.environ.get("LIST_PAGE_SIZE", "20"))
 MAP_TILE_URL = os.environ.get(
     "MAP_TILE_URL", "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 )
-CSP_REPORT_ONLY = os.environ.get("CSP_REPORT_ONLY", "True").lower() == "true"
+_csp_report_only_env = os.environ.get("CSP_REPORT_ONLY", "").strip()
+CSP_REPORT_ONLY = _csp_report_only_env.lower() == "true" if _csp_report_only_env else True
 # Retention settings use whole-day cutoffs; month-based defaults use 30/365-day approximations.
 COMPLAINT_RETENTION_DAYS = int(os.environ.get("COMPLAINT_RETENTION_DAYS", "365"))
 CLOSED_PHOTO_RETENTION_DAYS = int(os.environ.get("CLOSED_PHOTO_RETENTION_DAYS", "365"))

@@ -5,7 +5,8 @@ from django.core.exceptions import ImproperlyConfigured
 from . import base as base_settings
 
 DEBUG = False
-CSP_REPORT_ONLY = os.environ.get("CSP_REPORT_ONLY", "False").lower() == "true"
+_csp_report_only_env = os.environ.get("CSP_REPORT_ONLY", "").strip()
+CSP_REPORT_ONLY = _csp_report_only_env.lower() == "true" if _csp_report_only_env else False
 if not base_settings.SECRET_KEY:
     raise ImproperlyConfigured("DJANGO_SECRET_KEY must be set in production.")
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
