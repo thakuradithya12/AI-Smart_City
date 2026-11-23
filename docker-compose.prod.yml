@@ -41,6 +41,19 @@ services:
       retries: 5
       start_period: 30s
 
+  scheduler:
+    image: ${APP_IMAGE:?Set APP_IMAGE in .env}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.prod
+      DJANGO_DEBUG: "False"
+      POSTGRES_HOST: db
+    command: ["python", "manage.py", "run_scheduler"]
+    depends_on:
+      db:
+        condition: service_healthy
+
   candidate:
     image: ${CANDIDATE_IMAGE:-${APP_IMAGE:-ai-smart-city:initial}}
     profiles: ["deploy"]

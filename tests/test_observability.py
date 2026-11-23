@@ -18,7 +18,7 @@ from config.middleware import BrowserPolicyHeadersMiddleware, RequestIdMiddlewar
 def test_healthz_is_public_and_checks_the_database(client):
     response = client.get("/healthz/")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    assert response.json() == {"status": "ok", "scheduler": "unknown"}
     assert response["Cache-Control"] == "no-store"
     assert response["X-Content-Type-Options"] == "nosniff"
 

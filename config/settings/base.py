@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions", "django.contrib.messages", "django.contrib.staticfiles",
     "django.contrib.gis", "axes", "apps.accounts", "apps.geography", "apps.complaints",
     "apps.notifications",
+    "apps.scheduler",
     "apps.workflow", "apps.audit", "apps.console", "apps.ai_assist",
 ]
 MIDDLEWARE = [
@@ -69,6 +70,8 @@ NOTIFICATION_BATCH_SIZE = int(os.environ.get("NOTIFICATION_BATCH_SIZE", "100"))
 NOTIFICATION_MAX_ATTEMPTS = int(os.environ.get("NOTIFICATION_MAX_ATTEMPTS", "3"))
 NOTIFICATION_RETRY_DELAYS_SECONDS = (60, 300, 1800)
 NOTIFICATION_SEND_LEASE_SECONDS = 600
+SCHEDULER_POLL_SECONDS = int(os.environ.get("SCHEDULER_POLL_SECONDS", "15"))
+SCHEDULER_HEARTBEAT_STALE_SECONDS = int(os.environ.get("SCHEDULER_HEARTBEAT_STALE_SECONDS", "180"))
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"

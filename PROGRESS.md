@@ -441,8 +441,14 @@
 - Added recipient-scoped notification outbox/inbox, unread badge and mark-read action; status transition and reassignment hooks create deduplicated rows atomically.
 - Added bounded `send_notifications` batch with generic error recording, retry cap/backoff and in-app-only handling for missing email; email content is public ID, status and complaint link only.
 - Added event-recipient, privacy/IDOR, idempotency, rollback and delivery-failure tests. `py_compile`, Compose and diff-check passed; Django tests/migration check could not run because Django is absent. See `docs/TEST_REPORT.md`.
+
+### ROADMAP_V2 task 3.3 (2026-11-23)
+
+- Added PostgreSQL advisory-lock scheduler, maintenance intervals, scheduler heartbeat, health endpoint visibility, and dev/prod Compose services.
+- Jobs are skipped until their commands exist; `check_sla` and `purge_expired` are follow-on dependencies in the owner sequence (3.2 and privacy task 1.9). Scheduler acceptance remains pending until both are implemented and overlap/kill-restart behavior is exercised against PostgreSQL.
+- Exact static and collection checks are in `docs/TEST_REPORT.md`.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.
 - Evidence: `python -m py_compile ...` exit 0; `git diff --check` exit 0. Focused pytest collection remains unavailable because Django is not installed (exit 1).
-- Next: finish and commit task 3.1 notifications.
+- Follow-on: blank-toggle behavior was corrected in the 2.8 commit immediately before task 3.1.

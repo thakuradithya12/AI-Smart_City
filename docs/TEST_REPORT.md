@@ -35,6 +35,14 @@
 - `python -m pytest tests/test_notifications.py tests/test_day4_workflow.py tests/test_observability.py -q` — exit 1 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same reason.
 - Runtime migration, inbox/email behavior and end-to-end workflow remain unverified in this workspace.
 
+## 2026-11-23 — ROADMAP_V2 task 3.3 (implementation in progress)
+
+- Added a single-process scheduler protected by a session-scoped PostgreSQL advisory lock, periodic jobs, graceful unlock on normal exit, and a shared heartbeat read by `/healthz/`. Compose includes the scheduler in development and production.
+- `check_sla` and `purge_expired` are registered as future jobs and skipped until those commands are implemented; therefore the scheduler task acceptance is not complete yet.
+- `python -m py_compile apps/scheduler/apps.py apps/scheduler/models.py apps/scheduler/migrations/0001_initial.py apps/scheduler/management/commands/run_scheduler.py config/views.py config/settings/base.py tests/test_scheduler.py tests/test_observability.py` — exit 0.
+- `docker compose config -q` — exit 0. `git diff --check` — exit 0.
+- `python -m pytest tests/test_scheduler.py tests/test_observability.py -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). PostgreSQL overlap and process kill/restart integration tests remain unverified because the Docker engine is unavailable.
+
 ## Static risk notes for unverified Phase 0 commits
 
 These notes are based on the named `git show` diffs. No runtime verification is implied. Any item marked **not confirmed** needs a later executable test or owner/environment evidence.

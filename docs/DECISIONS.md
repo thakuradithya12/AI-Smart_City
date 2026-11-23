@@ -123,3 +123,9 @@ Never pin a version unless pip's configured package index confirms it exists. Re
 
 The package index check found `Django==5.2.20` did not resolve; it has been corrected to 5.2.19. The exact `pip install --dry-run` results for both requirement sets are recorded in `PROGRESS.md`. This validates dependency resolution, not application build, generated migrations, app tests, local smoke test, CI, or `check --deploy`.
 
+### 2026-11-23 — ROADMAP_V2 3.3: scheduled maintenance
+
+- Choice: run one PostgreSQL advisory-lock-protected Django scheduler process with per-command intervals and a database heartbeat exposed through `/healthz/`.
+- Reason: the existing database is shared across app processes, and PostgreSQL releases the session lock automatically if the scheduler exits.
+- Alternative rejected: host cron, which would split operational configuration from the Compose deployment and would not provide an application heartbeat.
+- Commands for later roadmap tasks are skipped until installed; job wiring is prepared for `check_sla` and `purge_expired`.

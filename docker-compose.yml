@@ -28,6 +28,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
+  scheduler:
+    build: .
+    command: python manage.py run_scheduler
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
   checks:
     build: .
     env_file: .env
