@@ -470,6 +470,12 @@ The first run produced one failed **test expectation** because its shared fixtur
 - Not implemented: D3 retention periods and the deletion process are owner decisions. The blocker is recorded in `docs/DECISIONS_NEEDED.md`; no data retention values or purge behavior were invented.
 - No code or tests changed for this decision-only commit. `git diff --check` — exit 0. `python manage.py makemigrations --check --dry-run` — exit 1 (`ModuleNotFoundError: No module named 'django'`).
 
+### ROADMAP_V2 task 1.10 attempt (2026-11-23)
+
+- Added tests for stable second pages across triage, department, field, and citizen lists, plus a combined triage search/status/ward/category/overdue filter.
+- Added four complaint indexes and recorded the EXPLAIN plan status in `docs/PERFORMANCE.md`; required 5,000-row before/after plans are **not measured**.
+- Python compilation and `git diff --check` are run before commit. Django tests, migration consistency, query counts, and EXPLAIN cannot run because Django and Docker/PostGIS are unavailable.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit found no issues in 1,453 lines; pip-audit found no known vulnerabilities. `migrate --check` exited 0. Repeated `check --deploy` exited 0 with only the two documented HSTS warnings, and the four container-local HTTP smoke requests each returned 200. This rerun includes the prior workflow, authorization, evidence, and UI-route regression coverage.

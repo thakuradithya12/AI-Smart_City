@@ -376,3 +376,9 @@
 - D3 is unresolved: complaint/photo/account retention periods and the deletion process are owner inputs. Recorded the blocker in `docs/DECISIONS_NEEDED.md`; left privacy deletion/purge behavior unimplemented rather than choosing retention periods.
 - Proceeding to independent task 1.10 as requested. No code tests were added for this decision-only task.
 
+## 2026-11-23 — ROADMAP_V2 task 1.10
+
+- Added pagination, stable ordering, shared ID/description search, status/ward/category/overdue filters, and the requested complaint indexes across citizen and staff lists.
+- Added pagination/filter tests and query plans documentation. EXPLAIN before/after on 5,000 rows is not measured because the PostGIS test service is unavailable; `docs/PERFORMANCE.md` records that limit.
+- Python compilation and diff checks run before commit. Django tests and migration checks remain unavailable in this workspace.
+

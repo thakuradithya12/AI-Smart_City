@@ -16,6 +16,7 @@ from apps.accounts.models import User
 from apps.audit.models import AuditEvent
 from apps.complaints.forms import CitizenRegistrationForm, ReportForm
 from apps.complaints.models import Complaint, ComplaintMessage, Evidence
+from apps.complaints.listing import filter_and_paginate_complaints
 from apps.complaints.services import delete_private_files, private_storage, store_citizen_image
 from apps.geography.services import active_ward_for_point
 from apps.workflow.services import potential_duplicates, transition
@@ -114,8 +115,9 @@ def report(request):
 def my_complaints(request):
     if request.user.role != User.Role.CITIZEN:
         raise Http404
-    complaints = Complaint.objects.visible_to(request.user).order_by("-created_at")
-    return render(request, "complaints/my_complaints.html", {"complaints": complaints})
+    complaints = Complaint.objects.visible_to(request.user).select_related("category", "ward").order_by("-created_at", "-pk")
+    context = filter_and_paginate_complaints(complaints, request)
+    return render(request, "complaints/my_complaints.html", context)
 
 
 @login_required

@@ -1,0 +1,7 @@
+{% if complaints.paginator.num_pages > 1 %}
+<nav class="pagination" aria-label="Complaint list pages">
+  {% if complaints.has_previous %}<a class="button button-secondary" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ complaints.previous_page_number }}">Previous</a>{% endif %}
+  <span>Page {{ complaints.number }} of {{ complaints.paginator.num_pages }}</span>
+  {% if complaints.has_next %}<a class="button button-secondary" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ complaints.next_page_number }}">Next</a>{% endif %}
+</nav>
+{% endif %}

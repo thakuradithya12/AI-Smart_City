@@ -2,6 +2,7 @@
 {% block title %}My complaints · AI Smart City{% endblock %}
 {% block content %}
 <header class="page-heading"><div><p class="eyebrow">Resident portal</p><h1>My complaints</h1><p>Track each report and see what has happened so far.</p></div><a class="button" href="{% url 'report' %}">＋ Report an issue</a></header>
+{% include "complaints/_list_filters.html" %}
 {% for complaint in complaints %}
 <article class="card">
   <div class="card-head"><h2><a class="mono" href="{% url 'complaint_detail' complaint.pk %}">{{ complaint.public_id }}</a></h2><span class="badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></div>
@@ -11,4 +12,5 @@
   <div class="card-actions"><a class="button button-secondary" href="{% url 'complaint_detail' complaint.pk %}">View timeline</a></div>
 </article>
 {% empty %}<div class="empty-state"><h2>Your reports will appear here</h2><p>Send a photo and location so the city can review the issue and route it to the right team.</p><a class="button" href="{% url 'report' %}">Report an issue</a></div>{% endfor %}
+{% include "complaints/_pagination.html" %}
 {% endblock %}

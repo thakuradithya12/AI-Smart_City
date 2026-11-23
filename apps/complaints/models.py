@@ -59,6 +59,14 @@ class Complaint(models.Model):
     duplicate_of = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
     objects = ComplaintQuerySet.as_manager()
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["status", "due_at"], name="complaint_status_due_idx"),
+            models.Index(fields=["department", "status"], name="complaint_dept_status_idx"),
+            models.Index(fields=["ward", "status"], name="complaint_ward_status_idx"),
+            models.Index(fields=["created_at"], name="complaint_created_idx"),
+        ]
+
     @property
     def is_overdue(self):
         return bool(

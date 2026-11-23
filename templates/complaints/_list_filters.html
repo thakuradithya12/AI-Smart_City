@@ -1,0 +1,8 @@
+<form method="get" class="filters" role="search">
+  <label>Search<input type="search" name="q" value="{{ search_query }}" maxlength="120" placeholder="Public ID or report text"></label>
+  <label>Status<select name="status"><option value="">All statuses</option>{% for value,label in statuses %}<option value="{{ value }}"{% if selected_status == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+  <label>Ward<select name="ward"><option value="">All wards</option>{% for ward in wards %}<option value="{{ ward.pk }}"{% if selected_ward == ward.pk|stringformat:"s" %} selected{% endif %}>{{ ward.name }}</option>{% endfor %}</select></label>
+  <label>Category<select name="category"><option value="">All categories</option>{% for category in categories %}<option value="{{ category.pk }}"{% if selected_category == category.pk|stringformat:"s" %} selected{% endif %}>{{ category.display_label }}</option>{% endfor %}</select></label>
+  <label>Due date<select name="overdue"><option value="">Any due date</option><option value="1"{% if selected_overdue %} selected{% endif %}>Overdue only</option></select></label>
+  <button type="submit">Apply filters</button>
+</form>

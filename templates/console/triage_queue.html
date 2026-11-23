@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Triage queue · AI Smart City{% endblock %}
 {% block content %}
-<header class="page-heading"><div><p class="eyebrow">Operations workspace</p><h1>Triage queue</h1><p>Review incoming reports, request details, and route each complaint using its ward and category rules.</p></div><span class="badge">{{ complaints|length }} shown</span></header>
-<form method="get" class="filters"><label>Status<select name="status"><option value="">All active statuses</option>{% for value,label in statuses %}<option value="{{ value }}"{% if selected_status == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></label><label>Ward<select name="ward"><option value="">All wards</option>{% for ward in wards %}<option value="{{ ward.pk }}"{% if selected_ward == ward.pk|stringformat:"s" %} selected{% endif %}>{{ ward.name }}</option>{% endfor %}</select></label><button type="submit">Apply filters</button></form>
+<header class="page-heading"><div><p class="eyebrow">Operations workspace</p><h1>Triage queue</h1><p>Review incoming reports, request details, and route each complaint using its ward and category rules.</p></div><span class="badge">{{ complaints.paginator.count }} shown</span></header>
+{% include "complaints/_list_filters.html" %}
 {% for complaint in complaints %}
 <article class="card">
   <div class="card-head"><h2><a class="mono" href="{% url 'complaint_detail' complaint.pk %}">{{ complaint.public_id }}</a></h2><span class="badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span>{% if complaint.info_request_timed_out %}<span class="badge">Information request timed out</span>{% endif %}</div>
@@ -16,4 +16,5 @@
   {% endif %}
 </article>
 {% empty %}<div class="empty-state"><h2>No complaints match these filters</h2><p>Try another status or ward, or check back when a new report arrives.</p><a class="button button-secondary" href="{% url 'triage_queue' %}">Clear filters</a></div>{% endfor %}
+{% include "complaints/_pagination.html" %}
 {% endblock %}

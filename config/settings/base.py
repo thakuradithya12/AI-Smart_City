@@ -50,6 +50,7 @@ MEDIA_ROOT = BASE_DIR / "private_media"
 MEDIA_URL = None
 EVIDENCE_DISPLAY_MAX_EDGE = int(os.environ.get("EVIDENCE_DISPLAY_MAX_EDGE", "1600"))
 REPORT_MAX_PHOTOS = int(os.environ.get("REPORT_MAX_PHOTOS", "3"))
+LIST_PAGE_SIZE = int(os.environ.get("LIST_PAGE_SIZE", "20"))
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"

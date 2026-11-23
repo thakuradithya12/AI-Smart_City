@@ -72,6 +72,54 @@ def test_admin_can_cancel_a_stuck_complaint_through_the_audited_console(client, 
 
 
 @pytest.mark.django_db
+def test_all_complaint_lists_are_paginated_with_stable_pages(client, console_setup, settings):
+    setup = console_setup
+    settings.LIST_PAGE_SIZE = 5
+    for index in range(12):
+        make_complaint(setup, status=Complaint.Status.IN_TRIAGE, public_id=f"PAGE-T-{index:02}")
+        make_complaint(setup, status=Complaint.Status.ACKNOWLEDGED, department=setup["department_a"], public_id=f"PAGE-D-{index:02}")
+        make_complaint(setup, status=Complaint.Status.ASSIGNED, department=setup["department_a"], public_id=f"PAGE-F-{index:02}")
+    Complaint.objects.filter(public_id__startswith="PAGE-F-").update(assignee=setup["field_worker"])
+    for index in range(12):
+        make_complaint(setup, status=Complaint.Status.SUBMITTED, public_id=f"PAGE-C-{index:02}")
+
+    cases = (
+        (setup["reviewer"], "triage_queue", "PAGE-T-"),
+        (setup["official"], "department_inbox", "PAGE-D-"),
+        (setup["field_worker"], "field_tasks", "PAGE-F-"),
+        (setup["citizen"], "my_complaints", "PAGE-C-"),
+    )
+    for actor, view_name, prefix in cases:
+        client.force_login(actor)
+        first_page = client.get(reverse(view_name))
+        second_page = client.get(reverse(view_name), {"page": 2})
+        assert first_page.status_code == second_page.status_code == 200
+        assert len(first_page.context["complaints"]) == 5
+        assert len(second_page.context["complaints"]) == 5
+        first_ids = {item.public_id for item in first_page.context["complaints"]}
+        second_ids = {item.public_id for item in second_page.context["complaints"]}
+        assert not first_ids.intersection(second_ids)
+        assert all(public_id.startswith(prefix) for public_id in first_ids | second_ids)
+
+
+@pytest.mark.django_db
+def test_triage_filters_search_status_ward_category_and_overdue(client, console_setup):
+    setup = console_setup
+    matching = make_complaint(setup, status=Complaint.Status.IN_TRIAGE, public_id="FILTER-MATCH")
+    matching.description = "Distinctive broken pavement"
+    matching.due_at = timezone.now() - timedelta(hours=1)
+    matching.save(update_fields=["description", "due_at"])
+    make_complaint(setup, status=Complaint.Status.IN_TRIAGE, public_id="FILTER-OTHER")
+    client.force_login(setup["reviewer"])
+    response = client.get(reverse("triage_queue"), {
+        "q": "Distinctive", "status": Complaint.Status.IN_TRIAGE,
+        "ward": setup["ward"].pk, "category": setup["category"].pk, "overdue": "1",
+    })
+    assert response.status_code == 200
+    assert [item.pk for item in response.context["complaints"]] == [matching.pk]
+
+
+@pytest.mark.django_db
 def test_department_inbox_worker_query_count_does_not_grow_with_complaints(client, console_setup):
     setup = console_setup
     client.force_login(setup["official"])

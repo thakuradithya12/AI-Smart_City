@@ -1,14 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import OuterRef, Subquery
 from django.core.exceptions import ValidationError
 from django.http import Http404
-from django.db.models import OuterRef, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.models import User
+from apps.complaints.listing import filter_and_paginate_complaints
 from apps.complaints.models import Complaint, StatusEvent
 from apps.audit.models import AuditEvent
-from apps.geography.models import Department, Ward
+from apps.geography.models import Department
 from apps.workflow.permissions import can_link_duplicate, can_transition
 from apps.workflow.services import (
     add_field_evidence,
@@ -37,25 +38,13 @@ def triage_queue(request):
     complaints = Complaint.objects.visible_to(request.user).select_related(
         "citizen", "category", "ward", "department"
     ).exclude(status__in=[Complaint.Status.VERIFIED_CLOSED, Complaint.Status.REJECTED, Complaint.Status.CANCELLED])
-    status = request.GET.get("status")
-    ward_id = request.GET.get("ward")
-    valid_statuses = {value for value, _label in Complaint.Status.choices}
-    if status in valid_statuses:
-        complaints = complaints.filter(status=status)
-    if ward_id and ward_id.isdecimal():
-        complaints = complaints.filter(ward_id=ward_id)
     latest_reason = StatusEvent.objects.filter(complaint_id=OuterRef("pk")).order_by("-created_at", "-pk").values("reason")[:1]
-    complaints = list(complaints.annotate(latest_status_reason=Subquery(latest_reason)).order_by("due_at", "created_at"))
-    for complaint in complaints:
+    complaints = complaints.annotate(latest_status_reason=Subquery(latest_reason)).order_by("due_at", "created_at", "pk")
+    context = filter_and_paginate_complaints(complaints, request)
+    for complaint in context["complaints"]:
         complaint.info_request_timed_out = complaint.status == Complaint.Status.IN_TRIAGE and (complaint.latest_status_reason or "").startswith("no reply within ")
-    return render(request, "console/triage_queue.html", {
-        "complaints": complaints,
-        "statuses": Complaint.Status.choices,
-        "wards": Ward.objects.order_by("name"),
-        "selected_status": status or "",
-        "selected_ward": ward_id or "",
-        "departments": Department.objects.order_by("name"),
-    })
+    context["departments"] = Department.objects.order_by("name")
+    return render(request, "console/triage_queue.html", context)
 
 
 @login_required
@@ -124,10 +113,8 @@ def department_inbox(request):
         raise Http404
     complaints = Complaint.objects.visible_to(request.user).filter(
         status__in=[Complaint.Status.ROUTED, Complaint.Status.ACKNOWLEDGED, Complaint.Status.RESOLVED_PENDING_VERIFICATION, Complaint.Status.REOPENED]
-    ).select_related("citizen", "category", "ward", "department", "assignee").order_by("due_at", "created_at")
-    status = request.GET.get("status")
-    if status in {value for value, _ in Complaint.Status.choices}:
-        complaints = complaints.filter(status=status)
+    ).select_related("citizen", "category", "ward", "department", "assignee").order_by("due_at", "created_at", "pk")
+    context = filter_and_paginate_complaints(complaints, request)
     # Build the shared worker choices once rather than issuing a department query for every complaint row.
     field_workers = User.objects.none()
     if request.user.department_id:
@@ -136,12 +123,8 @@ def department_inbox(request):
             role=User.Role.FIELD_WORKER,
             is_active=True,
         ).order_by("name")
-    return render(request, "console/department_inbox.html", {
-        "complaints": complaints,
-        "statuses": Complaint.Status.choices,
-        "selected_status": status or "",
-        "field_workers": field_workers,
-    })
+    context["field_workers"] = field_workers
+    return render(request, "console/department_inbox.html", context)
 
 
 @login_required
@@ -189,8 +172,11 @@ def field_tasks(request):
         raise Http404
     complaints = Complaint.objects.visible_to(request.user).filter(
         status__in=[Complaint.Status.ASSIGNED, Complaint.Status.IN_PROGRESS]
-    ).select_related("category", "ward", "department").order_by("due_at", "created_at")
-    return render(request, "console/field_tasks.html", {"complaints": complaints})
+    ).select_related("category", "ward", "department").order_by("due_at", "created_at", "pk")
+    context = filter_and_paginate_complaints(
+        complaints, request, allowed_statuses={Complaint.Status.ASSIGNED, Complaint.Status.IN_PROGRESS}
+    )
+    return render(request, "console/field_tasks.html", context)
 
 
 @login_required
