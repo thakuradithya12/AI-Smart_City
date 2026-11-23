@@ -401,3 +401,9 @@
 - Session idle age needs owner approval (D14); retained the framework default and recorded the pending input rather than choosing a timeout.
 - Added health, request ID, log format, cookie policy, and production DEBUG tests. Python compilation and diff checks run before commit; Django tests/Compose checks remain unavailable.
 
+## 2026-11-23 — ROADMAP_V2 task 2.1
+
+- Reused the existing `public_updates.html` partial on the Django landing page and added direct report/track actions alongside sign-in and account creation.
+- Added landing checks for real actions, public updates, no external origins/assets, and `/ui-showcase/` 404 under production settings. Updated stale landing assertions to the current AI Smart City brand and actual protected tracking route.
+- Python compilation and diff checks run before commit. Django template/browser tests remain unavailable in this workspace.
+

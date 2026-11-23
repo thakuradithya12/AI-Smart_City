@@ -501,6 +501,15 @@ The first run produced one failed **test expectation** because its shared fixtur
 - `docker compose config -q` — exit 0. `docker compose -f docker-compose.prod.yml config -q` — exit 1 because required `.env` values `APP_IMAGE` and `DOMAIN` are unset.
 - Django tests and production `check --deploy` are **not verified** in this workspace.
 
+### ROADMAP_V2 task 2.1 attempt (2026-11-23)
+
+- Landing now includes `public_updates.html` and report/track/sign-in/account actions. Added tests for these actions, public-update content, no external origins or CDN assets outside vendor files, and production `/ui-showcase/` 404.
+- Updated prior landing expectations from the archived CivicOps mockup to the implemented AI Smart City page and protected `/complaints/` tracking link; the redirect itself remains asserted.
+- `python -m py_compile tests/test_error_pages.py tests/test_login.py tests/test_accessibility.py` — exit 0; `git diff --check` — exit 0.
+- `python -m pytest tests/test_error_pages.py tests/test_login.py tests/test_accessibility.py -k 'landing or ui_showcase' -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
+- `rg -ni 'cdn\.|unpkg|googleapis|tailwind' templates static -g '*.html' -g '*.js' -g '*.css' -g '!static/vendor/**'` — exit 1 with no matches.
+- Django template behavior remains **not verified** because local Django and the Docker engine are unavailable.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit found no issues in 1,453 lines; pip-audit found no known vulnerabilities. `migrate --check` exited 0. Repeated `check --deploy` exited 0 with only the two documented HSTS warnings, and the four container-local HTTP smoke requests each returned 200. This rerun includes the prior workflow, authorization, evidence, and UI-route regression coverage.

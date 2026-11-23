@@ -2,7 +2,7 @@
 
 ## System shape
 
-AI SMART CITY is a server-rendered Django website backed by PostgreSQL with PostGIS. Django templates render the working report and operations pages. The public landing and the 47 supplied CivicOps screens are static UI references; their sample names, counts, locations and complaint IDs are illustrative and are not database records.
+AI SMART CITY is a server-rendered Django website backed by PostgreSQL with PostGIS. Django templates render the public landing, citizen report and operations pages. The landing shows real public update data from recent status events; the 47 supplied CivicOps screens remain design references only, and their sample names, counts, locations and complaint IDs are not database records.
 
 ```text
 Browser

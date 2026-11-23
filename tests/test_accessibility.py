@@ -153,7 +153,10 @@ def test_landing_navigation_targets_real_pages_and_existing_sections(client):
     parser.feed(response.content.decode())
     assert "/accounts/login/" in parser.links
     assert "/complaints/new/" in parser.links
-    assert "/accounts/login/?next=/complaints/" in parser.links
+    assert "/complaints/" in parser.links
+    tracking_response = client.get("/complaints/")
+    assert tracking_response.status_code == 302
+    assert tracking_response.url.startswith("/accounts/login/?next=")
     assert all(link[1:] in parser.ids for link in parser.links if link.startswith("#"))
     assert not any("#login" == link or "#report" == link for link in parser.links)
 

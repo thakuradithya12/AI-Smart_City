@@ -15,7 +15,7 @@ def test_login_page_renders(client):
 def test_public_home_renders_landing_page(client):
     response = client.get(reverse("home"))
     assert response.status_code == 200
-    assert b"CivicOps" in response.content
+    assert b"AI Smart City" in response.content
 
 @pytest.mark.django_db
 def test_workspace_requires_login(client):
