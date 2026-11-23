@@ -12,7 +12,7 @@ from apps.accounts.models import User
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, Resolution, StatusEvent
 from apps.complaints.services import delete_private_files, private_storage
-from apps.workflow.services import add_field_evidence
+from apps.workflow.services import add_field_evidence, transition
 from apps.geography.models import Category, Department, RoutingRule, Ward
 
 
@@ -28,6 +28,7 @@ def day4_setup(db):
     other_department = Department.objects.create(name="Day Four Water")
     citizen = User.objects.create_user(email="d4-citizen@example.test", password="Strong!Password982", name="Day Four Citizen")
     reviewer = User.objects.create_user(email="d4-reviewer@example.test", password="Strong!Password982", name="Day Four Reviewer", role=User.Role.TRIAGE_REVIEWER)
+    official = User.objects.create_user(email="d4-official@example.test", password="Strong!Password982", name="Day Four Official", role=User.Role.DEPARTMENT_OFFICIAL, department=department)
     supervisor = User.objects.create_user(email="d4-supervisor@example.test", password="Strong!Password982", name="Day Four Supervisor", role=User.Role.SUPERVISOR, department=department)
     other_supervisor = User.objects.create_user(email="d4-other-supervisor@example.test", password="Strong!Password982", name="Other Supervisor", role=User.Role.SUPERVISOR, department=other_department)
     worker = User.objects.create_user(email="d4-worker@example.test", password="Strong!Password982", name="Day Four Worker", role=User.Role.FIELD_WORKER, department=department)
@@ -171,6 +172,24 @@ def test_marking_done_without_after_photo_is_refused(client, day4_setup):
     complaint.refresh_from_db()
     assert complaint.status == Complaint.Status.IN_PROGRESS
     assert not Resolution.objects.filter(complaint=complaint).exists()
+
+
+@pytest.mark.django_db
+def test_department_official_cannot_mark_work_done_by_post_or_transition(client, day4_setup):
+    setup = day4_setup
+    complaint = submit_report(client, setup)
+    reach_assigned(client, setup, complaint)
+    client.force_login(setup["worker"])
+    client.post(reverse("start_work", args=[complaint.pk]))
+    client.post(reverse("upload_field_evidence", args=[complaint.pk]), {"kind": "field_after", "photo": image_file("after.jpg")})
+
+    client.force_login(setup["official"])
+    response = client.post(reverse("mark_work_done", args=[complaint.pk]), {"note": "Completed work on the report."})
+    assert response.status_code == 404
+    complaint.refresh_from_db()
+    assert complaint.status == Complaint.Status.IN_PROGRESS
+    with pytest.raises(ValidationError):
+        transition(complaint, Complaint.Status.RESOLVED_PENDING_VERIFICATION, actor=setup["official"], note="Completed work on the report.")
 
 
 @pytest.mark.django_db

@@ -328,3 +328,9 @@
 - Added a regression test that sets `BASE_DIR` to an empty temporary directory and checks the public homepage renders while `/ui-showcase/` is no longer routed.
 - Focused test exited 2 during collection (`ModuleNotFoundError: No module named 'django'`). Python AST parsing and `git diff --check` passed; runtime behavior remains unverified.
 
+## V10 — field-worker-only work completion (on phase1)
+
+- Updated the transition role matrix and SPEC: only field workers may claim work done; the existing endpoint already requires field-worker role and its template exposes the action only in the assigned field task.
+- Added a regression covering department-official POST denial and direct transition refusal; role-matrix coverage derives its allowed roles from `TRANSITIONS`.
+- Runtime tests not run; unverified until CI.
+

@@ -9,7 +9,7 @@ Citizens submit civic reports with a category, optional description, photo, and 
 - **Citizen:** create reports; view and act on their own reports only; cancel before acknowledgement; reply to information requests; confirm or dispute a resolution.
 - **Triage reviewer:** view the triage queue, request information, route or reject with a reason, and link a report to a potential duplicate after review.
 - **Department official:** act on reports routed to their department; acknowledge, transfer with a reason, and assign a worker in the same department.
-- **Field worker:** view assigned work only; add before/after evidence and a work note; claim work complete.
+- **Field worker:** view assigned work only; add before/after evidence and a work note; claim work complete. Department officials cannot submit the work-done claim.
 - **Supervisor:** manage their department's work and workers; verify, dispute/reopen, assign or reassign.
 - **Admin:** manage configuration and accounts. Workflow status changes remain subject to the central transition service and audited reasons.
 

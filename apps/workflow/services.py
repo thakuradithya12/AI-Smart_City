@@ -26,7 +26,7 @@ TRANSITIONS = {
     ("routed", "in_triage"): {"department_official", "supervisor"},
     ("acknowledged", "assigned"): {"department_official", "supervisor"},
     ("assigned", "in_progress"): {"field_worker"},
-    ("in_progress", "resolved_pending_verification"): {"field_worker", "department_official"},
+    ("in_progress", "resolved_pending_verification"): {"field_worker"},
     ("resolved_pending_verification", "verified_closed"): {"supervisor", "citizen"},
     ("resolved_pending_verification", "reopened"): {"supervisor", "citizen"},
     ("reopened", "assigned"): {"supervisor"},
