@@ -14,6 +14,17 @@
 - `git push origin phase1` for task 2.4 — exit 0; remote branch advanced from `5ec4072` to `6b97f7b`. Remote CI was not inspected.
 - `git diff --check` — exit 0; no application test applies to this documentation-only blocker.
 
+## 2026-11-23 — ROADMAP_V2 task 2.8 after owner decisions
+
+- Implemented exact D6 CSP directives; development defaults to report-only, production enforces unless `CSP_REPORT_ONLY=True`. `MAP_TILE_URL` is configurable, defaults to OSM canonical tile URL, and is rendered into the report map.
+- Added CSP header mode, production default, map URL, 12-hour rolling session and provisional retention-setting tests.
+- `python -m py_compile config/middleware.py config/settings/base.py config/settings/prod.py apps/complaints/views.py tests/test_observability.py tests/test_day2_reporting.py` — exit 0.
+- `python -m pytest tests/test_observability.py tests/test_day2_reporting.py -k 'csp or retention or idle_session or configured_tile_url' -q` — exit 1 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same reason.
+- `node --check static/js/report-map.js` — exit 0. `docker compose config -q` — exit 0. `git diff --check` — exit 0. `python -m ruff check ...` — exit 1 (`No module named ruff`).
+- `rg -n --pcre2 '<script(?![^>]*\\bsrc=)|<style\\b|\\sstyle=' templates static -g '!static/vendor/**' -g '!*.map'` — exit 1, no inline script/style tags or style attributes found in application templates/static files.
+- Browser click-through and ZAP with enforced CSP remain unverified: Django is unavailable to run the site locally; no browser scan was performed.
+- OSM heavy-production-use limitation and all owner decisions are recorded in `docs/LIMITS.md` and `docs/DECISIONS.md`.
+
 ## Static risk notes for unverified Phase 0 commits
 
 These notes are based on the named `git show` diffs. No runtime verification is implied. Any item marked **not confirmed** needs a later executable test or owner/environment evidence.

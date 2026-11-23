@@ -67,7 +67,11 @@ def report(request):
             form.add_error(None, " ".join(exc.messages))
             ward = None
         if form.errors:
-            return render(request, "complaints/report.html", {"form": form, "max_photos": getattr(settings, "REPORT_MAX_PHOTOS", 3)})
+            return render(request, "complaints/report.html", {
+                "form": form,
+                "max_photos": getattr(settings, "REPORT_MAX_PHOTOS", 3),
+                "map_tile_url": settings.MAP_TILE_URL,
+            })
         if ward is None:
             form.add_error(None, "That pin is outside the supported area. Please choose a location inside a supported ward.")
         else:
@@ -108,7 +112,11 @@ def report(request):
                 raise
             else:
                 return redirect("complaint_detail", pk=complaint.pk)
-    return render(request, "complaints/report.html", {"form": form, "max_photos": getattr(settings, "REPORT_MAX_PHOTOS", 3)})
+    return render(request, "complaints/report.html", {
+        "form": form,
+        "max_photos": getattr(settings, "REPORT_MAX_PHOTOS", 3),
+        "map_tile_url": settings.MAP_TILE_URL,
+    })
 
 
 @login_required

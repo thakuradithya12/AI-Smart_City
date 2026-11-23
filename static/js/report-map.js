@@ -13,7 +13,7 @@
   if (window.L) {
     map = L.map(mapNode).setView(start, latField.value && lonField.value ? 15 : 3);
     // OSM tiles are used at demo traffic only, with visible attribution.
-    const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    const tiles = L.tileLayer(mapNode.dataset.tileUrl, {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);

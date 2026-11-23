@@ -1,5 +1,7 @@
 import uuid
 
+from django.conf import settings
+
 from config.logging import request_id_var
 
 
@@ -34,4 +36,13 @@ class BrowserPolicyHeadersMiddleware:
         # Complaint and workspace HTML can contain personal data; browsers and shared caches must not retain it.
         if response.get("Content-Type", "").startswith("text/html"):
             response.headers["Cache-Control"] = "no-store"
+        # Keep the policy assembled in one place so report-only and enforced modes match exactly.
+        policy = (
+            "default-src 'self'; script-src 'self'; style-src 'self'; "
+            "img-src 'self' data: https://tile.openstreetmap.org; "
+            "font-src 'self'; connect-src 'self'; object-src 'none'; "
+            "base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+        )
+        header = "Content-Security-Policy-Report-Only" if settings.CSP_REPORT_ONLY else "Content-Security-Policy"
+        response[header] = policy
         return response

@@ -52,12 +52,24 @@ MEDIA_URL = None
 EVIDENCE_DISPLAY_MAX_EDGE = int(os.environ.get("EVIDENCE_DISPLAY_MAX_EDGE", "1600"))
 REPORT_MAX_PHOTOS = int(os.environ.get("REPORT_MAX_PHOTOS", "3"))
 LIST_PAGE_SIZE = int(os.environ.get("LIST_PAGE_SIZE", "20"))
+MAP_TILE_URL = os.environ.get(
+    "MAP_TILE_URL", "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+)
+CSP_REPORT_ONLY = os.environ.get("CSP_REPORT_ONLY", "True").lower() == "true"
+# Retention settings use whole-day cutoffs; month-based defaults use 30/365-day approximations.
+COMPLAINT_RETENTION_DAYS = int(os.environ.get("COMPLAINT_RETENTION_DAYS", "365"))
+CLOSED_PHOTO_RETENTION_DAYS = int(os.environ.get("CLOSED_PHOTO_RETENTION_DAYS", "365"))
+REJECTED_CANCELLED_RETENTION_DAYS = int(os.environ.get("REJECTED_CANCELLED_RETENTION_DAYS", "183"))
+INACTIVE_ACCOUNT_RETENTION_DAYS = int(os.environ.get("INACTIVE_ACCOUNT_RETENTION_DAYS", "730"))
+DELETION_REQUEST_DAYS = int(os.environ.get("DELETION_REQUEST_DAYS", "30"))
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_AGE = 43200
+SESSION_SAVE_EVERY_REQUEST = True
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

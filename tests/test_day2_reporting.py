@@ -157,7 +157,8 @@ def test_report_photo_input_has_mobile_file_hints(client, citizen):
 
 
 @pytest.mark.django_db
-def test_report_page_has_guided_flow_controls_and_photo_preview(client, citizen):
+@override_settings(MAP_TILE_URL="https://tiles.example.test/{z}/{x}/{y}.png")
+def test_report_page_has_guided_flow_controls_and_configured_tile_url(client, citizen):
     client.force_login(citizen)
 
     response = client.get(reverse("report"))
@@ -168,6 +169,7 @@ def test_report_page_has_guided_flow_controls_and_photo_preview(client, citizen)
     assert b"report-review" in response.content
     assert b"Nearby landmark or address" in response.content
     assert b"not an emergency service" in response.content
+    assert b'data-tile-url="https://tiles.example.test/{z}/{x}/{y}.png"' in response.content
 
 
 @pytest.mark.django_db

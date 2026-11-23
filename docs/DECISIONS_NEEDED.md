@@ -13,34 +13,13 @@ These questions block only the roadmap tasks that depend on them. Defaults are p
 | ID | Needed input | Blocks | Recommended default |
 | --- | --- | --- | --- |
 | D1 | Owner-controlled deployment target (domain and VPS/PaaS) and access method | 8.1 | Single VPS with Docker Compose and Caddy, only after the owner supplies the host and credentials. |
-| D2 | Pilot centre coordinates and authoritative ward polygon source/effective dates | 1.12, 8.1 | Owner names an open municipal GeoJSON source; keep the local synthetic demo ward clearly labelled. |
-| D3 | Retention periods for complaints, photos and accounts, and deletion process | 1.9 | Propose periods in `docs/PRIVACY.md`; obtain owner approval before production. |
-| D4 | Email/SMTP provider and owner-controlled delivery credentials | 3.1 | Console backend in development; SMTP from environment in production. |
+| D4 | Production SMTP host and owner-controlled delivery credentials | 3.1 production delivery | Use the configured SMTP backend from environment variables; do not invent credentials. |
 | D5 | Rights-cleared AI data source and evidence; owner images or an explicitly approved model/data source | 4.x | Owner images in `ml/data/<category>/`, subject to the existing preflight and sufficient grouped examples. |
-| D6 | Map tile provider for intended traffic (the choice determines the CSP `img-src` host) | 2.3, 2.8, 8.1 | OSM with attribution for demo traffic only; decide again before real traffic. |
 | D7 | Exact public fields and location coarsening/suppression policy | 5.2 | Counts and statuses only; no photos, text, names, person-linked identifiers or exact pins. |
-| D8 | SLA values by category and escalation levels | 3.2, 3.4 | Keep `default_due_hours`; no escalation until values are supplied. |
 | D9 | Native Telugu and Hindi translation reviewers | 7 | English only until reviewers are available. |
 | D10 | Submission deadline date and cut line | Scheduling | Owner supplies the actual date; do not infer it from the roadmap's “deadline is close” wording. |
 | Evidence derivative setting | Confirm the proposed 1600-pixel display-image long edge before production | 1.8 / production | Configured as `EVIDENCE_DISPLAY_MAX_EDGE=1600`; original bytes remain private and unchanged. |
-| D14 | Approve maximum session age/idle timeout | 1.14 | Pending owner input. SameSite is explicitly `Lax`; session age remains Django's current default until an idle timeout is approved. |
-
-### D3 status — task 1.9
-
-The owner has not supplied retention periods or an approved deletion process. Task 1.9 includes deletion/anonymisation and a purge command, so its implementation is paused rather than inventing retention values. `docs/PRIVACY.md` currently states that retention is unset and production data collection is not authorized until approval.
-
-### D2 status — task 1.12
-
-The owner has not supplied a pilot centre or authoritative boundary source/effective dates. Generic GeoJSON loading and synthetic-geometry validation are implemented, but no real pilot ward or inside/outside pilot point test is included. A database exclusion constraint is also not added because the PostGIS extension availability could not be checked without the database container; Python model validation and the import command check polygon interiors.
-
-### D6 status — tasks 2.3 and 2.8
-
-**Owner question:** Should the demo and planned deployment use OpenStreetMap tiles (with attribution and demo-scale traffic only) or a keyed tile provider, and what traffic level should the CSP allow? **Recommended default:** OSM for demo traffic only, matching the current report map; choose a keyed provider before real traffic if its terms or expected usage require it.
-
-Task 2.3 map panels and task 2.8 CSP enforcement depend on the answer because the allowed image host follows the tile provider. Keep current tile behavior and defer the new CSP until the host is confirmed. Unrelated UI work can proceed independently.
 | API auth | Authentication choice for `/api/v1/` | 6.1 | Do not build the API before owner choice; session or token auth as selected by owner. |
-| V10 | May a `department_official` mark work done (`in_progress` → `resolved_pending_verification`), or is that action reserved for `field_worker`? | 0.5 V10 alignment | **Recommended:** field worker only. The role matrix assigns evidence and the work claim to field workers, while department officials acknowledge/assign; aligning the transition table to the existing view preserves that division. |
-| 1.3 / V10 | Confirm whether `department_official` may mark work done | 1.3 | **Pending owner decision.** Current behavior and transition matrix keep this action field-worker-only; no role expansion made. |
 
 ## Operational default selected during roadmap execution
 

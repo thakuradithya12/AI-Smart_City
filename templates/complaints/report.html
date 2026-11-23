@@ -54,7 +54,7 @@
     <section class="report-step" data-step="2" aria-labelledby="step-location-title">
       <h2 id="step-location-title">3. Confirm the location</h2>
       <p class="subtle">Move the pin to the issue location. Your confirmed pin determines the ward used for routing. If the map does not load, enter coordinates below.</p>
-      <div id="report-map" aria-label="Map for selecting a report location"></div>
+      <div id="report-map" data-tile-url="{{ map_tile_url }}" aria-label="Map for selecting a report location"></div>
       <button type="button" id="locate-button" class="button-secondary">Use my location</button>
       <p id="location-status" class="subtle" role="status" aria-live="polite">Choose a point on the map or enter coordinates manually.</p>
       <div class="form-grid">

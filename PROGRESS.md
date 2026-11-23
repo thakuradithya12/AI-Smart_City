@@ -429,3 +429,9 @@
 
 - CSP `img-src` depends on D6's tile host. Recorded the exact owner question and recommended OSM demo default; no provider policy was guessed.
 - Updated the stale remote-status note: `origin/phase1` accepted `6b97f7b`; no remote CI result was checked.
+
+### ROADMAP_V2 task 2.8 owner decision and implementation (2026-11-23)
+
+- Owner selected OSM demo tiles and strict CSP allow-list; tile URL is now setting-driven, CSP is report-only by default in development and enforced by default in production.
+- Recorded D2, D3, D6, D8, D12, D14 and V10 decisions; removed resolved items from `DECISIONS_NEEDED.md`. D3 periods remain provisional pending owner/college confirmation.
+- CSP, setting, tile URL, and retention-default tests added. Manual browser click-through/ZAP and Django tests remain unverified in this environment.
