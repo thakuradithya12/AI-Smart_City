@@ -19,6 +19,7 @@ from apps.accounts.models import User
 from apps.accounts.management.commands.seed_demo import DEMO_LATITUDE, DEMO_LONGITUDE
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, Evidence, StatusEvent
+from apps.complaints.forms import ReportForm
 from apps.complaints.services import delete_private_files, private_storage, store_citizen_image
 from apps.geography.models import Category, Ward
 from apps.geography.models import RoutingRule
@@ -156,6 +157,14 @@ def test_report_photo_input_has_mobile_file_hints(client, citizen):
 
 
 @pytest.mark.django_db
+def test_report_category_choices_exclude_inactive_categories(category):
+    inactive = Category.objects.create(name="retired-category", is_active=False)
+    form = ReportForm()
+    assert category.pk in form.fields["category"].queryset.values_list("pk", flat=True)
+    assert inactive.pk not in form.fields["category"].queryset.values_list("pk", flat=True)
+
+
+@pytest.mark.django_db
 def test_evidence_response_has_private_safe_headers_and_never_opens_original(
     client, citizen, ward, category, monkeypatch
 ):
@@ -252,6 +261,10 @@ def test_seed_demo_creates_hyderabad_demo_ward_defaults_and_prints_passwords_onc
     assert ward.boundary.covers(Point(DEMO_LONGITUDE + 0.05, DEMO_LATITUDE + 0.05, srid=4326))
     assert not ward.boundary.covers(Point(77.5946, 12.9716, srid=4326))
     assert set(Category.objects.values_list("name", flat=True)) == {"pothole", "garbage", "drainage", "streetlight", "water_leakage", "other"}
+    assert dict(Category.objects.values_list("name", "label")) == {
+        "pothole": "Pothole", "garbage": "Garbage", "drainage": "Drainage",
+        "streetlight": "Streetlight", "water_leakage": "Water leakage", "other": "Other",
+    }
     assert User.objects.count() == 5
     assert RoutingRule.objects.filter(ward=ward).count() == 6
     demo_department = User.objects.get(role=User.Role.FIELD_WORKER).department

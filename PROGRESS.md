@@ -382,3 +382,9 @@
 - Added pagination/filter tests and query plans documentation. EXPLAIN before/after on 5,000 rows is not measured because the PostGIS test service is unavailable; `docs/PERFORMANCE.md` records that limit.
 - Python compilation and diff checks run before commit. Django tests and migration checks remain unavailable in this workspace.
 
+## 2026-11-23 — ROADMAP_V2 task 1.11
+
+- Added category display labels, optional icon, and active flag while preserving slugs; seed data now sets labels and active state, and citizen reporting excludes inactive categories.
+- Kept `default_department` as a triage suggestion only; routing still follows the active ward/category rule and records overrides.
+- Added label, inactive-category, seed-label, and triage-suggestion tests. Python compilation and diff checks run before commit; Django tests/migration checks remain unavailable.
+

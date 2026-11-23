@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from django.contrib.gis.admin import GISModelAdmin
 
 from apps.geography.admin import WardAdmin
@@ -14,7 +15,14 @@ def test_category_display_label_humanizes_stable_slug():
     category = Category(name="water_leakage")
 
     assert category.display_label == "Water Leakage"
-    assert str(category) == "Water Leakage"
+
+
+@pytest.mark.django_db
+def test_category_display_label_uses_owner_label_without_changing_slug():
+    category = Category.objects.create(name="water_leakage", label="Water leak")
+    assert category.name == "water_leakage"
+    assert category.display_label == "Water leak"
+    assert str(category) == "Water leak"
 
 
 def test_live_templates_do_not_render_category_slug_directly():

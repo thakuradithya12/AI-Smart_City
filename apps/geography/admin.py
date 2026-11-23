@@ -19,9 +19,9 @@ class DepartmentAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("name", "default_due_hours", "default_department", "is_safety_critical")
-    list_filter = ("is_safety_critical", "default_department")
-    search_fields = ("name",)
+    list_display = ("label", "name", "is_active", "icon", "default_due_hours", "default_department", "is_safety_critical")
+    list_filter = ("is_active", "is_safety_critical", "default_department")
+    search_fields = ("name", "label")
 
 
 @admin.register(RoutingRule)

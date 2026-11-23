@@ -22,6 +22,8 @@ Citizens submit civic reports with a category, optional description, photo, and 
 5. Only the workflow service writes statuses. Status events and audit events are append-only through application operations.
 6. Duplicate suggestions are advisory: same category, open state, 30 m, last 7 days. A triage reviewer may link a candidate; this does not delete, hide, or close either report.
 
+Category slugs remain stable in `Category.name`; the editable display label is shown to citizens and staff. Inactive categories cannot be selected for new reports. `default_department` is only preselected as a suggestion for triage; active routing rules remain authoritative.
+
 ## Geography and demo data
 
 The project stores WGS84 points and uses an effective ward boundary to decide jurisdiction. GPS coordinates alone do not determine the responsible department. The local seeded Hyderabad square is synthetic demo coverage only. It is not an authoritative municipal ward or pilot area. Pilot geography stays unconfigured until the owner supplies coordinates and a source-documented boundary.

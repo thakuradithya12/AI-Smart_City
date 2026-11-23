@@ -120,6 +120,17 @@ def test_triage_filters_search_status_ward_category_and_overdue(client, console_
 
 
 @pytest.mark.django_db
+def test_category_default_department_is_only_a_triage_form_suggestion(client, console_setup):
+    setup = console_setup
+    complaint = make_complaint(setup, status=Complaint.Status.IN_TRIAGE, public_id="DEFAULT-DEPARTMENT")
+    client.force_login(setup["reviewer"])
+    response = client.get(reverse("triage_queue"))
+    assert response.status_code == 200
+    assert f'value="{setup["department_a"].pk}" selected'.encode() in response.content
+    assert complaint.status == Complaint.Status.IN_TRIAGE
+
+
+@pytest.mark.django_db
 def test_department_inbox_worker_query_count_does_not_grow_with_complaints(client, console_setup):
     setup = console_setup
     client.force_login(setup["official"])

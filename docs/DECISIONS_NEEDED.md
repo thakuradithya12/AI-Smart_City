@@ -43,4 +43,4 @@ The workflow's `actions/checkout@v6` tag and the existing `actions/setup-python@
 
 
 
-Category.default_department is unused by routing. Options: (a) drop the field in a migration; (b) use it only to pre-select the department in the triage form (reviewer still confirms; a different choice needs a reason). Recommended: (b). The earlier fallback that routed with rule_version 0 was reverted because 0 is not a real rule version and cannot appear in the audit trail.
+`Category.default_department` is retained as a triage-form suggestion only; it does not replace the active ward/category routing rule. The reviewer must submit the route, and a selected department different from that active rule requires a reason. The earlier fallback that routed with `rule_version=0` was reverted because 0 is not a real rule version and cannot appear in the audit trail.

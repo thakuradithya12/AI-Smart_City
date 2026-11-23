@@ -476,6 +476,14 @@ The first run produced one failed **test expectation** because its shared fixtur
 - Added four complaint indexes and recorded the EXPLAIN plan status in `docs/PERFORMANCE.md`; required 5,000-row before/after plans are **not measured**.
 - Python compilation and `git diff --check` are run before commit. Django tests, migration consistency, query counts, and EXPLAIN cannot run because Django and Docker/PostGIS are unavailable.
 
+### ROADMAP_V2 task 1.11 attempt (2026-11-23)
+
+- Added tests for explicit labels preserving slugs, inactive categories excluded from citizen forms, seeded display labels, and default-department triage preselection.
+- Migration adds `label`, optional `icon`, `is_active`, and populates existing category labels from their existing slugs.
+- `python -m py_compile apps/geography/models.py apps/geography/admin.py apps/geography/migrations/0003_category_display_fields.py apps/complaints/forms.py apps/accounts/management/commands/seed_demo.py tests/test_geography_admin.py tests/test_day2_reporting.py tests/test_console_workflow.py` — exit 0; `git diff --check` — exit 0.
+- `python -m pytest tests/test_geography_admin.py tests/test_day2_reporting.py -k 'category or seed_demo' -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
+- Django tests and migration consistency are **not verified** because local Django and Docker are unavailable.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit found no issues in 1,453 lines; pip-audit found no known vulnerabilities. `migrate --check` exited 0. Repeated `check --deploy` exited 0 with only the two documented HSTS warnings, and the four container-local HTTP smoke requests each returned 200. This rerun includes the prior workflow, authorization, evidence, and UI-route regression coverage.

@@ -32,11 +32,23 @@ class Command(BaseCommand):
         demo_department, _ = Department.objects.get_or_create(name="Demo Department — Roads")
         for name in ("Sanitation", "Water", "Lighting"):
             Department.objects.get_or_create(name=f"Demo Department — {name}")
-        categories = ["pothole", "garbage", "drainage", "streetlight", "water_leakage", "other"]
-        for category_name in categories:
+        categories = {
+            "pothole": "Pothole",
+            "garbage": "Garbage",
+            "drainage": "Drainage",
+            "streetlight": "Streetlight",
+            "water_leakage": "Water leakage",
+            "other": "Other",
+        }
+        for category_name, label in categories.items():
             category, _ = Category.objects.update_or_create(
                 name=category_name,
-                defaults={"default_due_hours": 72, "default_department": demo_department},
+                defaults={
+                    "label": label,
+                    "is_active": True,
+                    "default_due_hours": 72,
+                    "default_department": demo_department,
+                },
             )
             RoutingRule.objects.update_or_create(
                 category=category, ward=ward, version=1,
