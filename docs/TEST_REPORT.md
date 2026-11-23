@@ -46,7 +46,7 @@ These notes are based on the named `git show` diffs. No runtime verification is 
 - **Migration:** No.
 - **Risk:** Template errors or configured handler wiring could interfere with error responses. **Not confirmed:** production handler invocation or test results; the commit adds tests but they did not run.
 
-### V8 — `0020030` category-default routing
+### V8 — `0020030` category-default routing (reverted in f071b46)
 
 - **Files/behavior:** `apps/workflow/services.py`, `docs/SPEC.md`, `tests/test_console_workflow.py`; routing prefers an active `RoutingRule`, otherwise uses `Category.default_department` when configured.
 - **Migration:** No.
@@ -182,7 +182,7 @@ These notes are based on the named `git show` diffs. No runtime verification is 
 | Change | Implemented, not runtime-verified | Added four plain-language error templates and a test URLconf/test covering 400, 403, 404 and 500 handler rendering under `DEBUG=False`. |
 | Syntax check | Passed | Python `ast.parse` parsed `tests/error_urls.py` and `tests/test_error_pages.py`. |
 
-## 2026-11-23 — ROADMAP_V2 Phase 0.5 V8 category routing default
+## 2026-11-23 — ROADMAP_V2 Phase 0.5 V8 category routing default (reverted in f071b46)
 
 | Check | Result | Evidence |
 | --- | --- | --- |
@@ -429,3 +429,4 @@ On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `
 
 - Centre coordinates and authoritative ward boundary/source data remain unavailable. Test polygons are synthetic fixtures only; no real pilot ward, routing data, or location-specific availability is claimed.
 - GitHub CI, public deployment, backup/restore, and full acceptance remain unverified.
+
