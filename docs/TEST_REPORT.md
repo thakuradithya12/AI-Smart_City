@@ -484,6 +484,14 @@ The first run produced one failed **test expectation** because its shared fixtur
 - `python -m pytest tests/test_geography_admin.py tests/test_day2_reporting.py -k 'category or seed_demo' -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
 - Django tests and migration consistency are **not verified** because local Django and Docker are unavailable.
 
+### ROADMAP_V2 task 1.12 attempt (2026-11-23)
+
+- Added importer/model tests for valid Polygon and MultiPolygon, empty and self-intersecting geometry, invalid geometry type, proposed/existing active overlaps, dry-run, idempotence, and the admin routing-gap report.
+- D2 real pilot polygon/inside/outside evidence remains pending. Database exclusion constraint omitted pending verification of `btree_gist` support in the pinned PostGIS image.
+- `python -m py_compile apps/geography/models.py apps/geography/geometry.py apps/geography/admin.py apps/geography/management/__init__.py apps/geography/management/commands/__init__.py apps/geography/management/commands/load_wards.py tests/test_ward_import.py tests/test_geography_admin.py` — exit 0; `git diff --check` — exit 0.
+- `python -m pytest tests/test_ward_import.py tests/test_geography_admin.py -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` — exit 1 for the same missing module.
+- Django/PostGIS tests and migration consistency are **not verified** because local Django and Docker are unavailable.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit found no issues in 1,453 lines; pip-audit found no known vulnerabilities. `migrate --check` exited 0. Repeated `check --deploy` exited 0 with only the two documented HSTS warnings, and the four container-local HTTP smoke requests each returned 200. This rerun includes the prior workflow, authorization, evidence, and UI-route regression coverage.

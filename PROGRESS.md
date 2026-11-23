@@ -388,3 +388,10 @@
 - Kept `default_department` as a triage suggestion only; routing still follows the active ward/category rule and records overrides.
 - Added label, inactive-category, seed-label, and triage-suggestion tests. Python compilation and diff checks run before commit; Django tests/migration checks remain unavailable.
 
+## 2026-11-23 — ROADMAP_V2 task 1.12
+
+- Added `load_wards` with dry-run, source/effective date, idempotent name upsert, Polygon→MultiPolygon normalization, geometry and active-overlap checks; added model overlap validation and an admin routing-gap report.
+- Added tests for Polygon/MultiPolygon, empty/invalid/self-intersecting/overlapping input, dry-run/idempotence, model overlap validation, and routing-gap reporting.
+- D2 pilot coordinates and authoritative ward source remain pending; no pilot polygon or known-point test was invented. `btree_gist` could not be verified without Docker/PostGIS, so no database exclusion constraint was added.
+- Python compilation and diff checks run before commit. Django/PostGIS tests and migrations remain unavailable.
+

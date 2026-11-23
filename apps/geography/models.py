@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import F, Q
 from django.utils import timezone
 
+from apps.geography.geometry import has_area_overlap, validated_multi_polygon
+
 class Department(models.Model):
     name = models.CharField(max_length=120, unique=True)
 
@@ -37,8 +39,26 @@ class Ward(models.Model):
         ]
 
     def clean(self):
+        errors = {}
         if self.effective_to and self.effective_to < self.effective_from:
-            raise ValidationError({"effective_to": "End date must be on or after the start date."})
+            errors["effective_to"] = "End date must be on or after the start date."
+        if self.boundary is not None:
+            try:
+                self.boundary = validated_multi_polygon(self.boundary)
+            except ValidationError as exc:
+                errors["boundary"] = exc.messages
+        if errors:
+            raise ValidationError(errors)
+        if self.boundary is None:
+            return
+        # Ward records may overlap in time only when their polygon interiors do not overlap.
+        candidates = Ward.objects.filter(boundary__intersects=self.boundary).exclude(pk=self.pk)
+        if self.effective_to:
+            candidates = candidates.filter(effective_from__lte=self.effective_to)
+        candidates = candidates.filter(Q(effective_to__isnull=True) | Q(effective_to__gte=self.effective_from))
+        for ward in candidates.iterator():
+            if has_area_overlap(self.boundary, ward.boundary):
+                raise ValidationError({"boundary": f"Ward boundary overlaps active ward '{ward.name}'."})
 
     def __str__(self):
         return self.name

@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+  <div id="content-main">
+    <h1>{{ title }}</h1>
+    <form method="get">
+      <label for="id_ward">Ward</label>
+      <select id="id_ward" name="ward" required>
+        <option value="">Choose a ward</option>
+        {% for ward in wards %}<option value="{{ ward.pk }}"{% if selected_ward.pk == ward.pk %} selected{% endif %}>{{ ward.name }}</option>{% endfor %}
+      </select>
+      <button type="submit">Check routing coverage</button>
+    </form>
+    {% if selected_ward %}
+      <h2>{{ selected_ward.name }}</h2>
+      <ul>
+        {% for category in missing_categories %}<li>{{ category.display_label }} ({{ category.name }})</li>{% empty %}<li>Every active category has an active ward-specific or all-ward routing rule.</li>{% endfor %}
+      </ul>
+    {% endif %}
+    <p><a href="{% url 'admin:geography_category_changelist' %}">Back to categories</a></p>
+  </div>
+{% endblock %}

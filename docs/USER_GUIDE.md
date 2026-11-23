@@ -40,6 +40,8 @@ The sequence is submit → triage → route → acknowledge → assign → work 
 
 `seed_demo` creates demo-labelled departments, categories, a synthetic square ward centered in Hyderabad, Telangana, and role accounts with random passwords printed once. The location is fixed to keep the demo area in Telangana. This is not an authoritative ward boundary or pilot geography. Use only in a disposable local development database; never run demo seeding against production. The command requires `--force` when Django debug mode is off; do not use that flag to seed a production system.
 
+Load an owner-supplied, source-documented ward GeoJSON only after reviewing its provenance. First run `load_wards <file.geojson> --source "<authoritative source>" --effective-from <YYYY-MM-DD> --dry-run`; omit `--dry-run` only after the validation report is accepted. The command accepts a GeoJSON FeatureCollection with a `name` property per feature, validates WGS84 polygon geometry, rejects active interior overlaps, and updates by ward name. It does not provide default ward data.
+
 ## Privacy and support
 
 The app stores a citizen's phone number/name, complaint details, locations and evidence photos. Existing staff email identifiers remain only for unmigrated accounts. Do not submit secrets, identity documents or unrelated personal information. Evidence is private to users authorized for its complaint. No automatic complaint/photo deletion is configured: an owner-approved retention period and deletion process must be set before public deployment. Keep local `.env` values private and rotate any exposed credential.
