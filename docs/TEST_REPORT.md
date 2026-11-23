@@ -382,6 +382,13 @@ The actual photo dataset is not in the workspace. No model, split, evaluation me
 
 The owner-selected path was checked directly: the five category folders were empty and `manifest.csv` was absent, so `python ml/dataset_preflight.py` exited 1 as designed and reported that training/evaluation had not run. The bare rebuilt app image does not contain `.env`, `.git`, `ml/data`, `private_media`, `backups`, or the uploaded UI ZIP. The Compose image build context was 97.49 kB after exclusions.
 
+### ROADMAP_V2 task 2.2 attempt (2026-11-23)
+
+- Added a regression test for the shared base page not requesting Bootstrap and for the site token set/system font stack.
+- `python -m py_compile tests/test_error_pages.py` — exit 0; `git diff --check` — exit 0.
+- `python -m pytest tests/test_error_pages.py -k 'design_system' -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`).
+- Source inspection found no Bootstrap layout/control classes in live templates; removed its base stylesheet reference. Screenshot comparison at 360/768/1280 and browser verification remain not verified because Django and Docker are unavailable. CSS source size: 14,782 bytes.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran Compose checks for Phase 4 intake plus Phases 0–3: `No changes detected`; `54 passed in 60.80s`; Ruff passed; Bandit found no issues across 1,453 lines; pip-audit found no known vulnerabilities. The real-data preflight again exited 1 as designed: zero images in the five folders and no manifest. `migrate --check` and production `check --deploy` exited 0; only the documented HSTS warnings remain. Container-local landing, showcase, login and workspace requests all returned HTTP 200. This verifies the existing backend and intake preflight, not classifier quality or model behavior.

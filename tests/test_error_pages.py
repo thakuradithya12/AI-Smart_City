@@ -65,6 +65,18 @@ def test_runtime_templates_and_scripts_have_no_external_asset_cdn_references():
     )
 
 
+def test_base_uses_local_design_system_without_bootstrap(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert b"vendor/bootstrap/bootstrap.min.css" not in response.content
+    project_root = Path(__file__).resolve().parents[1]
+    stylesheet = project_root / "static" / "css" / "site.css"
+    css = stylesheet.read_text(encoding="utf-8")
+    for token in ("--color-evergreen:", "--space-4:", "--radius-card:", "--type-body:"):
+        assert token in css
+    assert "system-ui" in css
+
+
 @pytest.mark.django_db
 @override_settings(DEBUG=False)
 def test_ui_showcase_is_not_routed_in_production(client):

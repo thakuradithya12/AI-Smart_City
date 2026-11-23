@@ -407,3 +407,9 @@
 - Added landing checks for real actions, public updates, no external origins/assets, and `/ui-showcase/` 404 under production settings. Updated stale landing assertions to the current AI Smart City brand and actual protected tracking route.
 - Python compilation and diff checks run before commit. Django template/browser tests remain unavailable in this workspace.
 
+### ROADMAP_V2 task 2.2 attempt (2026-11-23)
+
+- Centralized palette, semantic state colors, system typography, spacing, radius and type tokens in `static/css/site.css`; documented the system in `docs/DESIGN_SYSTEM.md`.
+- Removed the unused Bootstrap stylesheet from the shared base template after checking live templates for Bootstrap layout/control classes. Kept vendor files intact. Added regression coverage for no Bootstrap request and expected tokens.
+- CSS source is 14,782 bytes. Screenshot comparison at 360/768/1280 is not verified: Django and Docker are unavailable.
+- `python -m py_compile tests/test_error_pages.py` and `git diff --check` — see task entry in `docs/TEST_REPORT.md`.

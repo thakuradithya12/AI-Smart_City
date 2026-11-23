@@ -1,23 +1,53 @@
 :root {
   color-scheme: light;
-  --navy: #183b32;
-  --blue: #b75d3b;
-  --blue-soft: #f3e4dc;
-  --ink: #182620;
-  --muted: #59665e;
-  --canvas: #f4f2ea;
-  --surface: #fffdf8;
-  --surface-low: #f9f7f0;
-  --surface-mid: #eceae1;
-  --line: #dfe4da;
-  --line-strong: #c9d4cc;
-  --green: #236d4a;
-  --green-soft: #e1efe6;
-  --amber: #754817;
-  --amber-soft: #f8ebd5;
-  --red: #a84437;
-  --red-soft: #f7e1dd;
-  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  /* Named design tokens keep the site's existing class rules on one palette. */
+  --color-evergreen: #183b32;
+  --color-terracotta: #b75d3b;
+  --color-terracotta-soft: #f3e4dc;
+  --color-ink: #182620;
+  --color-muted: #59665e;
+  --color-canvas: #f4f2ea;
+  --color-surface: #fffdf8;
+  --color-surface-low: #f9f7f0;
+  --color-surface-mid: #eceae1;
+  --color-line: #dfe4da;
+  --color-line-strong: #c9d4cc;
+  --color-success: #236d4a;
+  --color-success-soft: #e1efe6;
+  --color-warning: #754817;
+  --color-warning-soft: #f8ebd5;
+  --color-error: #a84437;
+  --color-error-soft: #f7e1dd;
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --radius-control: 7px;
+  --radius-card: 10px;
+  --radius-panel: 12px;
+  --type-body: 14px;
+  --type-small: 13px;
+  --type-label: 11px;
+  --navy: var(--color-evergreen);
+  --blue: var(--color-terracotta);
+  --blue-soft: var(--color-terracotta-soft);
+  --ink: var(--color-ink);
+  --muted: var(--color-muted);
+  --canvas: var(--color-canvas);
+  --surface: var(--color-surface);
+  --surface-low: var(--color-surface-low);
+  --surface-mid: var(--color-surface-mid);
+  --line: var(--color-line);
+  --line-strong: var(--color-line-strong);
+  --green: var(--color-success);
+  --green-soft: var(--color-success-soft);
+  --amber: var(--color-warning);
+  --amber-soft: var(--color-warning-soft);
+  --red: var(--color-error);
+  --red-soft: var(--color-error-soft);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   background: var(--canvas);
   color: var(--ink);
   font-synthesis: none;
@@ -25,7 +55,7 @@
 }
 
 * { box-sizing: border-box; }
-body { position: relative; isolation: isolate; margin: 0; min-width: 320px; background: var(--canvas); font-size: 14px; line-height: 1.5; }
+body { position: relative; isolation: isolate; margin: 0; min-width: 320px; background: var(--canvas); font-size: var(--type-body); line-height: 1.5; }
 body::before { position: fixed; z-index: 0; inset: -2rem; background: url("/static/img/civic-street-lines.svg") no-repeat right 46% / min(960px, 84vw) auto; opacity: .34; transform: translate3d(var(--city-shift-x, 0), var(--city-shift-y, 0), 0); transition: transform 800ms cubic-bezier(.2, .65, .3, 1); animation: city-route-breathe 16s ease-in-out infinite alternate; content: ""; pointer-events: none; }
 body > * { position: relative; z-index: 1; }
 @keyframes city-route-breathe { from { opacity: .22; } to { opacity: .36; } }
