@@ -437,6 +437,11 @@ The first run produced one failed **test expectation** because its shared fixtur
 - Python compilation and `git diff --check` are required before commit; Django test and migration execution are unavailable because Django is missing locally and Docker Desktop's engine pipe is unavailable.
 - Functional behavior remains **not verified** in this workspace; no CI result is available.
 
+### ROADMAP_V2 task 1.3 (2026-11-23)
+
+- Blocked on the owner decision recorded as D-V10 in `docs/DECISIONS_NEEDED.md` (department official work-done authority).
+- Existing policy remains field-worker-only; no code or test was changed. Runtime matrix tests cannot be run here because Django and the Docker engine are unavailable.
+
 ### Independent integrated rerun
 
 On **2026-11-21**, reran the Compose checks on the resulting Phase 3 worktree: `No changes detected`; `49 passed in 62.49s`; Ruff passed; Bandit found no issues in 1,453 lines; pip-audit found no known vulnerabilities. `migrate --check` exited 0. Repeated `check --deploy` exited 0 with only the two documented HSTS warnings, and the four container-local HTTP smoke requests each returned 200. This rerun includes the prior workflow, authorization, evidence, and UI-route regression coverage.

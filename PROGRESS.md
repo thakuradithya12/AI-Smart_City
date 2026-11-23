@@ -347,3 +347,9 @@
 - Added tests for expiry, idempotence, no early expiry, audit/status events, and the queue marker.
 - `py_compile` and `git diff --check` are run before commit. Django tests and migration checks remain unavailable in this workspace; see `docs/TEST_REPORT.md`.
 
+## 2026-11-23 — ROADMAP_V2 task 1.3
+
+- Owner decision D-V10 is pending: whether department officials may mark work done. Kept the existing field-worker-only transition/view/matrix consistent and recorded the question in `docs/DECISIONS_NEEDED.md`.
+- No implementation change made while the decision is pending; proceeding with independent roadmap tasks as requested.
+- `git diff --check` run before commit. Django migration/test commands remain unavailable as recorded in `docs/TEST_REPORT.md`.
+
