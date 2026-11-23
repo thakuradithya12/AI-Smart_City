@@ -50,6 +50,10 @@
 - `python -m py_compile apps/complaints/models.py apps/complaints/migrations/0006_complaint_sla_fields.py apps/complaints/management/commands/check_sla.py apps/workflow/services.py tests/test_sla.py` — exit 0.
 - `python -m pytest tests/test_sla.py tests/test_notifications.py tests/test_day4_workflow.py -q` — exit 1 during collection (`ModuleNotFoundError: No module named 'django'`). `python manage.py makemigrations --check --dry-run` is likewise unavailable for that reason. PostgreSQL/Docker integration checks were not run.
 
+## 2026-11-23 — ROADMAP_V2 task 3.4 decision record
+
+- No reminder code was added because the roadmap requires an owner-selected delay and D8 did not set one. `docs/DECISIONS_NEEDED.md` records the exact question and a 3-day, one-reminder recommendation.
+
 ## Static risk notes for unverified Phase 0 commits
 
 These notes are based on the named `git show` diffs. No runtime verification is implied. Any item marked **not confirmed** needs a later executable test or owner/environment evidence.

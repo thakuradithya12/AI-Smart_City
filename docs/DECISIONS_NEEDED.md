@@ -34,3 +34,4 @@ The workflow's `actions/checkout@v6` tag and the existing `actions/setup-python@
 
 
 `Category.default_department` is retained as a triage-form suggestion only; it does not replace the active ward/category routing rule. The reviewer must submit the route, and a selected department different from that active rule requires a reason. The earlier fallback that routed with `rule_version=0` was reverted because 0 is not a real rule version and cannot appear in the audit trail.
+| D8-R | 3.4 citizen reminder delay | How many days after a field worker claims work complete should the system send the first citizen reminder to confirm or dispute? Recommended default: 3 days, with one reminder per pending resolution and no repeat/auto-close. | Blocks 3.4 reminder scheduling only; other work continues. |

@@ -452,6 +452,10 @@
 
 - Added reviewer-set priority, an SLA breach timestamp, pause/resume accounting around information requests, and an idempotent `check_sla` command. Breaches are audited and notify supervisors in the complaint's department; no status transition or escalation is performed.
 - Tests cover pause/resume, priority authorization/audit, breach idempotency, and paused/terminal exclusions. Runtime tests and migration checks remain unverified because Django is unavailable.
+
+### ROADMAP_V2 task 3.4 decision record (2026-11-23)
+
+- Recorded the missing reminder interval question and recommended default (3 days, once per pending resolution). Reminder scheduling is deferred until owner selection; AI tasks continue independently.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.
