@@ -30,9 +30,15 @@ TRANSITIONS = {
     ("resolved_pending_verification", "verified_closed"): {"supervisor", "citizen"},
     ("resolved_pending_verification", "reopened"): {"supervisor", "citizen"},
     ("reopened", "assigned"): {"supervisor"},
-    ("submitted", "cancelled"): {"citizen"},
-    ("in_triage", "cancelled"): {"citizen"},
-    ("routed", "cancelled"): {"citizen"},
+    ("submitted", "cancelled"): {"citizen", "admin"},
+    ("in_triage", "cancelled"): {"citizen", "admin"},
+    ("info_requested", "cancelled"): {"admin"},
+    ("routed", "cancelled"): {"citizen", "admin"},
+    ("acknowledged", "cancelled"): {"admin"},
+    ("assigned", "cancelled"): {"admin"},
+    ("in_progress", "cancelled"): {"admin"},
+    ("resolved_pending_verification", "cancelled"): {"admin"},
+    ("reopened", "cancelled"): {"admin"},
 }
 
 
@@ -170,11 +176,11 @@ def reassign_complaint(complaint, actor, assignee, reason):
     AuditEvent.objects.create(
         actor=actor,
         role=actor.role,
-        action="complaint_reassigned",
+        action="admin_override" if actor.role == "admin" else "complaint_reassigned",
         object_type="Complaint",
         object_id=str(locked.pk),
         before={"assignee_id": previous_assignee_id},
-        after={"assignee_id": assignee.pk},
+        after={"assignee_id": assignee.pk, **({"operation": "complaint_reassigned"} if actor.role == "admin" else {})},
         reason=reason,
     )
     return locked

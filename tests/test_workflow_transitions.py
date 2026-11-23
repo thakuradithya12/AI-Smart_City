@@ -145,6 +145,24 @@ def test_transition_helper_scopes_role_actions_to_visible_complaints(workflow_se
 
 
 @pytest.mark.django_db
+def test_admin_can_cancel_stuck_active_complaint_with_audited_reason(workflow_setup):
+    setup = workflow_setup
+    complaint = Complaint.objects.create(
+        public_id="ADMIN-CANCEL", citizen=setup["users"][User.Role.CITIZEN],
+        category=setup["category"], location=Point(0, 0, srid=4326), ward=setup["ward"],
+        department=setup["department"], status=Complaint.Status.IN_PROGRESS,
+        assignee=setup["users"][User.Role.FIELD_WORKER], consent_at="2026-01-01T00:00:00Z",
+    )
+    admin = setup["users"][User.Role.ADMIN]
+    transition(complaint, Complaint.Status.CANCELLED, actor=admin, reason="Work is stuck pending review")
+    complaint.refresh_from_db()
+    assert complaint.status == Complaint.Status.CANCELLED
+    assert complaint.status_events.get(to_status=Complaint.Status.CANCELLED).actor == admin
+    audit = AuditEvent.objects.get(action="admin_override", object_id=str(complaint.pk))
+    assert audit.reason == "Work is stuck pending review"
+
+
+@pytest.mark.django_db
 def test_inactive_actor_cannot_transition_visible_complaint(workflow_setup):
     citizen = workflow_setup["users"][User.Role.CITIZEN]
     complaint = Complaint.objects.create(

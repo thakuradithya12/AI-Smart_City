@@ -58,6 +58,20 @@ def test_triage_queue_scopes_role_and_hides_citizen_email(client, console_setup)
 
 
 @pytest.mark.django_db
+def test_admin_can_cancel_a_stuck_complaint_through_the_audited_console(client, console_setup):
+    setup = console_setup
+    complaint = make_complaint(setup, status=Complaint.Status.ACKNOWLEDGED, department=setup["department_a"])
+    client.force_login(setup["admin"])
+    response = client.post(reverse("admin_cancel_complaint", args=[complaint.pk]), {
+        "reason": "Work is stuck pending review",
+    })
+    assert response.status_code == 302
+    complaint.refresh_from_db()
+    assert complaint.status == Complaint.Status.CANCELLED
+    assert AuditEvent.objects.get(action="admin_override", object_id=str(complaint.pk)).reason == "Work is stuck pending review"
+
+
+@pytest.mark.django_db
 def test_department_inbox_worker_query_count_does_not_grow_with_complaints(client, console_setup):
     setup = console_setup
     client.force_login(setup["official"])

@@ -184,7 +184,10 @@ def test_authorized_staff_can_reassign_without_changing_status(day4_setup, role,
     assert complaint.status == status
     assert complaint.assignee == replacement
     assert complaint.status_events.count() == before_events
-    audit = AuditEvent.objects.get(action="complaint_reassigned", object_id=str(complaint.pk))
+    audit = AuditEvent.objects.get(
+        action="admin_override" if role == User.Role.ADMIN else "complaint_reassigned",
+        object_id=str(complaint.pk),
+    )
     assert audit.before == {"assignee_id": setup["worker"].pk}
     assert audit.after == {"assignee_id": replacement.pk}
     assert audit.reason == "Worker unavailable for this task"

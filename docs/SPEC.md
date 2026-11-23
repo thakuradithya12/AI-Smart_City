@@ -11,7 +11,7 @@ Citizens submit civic reports with a category, optional description, photo, and 
 - **Department official:** act on reports routed to their department; acknowledge, transfer with a reason, and assign a worker in the same department.
 - **Field worker:** view assigned work only; add before/after evidence and a work note; claim work complete. Department officials cannot submit the work-done claim.
 - **Supervisor:** manage their department's work and workers; verify, dispute/reopen, assign or reassign.
-- **Admin:** manage configuration and accounts. Workflow status changes remain subject to the central transition service and audited reasons.
+- **Admin:** manage configuration and accounts; reassign active field work; route or reject in-triage complaints; cancel a stuck complaint in any active state with a reason. These workflow overrides pass through the central transition/service layer and are recorded as `admin_override` audit events.
 
 ## Workflow rules
 

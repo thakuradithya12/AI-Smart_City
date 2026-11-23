@@ -287,6 +287,26 @@ def citizen_cancel(request, pk):
 
 
 @login_required
+def admin_cancel_complaint(request, pk):
+    complaint = get_object_or_404(Complaint.objects.visible_to(request.user), pk=pk)
+    if (request.method != "POST" or request.user.role != User.Role.ADMIN
+            or not can_transition(request.user, complaint, Complaint.Status.CANCELLED)):
+        raise Http404
+    form = ReasonForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, "Enter an admin cancellation reason of 5 to 500 characters.")
+        return redirect("complaint_detail", pk=pk)
+    transition(
+        complaint,
+        Complaint.Status.CANCELLED,
+        actor=request.user,
+        reason=form.cleaned_data["reason"].strip(),
+    )
+    messages.success(request, "Complaint cancelled with an audited admin override.")
+    return redirect("complaint_detail", pk=pk)
+
+
+@login_required
 def request_information(request, pk):
     complaint = get_object_or_404(Complaint.objects.visible_to(request.user), pk=pk)
     if request.method != "POST" or not _triage_user(request.user) or not can_transition(request.user, complaint, Complaint.Status.INFO_REQUESTED):

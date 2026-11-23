@@ -353,3 +353,9 @@
 - No implementation change made while the decision is pending; proceeding with independent roadmap tasks as requested.
 - `git diff --check` run before commit. Django migration/test commands remain unavailable as recorded in `docs/TEST_REPORT.md`.
 
+## 2026-11-23 — ROADMAP_V2 task 1.4
+
+- Defined admin recovery actions: reassign active work, route/reject triage items, and cancel any non-terminal complaint with a reason. Admin cancellation is available on complaint detail; audit entries are marked `admin_override`.
+- Added matrix and endpoint tests; documented the capability in `SPEC.md` and `DECISIONS.md`.
+- Python compilation and diff checks run before commit. Django tests and migration checks remain unverified because Django/Docker are unavailable.
+

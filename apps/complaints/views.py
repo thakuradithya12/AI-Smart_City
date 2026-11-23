@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.cache import cache
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -139,7 +139,8 @@ def complaint_detail(request, pk):
     timeline.extend(
         {"kind": "assignment", "created_at": event.created_at}
         for event in AuditEvent.objects.filter(
-            action="complaint_reassigned", object_type="Complaint", object_id=str(complaint.pk)
+            Q(action="complaint_reassigned") | Q(action="admin_override", after__operation="complaint_reassigned"),
+            object_type="Complaint", object_id=str(complaint.pk),
         )
     )
     timeline.sort(key=lambda item: item["created_at"])

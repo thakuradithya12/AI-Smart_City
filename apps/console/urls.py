@@ -65,6 +65,7 @@ urlpatterns = [
     path("complaints/<int:pk>/verify/", workflow_views.verify_resolution, name="verify_resolution"),
     path("complaints/<int:pk>/dispute/", workflow_views.dispute_resolution, name="dispute_resolution"),
     path("complaints/<int:pk>/cancel/", workflow_views.citizen_cancel, name="citizen_cancel"),
+    path("complaints/<int:pk>/admin-cancel/", workflow_views.admin_cancel_complaint, name="admin_cancel_complaint"),
     path("complaints/<int:pk>/request-information/", workflow_views.request_information, name="request_information"),
     path("complaints/<int:pk>/reply/", workflow_views.citizen_reply, name="citizen_reply"),
     path("complaints/<int:pk>/reassign/", workflow_views.supervisor_reassign, name="supervisor_reassign"),
