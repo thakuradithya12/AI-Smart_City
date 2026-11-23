@@ -25,7 +25,10 @@ class CitizenRegistrationForm(forms.ModelForm):
         fields = ("phone_number", "name")
 
     def clean_phone_number(self):
-        phone_number = normalize_phone_number(self.cleaned_data["phone_number"])
+        try:
+            phone_number = normalize_phone_number(self.cleaned_data["phone_number"])
+        except ValidationError as exc:
+            raise ValidationError("Enter a valid Indian mobile number.") from exc
         if User.objects.filter(phone_number=phone_number).exists():
             raise ValidationError("An account already uses this phone number. Sign in or use another number.")
         return phone_number
