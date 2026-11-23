@@ -16,12 +16,12 @@
 <section class="panel report-panel">
   <p class="emergency"><strong>Emergency notice:</strong> This platform is not an emergency service. For immediate danger, contact local emergency services.</p>
 
-  <form method="post" enctype="multipart/form-data" id="report-form">
+  <form method="post" enctype="multipart/form-data" id="report-form" data-max-file-bytes="8388608">
     {% csrf_token %}
     {% if form.errors %}
     <div class="form-error-summary" id="report-error-summary" role="alert" aria-live="assertive" tabindex="-1">
       <h2>Review the report details</h2>
-      <p>Correct the following fields, then submit the report again.</p>
+      <p>Correct the following fields, then submit the report again. Your text and location choices are kept; browsers require you to choose photos again.</p>
       <ul>
         {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
         {% for field in form %}
@@ -31,40 +31,68 @@
     </div>
     {% endif %}
 
-    <label for="id_category">Issue category</label>
-    {{ form.category }}{{ form.category.errors }}
+    <ol class="report-progress" aria-label="Report steps">
+      <li data-step-label="0">Category</li><li data-step-label="1">Photos</li><li data-step-label="2">Location</li>
+      <li data-step-label="3">Details</li><li data-step-label="4">Consent</li><li data-step-label="5">Review</li>
+    </ol>
 
-    <label for="id_description">Describe the issue <span class="subtle">(optional)</span></label>
-    {{ form.description }}{{ form.description.errors }}
+    <section class="report-step" data-step="0" aria-labelledby="step-category-title">
+      <h2 id="step-category-title">1. Choose a category</h2>
+      <label for="id_category">Issue category</label>
+      {{ form.category }}{{ form.category.errors }}
+    </section>
 
-    <label for="id_photo">Photo evidence <span class="subtle">(JPEG, PNG or WebP · up to {{ max_photos }} photos · 8 MB each)</span></label>
-    {{ form.photo }}{{ form.photo.errors }}
+    <section class="report-step" data-step="1" aria-labelledby="step-photo-title">
+      <h2 id="step-photo-title">2. Add photos</h2>
+      <label for="id_photo">Photo evidence <span class="subtle">(JPEG, PNG or WebP · up to {{ max_photos }} photos · 8 MB each)</span></label>
+      {{ form.photo }}{{ form.photo.errors }}
+      <p class="subtle">A photo helps the team understand the issue. Avoid including faces or private documents.</p>
+      <ul id="photo-preview" class="photo-preview" aria-live="polite"></ul>
+      <p id="photo-error" class="form-error" role="alert" hidden></p>
+    </section>
 
-    <fieldset>
-      <legend>Confirm the location</legend>
-      <p class="subtle">Move the pin to the issue location. Your pin determines the ward used for routing. If the map does not load, enter coordinates below.</p>
+    <section class="report-step" data-step="2" aria-labelledby="step-location-title">
+      <h2 id="step-location-title">3. Confirm the location</h2>
+      <p class="subtle">Move the pin to the issue location. Your confirmed pin determines the ward used for routing. If the map does not load, enter coordinates below.</p>
       <div id="report-map" aria-label="Map for selecting a report location"></div>
       <button type="button" id="locate-button" class="button-secondary">Use my location</button>
       <p id="location-status" class="subtle" role="status" aria-live="polite">Choose a point on the map or enter coordinates manually.</p>
       <div class="form-grid">
-        <div>
-          <label for="id_latitude">Latitude</label>
-          {{ form.latitude }}{{ form.latitude.errors }}
-        </div>
-        <div>
-          <label for="id_longitude">Longitude</label>
-          {{ form.longitude }}{{ form.longitude.errors }}
-        </div>
+        <div><label for="id_latitude">Latitude</label>{{ form.latitude }}{{ form.latitude.errors }}</div>
+        <div><label for="id_longitude">Longitude</label>{{ form.longitude }}{{ form.longitude.errors }}</div>
       </div>
       <label for="id_gps_accuracy_m">GPS accuracy in metres <span class="subtle">(optional)</span></label>
       {{ form.gps_accuracy_m }}{{ form.gps_accuracy_m.errors }}
+    </section>
 
+    <section class="report-step" data-step="3" aria-labelledby="step-details-title">
+      <h2 id="step-details-title">4. Describe the issue</h2>
+      <label for="id_description">What happened? <span class="subtle">(optional)</span></label>
+      {{ form.description }}{{ form.description.errors }}
+      <label for="id_landmark">Nearby landmark or address <span class="subtle">(optional)</span></label>
+      {{ form.landmark }}{{ form.landmark.errors }}
+    </section>
+
+    <section class="report-step" data-step="4" aria-labelledby="step-consent-title">
+      <h2 id="step-consent-title">5. Privacy and consent</h2>
       <label class="check">{{ form.consent }} <span>I have read the privacy notice. We store your name, phone number and report details to process this complaint.</span></label>
       {{ form.consent.errors }}
       <label class="check">{{ form.pin_confirmed }} <span>{{ form.pin_confirmed.label }}</span></label>
       {{ form.pin_confirmed.errors }}
-    </fieldset>
-    <button type="submit">Submit complaint</button>
+    </section>
+
+    <section class="report-step" data-step="5" aria-labelledby="step-review-title">
+      <h2 id="step-review-title">6. Review before sending</h2>
+      <p>Check your category, photos, location, details and consent. The team will review your report before routing it.</p>
+      <div id="report-review" class="notice" aria-live="polite"></div>
+      <button type="submit" id="report-submit">Submit complaint</button>
+    </section>
+
+    <div class="report-controls" id="report-controls" hidden>
+      <button type="button" class="button-secondary" id="report-back">Back</button>
+      <button type="button" id="report-next">Continue</button>
+    </div>
+    <p class="subtle" id="report-submit-status" role="status" aria-live="polite"></p>
   </form>
 </section>
 {% endblock %}
@@ -76,4 +104,5 @@
 {% block extra_scripts %}
 <script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
 <script src="{% static 'js/report-map.js' %}"></script>
+<script src="{% static 'js/report-flow.js' %}"></script>
 {% endblock %}

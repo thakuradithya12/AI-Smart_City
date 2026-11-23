@@ -417,3 +417,9 @@
 
 - Map implementation is held at the D6 owner choice (OSM demo traffic or keyed provider); recorded the dependency in `docs/DECISIONS_NEEDED.md` and proceeded to independent work as instructed.
 - No map code or tests changed. `git diff --check` — see task entry in `docs/TEST_REPORT.md`.
+
+### ROADMAP_V2 task 2.4 (2026-11-23)
+
+- Reworked reporting into six progressively enhanced steps; added multiple-photo preview and client size feedback, review summary, double-submit guard, bounded optional landmark, and documented that files must be reselected after server errors.
+- Added form/render, landmark persistence and over-limit validation tests; Android/iPhone-class manual run remains not verified because no physical device was available.
+- Python compilation, JS syntax, Django tests, and diff-check results are recorded in `docs/TEST_REPORT.md`.

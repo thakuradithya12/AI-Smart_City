@@ -1,5 +1,13 @@
 # Test report
 
+## 2026-11-23 — ROADMAP_V2 task 2.4
+
+- Added report flow tests for rendered wizard/photo controls, optional landmark persistence, the 160-character server-side limit, and preservation of description/landmark/coordinates after ward validation errors.
+- `python -m py_compile apps/complaints/forms.py apps/complaints/views.py apps/complaints/models.py apps/complaints/migrations/0005_complaint_landmark.py tests/test_day2_reporting.py` — exit 0.
+- `node --check static/js/report-flow.js` and `node --check static/js/report-map.js` — exit 0 for each.
+- `python -m pytest tests/test_day2_reporting.py -k 'guided_flow or saves_optional_landmark or landmark_over_limit or photo_input' -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`); Django behavior is not verified.
+- `git diff --check` — exit 0. Manual run on Android and iPhone-class hardware remains not verified; no physical devices were available.
+
 ## Static risk notes for unverified Phase 0 commits
 
 These notes are based on the named `git show` diffs. No runtime verification is implied. Any item marked **not confirmed** needs a later executable test or owner/environment evidence.

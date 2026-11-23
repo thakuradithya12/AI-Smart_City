@@ -101,6 +101,7 @@ class MultipleImageField(forms.ImageField):
 
 class ReportForm(forms.Form):
     category = forms.ModelChoiceField(queryset=Category.objects.filter(is_active=True))
+    landmark = forms.CharField(required=False, max_length=160)
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={"rows": 4}))
     photo = MultipleImageField(
         max_files=3,

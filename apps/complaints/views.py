@@ -77,7 +77,7 @@ def report(request):
                     category = form.cleaned_data["category"]
                     complaint = Complaint.objects.create(
                         citizen=request.user, category=category,
-                        description=form.cleaned_data["description"], location=point,
+                        description=form.cleaned_data["description"], landmark=form.cleaned_data["landmark"], location=point,
                         gps_accuracy_m=form.cleaned_data["gps_accuracy_m"],
                         ward=ward, due_at=timezone.now() + timedelta(hours=category.default_due_hours),
                         consent_at=timezone.now(),

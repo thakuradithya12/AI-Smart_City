@@ -27,6 +27,9 @@
     marker = L.marker(start, { draggable: true }).addTo(map);
     map.on("click", (event) => applyPoint(event.latlng));
     marker.on("dragend", () => applyPoint(marker.getLatLng()));
+    window.addEventListener("report-step-shown", (event) => {
+      if (event.detail?.step === 2) map.invalidateSize();
+    });
   } else {
     status.textContent = "Interactive map is unavailable. Enter coordinates manually or use your location.";
   }

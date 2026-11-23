@@ -157,6 +157,80 @@ def test_report_photo_input_has_mobile_file_hints(client, citizen):
 
 
 @pytest.mark.django_db
+def test_report_page_has_guided_flow_controls_and_photo_preview(client, citizen):
+    client.force_login(citizen)
+
+    response = client.get(reverse("report"))
+
+    assert response.status_code == 200
+    assert b"report-flow.js" in response.content
+    assert b"photo-preview" in response.content
+    assert b"report-review" in response.content
+    assert b"Nearby landmark or address" in response.content
+    assert b"not an emergency service" in response.content
+
+
+@pytest.mark.django_db
+def test_report_saves_optional_landmark(client, citizen, ward, category):
+    client.force_login(citizen)
+    response = client.post(reverse("report"), {
+        "category": category.pk,
+        "description": "Broken road surface",
+        "landmark": "Near the public library",
+        "latitude": "0",
+        "longitude": "0",
+        "consent": "on",
+        "pin_confirmed": "on",
+        "photo": SimpleUploadedFile("landmark.jpg", make_image(), content_type="image/jpeg"),
+    })
+
+    assert response.status_code == 302
+    complaint = Complaint.objects.get(citizen=citizen)
+    assert complaint.landmark == "Near the public library"
+    evidence = complaint.evidence.get()
+    delete_private_files((evidence.original_path, evidence.display_path, evidence.thumbnail_path))
+
+
+@pytest.mark.django_db
+def test_report_rejects_landmark_over_limit(client, citizen, ward, category):
+    client.force_login(citizen)
+    response = client.post(reverse("report"), {
+        "category": category.pk,
+        "landmark": "x" * 161,
+        "latitude": "0",
+        "longitude": "0",
+        "consent": "on",
+        "pin_confirmed": "on",
+        "photo": SimpleUploadedFile("landmark.jpg", make_image(), content_type="image/jpeg"),
+    })
+
+    assert response.status_code == 200
+    assert "Ensure this value has at most 160 characters" in response.content.decode()
+    assert not Complaint.objects.exists()
+
+
+@pytest.mark.django_db
+def test_report_validation_error_preserves_text_and_location(client, citizen, category):
+    client.force_login(citizen)
+    response = client.post(reverse("report"), {
+        "category": category.pk,
+        "description": "Broken drain cover",
+        "landmark": "Near the bus stop",
+        "latitude": "4",
+        "longitude": "4",
+        "consent": "on",
+        "pin_confirmed": "on",
+        "photo": SimpleUploadedFile("outside.jpg", make_image(), content_type="image/jpeg"),
+    })
+
+    assert response.status_code == 200
+    assert b'value="4"' in response.content
+    assert b"Broken drain cover" in response.content
+    assert b"Near the bus stop" in response.content
+    assert not Complaint.objects.exists()
+
+
+@pytest.mark.django_db
 def test_report_category_choices_exclude_inactive_categories(category):
     inactive = Category.objects.create(name="retired-category", is_active=False)
     form = ReportForm()
