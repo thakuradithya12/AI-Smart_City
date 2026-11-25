@@ -1,5 +1,12 @@
+from datetime import timedelta
+
+from django.conf import settings
+from django.db import transaction
+from django.utils import timezone
+
 from apps.notifications.models import Notification
 from apps.accounts.models import User
+from apps.complaints.models import Complaint, StatusEvent
 
 
 TRANSITION_EVENTS = {
@@ -74,3 +81,41 @@ def notify_overdue_supervisors(complaint):
             is_active=True,
         ).order_by("pk")
     ]
+
+
+def enqueue_citizen_reminders(*, now=None):
+    """Queue one in-app/email reminder per work-completion status event after the delay."""
+    current_time = now or timezone.now()
+    cutoff = current_time - timedelta(days=settings.CITIZEN_REMINDER_DAYS)
+    candidates = Complaint.objects.filter(
+        status=Complaint.Status.RESOLVED_PENDING_VERIFICATION,
+        resolution__claimed_at__lte=cutoff,
+    ).order_by("pk").values_list("pk", flat=True)
+    created = 0
+    for complaint_id in candidates.iterator(chunk_size=100):
+        with transaction.atomic():
+            # System maintenance uses row locks so concurrent scheduler instances cannot enqueue duplicates.
+            complaint = Complaint.objects.select_for_update(skip_locked=True).filter(
+                pk=complaint_id,
+                status=Complaint.Status.RESOLVED_PENDING_VERIFICATION,
+                resolution__claimed_at__lte=cutoff,
+            ).select_related("resolution", "citizen").first()
+            if complaint is None:
+                continue
+            claim_event = StatusEvent.objects.filter(
+                complaint=complaint,
+                to_status=Complaint.Status.RESOLVED_PENDING_VERIFICATION,
+            ).order_by("-created_at", "-pk").first()
+            if claim_event is None:
+                continue
+            _notification, was_created = Notification.objects.get_or_create(
+                event_key=f"reminder:{claim_event.pk}:{complaint.citizen_id}:{Notification.Event.CITIZEN_REMINDER}",
+                defaults={
+                    "recipient": complaint.citizen,
+                    "complaint": complaint,
+                    "event": Notification.Event.CITIZEN_REMINDER,
+                    "status": Complaint.Status.RESOLVED_PENDING_VERIFICATION,
+                },
+            )
+            created += int(was_created)
+    return created

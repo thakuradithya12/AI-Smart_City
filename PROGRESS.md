@@ -1,5 +1,11 @@
 # Progress
 
+## 2026-11-25 — E.3 citizen verification reminder
+
+- Added the D8-R three-day reminder service and management command, scheduled hourly. It creates one in-app/email notification per work-completion status event and never changes complaint or resolution state.
+- Added a test for the pre-deadline boundary, one-time enqueue, and no automatic closure; recorded D8-R.
+- `python -m py_compile` and `git diff --check` passed. Runtime test is not verified because Django is unavailable locally and Docker cannot connect to its engine.
+
 ## 2026-11-25 — E.2 D14 rolling session test
 
 - Kept the already configured 12-hour rolling session policy and added a database-backed test that advances the request clock, checks session-store expiry moves forward, and checks the refreshed cookie max-age.

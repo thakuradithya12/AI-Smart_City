@@ -14,6 +14,7 @@ SCHEDULER_LOCK_ID = 0x4153435343484544
 JOBS = {
     "expire_info_requests": 60,
     "send_notifications": 30,
+    "send_citizen_reminders": 3600,
     "check_sla": 300,
     "purge_expired": 3600,
 }

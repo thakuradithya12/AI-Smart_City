@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — E.3 citizen verification reminder
+
+- Implemented a one-time citizen reminder three days after each work-completion claim, queued through the scheduled command and reusing the email/in-app delivery path. The service only writes `Notification`; status and resolution remain unchanged.
+- Added a boundary/idempotency/no-auto-close test. `python -m py_compile` and `git diff --check` pass; runtime pytest is not verified because Django is not installed and Docker is unavailable.
+
 ## 2026-11-25 — E.2 D14 rolling session test
 
 - Added a test that checks a later authenticated request refreshes the stored 12-hour expiry and cookie max-age. The settings already matched D14 (`43200`, `SESSION_SAVE_EVERY_REQUEST=True`).
