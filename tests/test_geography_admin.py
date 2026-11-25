@@ -32,7 +32,7 @@ def test_category_display_label_uses_owner_label_without_changing_slug():
 @pytest.mark.django_db
 def test_admin_routing_gap_report_lists_only_categories_without_active_rule(client):
     department = Department.objects.create(name="Report Department")
-    category_missing = Category.objects.create(name="missing-route", label="Missing route")
+    Category.objects.create(name="missing-route", label="Missing route")
     category_covered = Category.objects.create(name="covered-route", label="Covered route")
     polygon = Polygon(((0, 0), (1, 0), (1, 1), (0, 1), (0, 0)))
     ward = Ward.objects.create(name="Routing report ward", boundary=MultiPolygon(polygon, srid=4326),

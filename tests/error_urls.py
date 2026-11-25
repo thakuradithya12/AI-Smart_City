@@ -1,5 +1,4 @@
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
-from django.http import HttpResponse
 from django.urls import path
 from django.views import defaults
 

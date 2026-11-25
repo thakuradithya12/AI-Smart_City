@@ -1,11 +1,9 @@
 import pytest
 from django.contrib.auth import authenticate, get_user_model
 from django.core import mail
-from django.test import override_settings
-from django.test import RequestFactory
+from django.test import RequestFactory, override_settings
 from django.urls import reverse
 from django.db import IntegrityError, transaction
-from django.test import override_settings
 
 @pytest.mark.django_db
 def test_user_can_authenticate_with_normalized_phone_number():

@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from apps.accounts.models import User
 from apps.complaints.listing import filter_and_paginate_complaints
 from apps.complaints.models import Complaint, StatusEvent
-from apps.audit.models import AuditEvent
 from apps.geography.models import Department
 from apps.workflow.permissions import can_link_duplicate, can_transition
 from apps.workflow.services import (
