@@ -176,7 +176,8 @@ def test_report_map_assets_are_vendored_and_location_button_has_status_fallback(
     base_settings = (project_root / "config/settings/base.py").read_text(encoding="utf-8")
     assert "navigator.geolocation.getCurrentPosition" in map_script
     assert "Location access was denied" in map_script
-    assert 'L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png"' in map_script
+    assert 'data-tile-url="{{ map_tile_url }}"' in report_template
+    assert "L.tileLayer(mapNode.dataset.tileUrl" in map_script
     assert 'tiles.on("tileerror"' in map_script
     assert 'id="location-status" class="subtle" role="status" aria-live="polite"' in report_template
     assert 'SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"' in base_settings

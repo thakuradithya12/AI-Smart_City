@@ -499,6 +499,11 @@
 
 - The importer assigned an existing primary key to a new unsaved `Ward` before `full_clean()`, causing unique checks to report the existing ward as a duplicate. Reused the persisted instance for update validation, matching the eventual write path.
 - `python -m py_compile apps/geography/management/commands/load_wards.py` — exit 0; focused pytest exited 4 during collection (`ModuleNotFoundError: No module named 'django'`); `git diff --check` — exit 0.
+
+### CI pytest: configurable map tile assertion (2026-11-25)
+
+- Updated the map asset test to assert the tile URL is supplied through the template's `map_tile_url` data attribute and consumed by Leaflet, matching the D6-swappable setting instead of requiring a hardcoded OSM URL in JavaScript.
+- `python -m py_compile tests/test_accessibility.py` — exit 0; focused pytest exited 4 during collection because Django is unavailable locally; `git diff --check` — exit 0.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.
