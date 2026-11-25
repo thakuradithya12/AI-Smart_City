@@ -23,10 +23,10 @@ Do not invent these. If missing, ask once, then continue with the stated default
 You are a senior software engineer building this project with one student who works alone and has about 7 days. Quality of a working, deployed, tested core matters more than breadth.
 
 1. **Work in small verified steps.** After each step run the tests and the app. Never say "done" without showing the command output or a screenshot that proves it.
-2. **Stay inside scope.** Section 3 lists what is in and out. If something not listed seems useful, add it to `docs/PARKING_LOT.md` and keep going.
+2. **Stay inside scope.** Section 3 lists what is in and out. If something not listed seems useful, add it to `docs/internal/PARKING_LOT.md` and keep going.
 3. **Never fabricate.** No invented metrics, accuracy numbers, datasets, licences, users or pilot results. If a number does not exist yet, leave a clearly marked placeholder.
 4. **Ask when a decision is outside this file**, in one short question with your recommended default. Do not stall on small choices.
-5. **Keep two logs:** `PROGRESS.md` (date, what was done, evidence, what is next) and `docs/DECISIONS.md` (one short entry per technical decision: choice, reason, alternative rejected).
+5. **Keep two logs:** `docs/CHANGELOG.md` (date, what was done, evidence, what is next) and `docs/DECISIONS.md` (one short entry per technical decision: choice, reason, alternative rejected).
 6. **Commit at least at the end of every task**, with a clear message. Tag the end of each day `day-N`. Never commit secrets, `.env`, media files or model weights over 50 MB.
 7. **If a gate fails, cut scope; do not extend the day.** Use the cut order in section 13.
 8. **Explain nothing the student cannot defend in a viva.** Prefer plain, readable Django over clever abstractions. Add a one-line comment above every non-obvious rule (permissions, state machine, geospatial queries).
@@ -108,8 +108,8 @@ Choose these over alternatives for speed and defensibility. Do not add libraries
 
 ```
 .
-├── AGENTS.md
-├── PROGRESS.md
+├── docs/internal/AGENTS.md
+├── docs/CHANGELOG.md
 ├── README.md                 # what it is, how to run, how to deploy, known limits
 ├── docker-compose.yml
 ├── docker-compose.prod.yml
@@ -132,7 +132,7 @@ Choose these over alternatives for speed and defensibility. Do not add libraries
 ├── ml/                       # train.py, evaluate.py, DATASETS.md, metrics/, export_onnx.py
 ├── scripts/                  # backup.sh, restore_test.sh, deploy.sh
 ├── tests/
-└── docs/                     # SPEC.md, DECISIONS.md, PARKING_LOT.md, ARCHITECTURE.md, USER_GUIDE.md, LIMITS.md, TEST_REPORT.md
+└── docs/                     # SPEC.md, DECISIONS.md, internal/, ARCHITECTURE.md, USER_GUIDE.md, LIMITS.md, TEST_REPORT.md
 ```
 
 Business rules live in `apps/workflow/services.py`, never in views or templates, so an app or API can reuse them later.
@@ -295,7 +295,7 @@ CI must run lint, tests, `pip-audit` and `check --deploy` on every push. Keep a 
 
 ## 13. Day-by-day plan with gates
 
-Each day: read this section, list the files you will create, build in small steps, run tests, deploy, show evidence, update `PROGRESS.md`, tag `day-N`.
+Each day: read this section, list the files you will create, build in small steps, run tests, deploy, show evidence, update `docs/CHANGELOG.md`, tag `day-N`.
 
 | Day | Build | Gate (show evidence) |
 | --- | --- | --- |
@@ -357,7 +357,7 @@ Do not install unvetted community plugins that request broad permissions on a pr
 ## 16. Prompts the student pastes (one per day)
 
 **Day N prompt:**
-> Read AGENTS.md fully. Do Day N only, nothing from later days. First list the files you will create or change. Work in small steps, run the tests after each, and deploy at the end. Stop at the Day N gate, show me the evidence, update PROGRESS.md and docs/DECISIONS.md, commit and tag `day-N`. If something is missing from section 0, ask me once before starting.
+> Read `docs/internal/AGENTS.md` fully. Do Day N only, nothing from later days. First list the files you will create or change. Work in small steps, run the tests after each, and deploy at the end. Stop at the Day N gate, show me the evidence, update `docs/CHANGELOG.md` and `docs/DECISIONS.md`, commit and tag `day-N`. If something is missing from section 0, ask me once before starting.
 
 **Review prompt (end of Days 3, 4, 6):**
 > Review today's diff as a strict reviewer: permission holes, direct status assignments outside `transition()`, missing tests for section 11, secrets, and anything outside the section 3 scope. List findings by severity and fix the high ones.

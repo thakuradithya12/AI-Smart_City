@@ -1,4 +1,4 @@
-# Binding clarifications to AGENTS.md
+# Binding clarifications to the internal project instructions
 
 ## 2026-11-23 — Roadmap V2 scope amendment
 
@@ -6,7 +6,7 @@ The owner requested that the agent execute `docs/ROADMAP_V2.md` completely. This
 
 Public transparency uses the roadmap's safe defaults until the owner decides otherwise: counts, categories, wards and statuses only; no photos, text, names, person-linked identifiers or exact pins. The file is located at `docs/ROADMAP_V2.md`.
 
-These decisions were supplied by the project owner on 2026-11-18. They are binding additions to the repository-root `AGENTS.md`. Do not ask these questions again. Where an input remains a placeholder, preserve it as unresolved; do not invent a value.
+These decisions were supplied by the project owner on 2026-11-18. They are binding additions to [`internal/AGENTS.md`](internal/AGENTS.md). Do not ask these questions again. Where an input remains a placeholder, preserve it as unresolved; do not invent a value.
 
 ## Inputs
 
@@ -23,7 +23,7 @@ These decisions were supplied by the project owner on 2026-11-18. They are bindi
 - Add `ComplaintMessage(complaint, author, body, created_at)` for information requests and citizen replies; write these events to the audit log.
 - `submitted -> in_triage` uses `actor=None`, role `system`, in the same transaction. Roll back the report if that transition fails.
 - `routed -> in_triage` means transfer back to triage with a reason; a reviewer manually routes it again. Never automatically re-route.
-- Admin overrides may use only transitions in AGENTS.md section 8, require a reason, and are flagged in the audit log.
+- Admin overrides may use only transitions in `internal/AGENTS.md` section 8, require a reason, and are flagged in the audit log.
 - Create the complaint row, then set `public_id` from its primary key inside the same atomic block; enforce uniqueness.
 - Reviewers see complaint facts and citizen name, but not phone number or email.
 - Owner request (2026-11-23): new citizen registration and sign-in use a unique Indian phone number instead of email. SMS/OTP verification remains out of scope. Existing staff email-based accounts remain usable until an administrator assigns phone numbers.

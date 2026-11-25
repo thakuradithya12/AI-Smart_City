@@ -1,8 +1,8 @@
 # Understanding AI SMART CITY
 
-Prepared 2026-11-18 after reading every section of the repository-root AGENTS.md. This document records understanding and a proposed Day 1 plan only; no implementation or verification commands have been run.
+Prepared 2026-11-18 after reading every section of `docs/internal/AGENTS.md`. This document records understanding and a proposed Day 1 plan only; no implementation or verification commands have been run.
 
-**Update:** The owner subsequently approved Day 1 and supplied binding decisions in [CLARIFICATIONS.md](CLARIFICATIONS.md). Those decisions supersede any open-question wording or recommended defaults below. Do not ask those questions again. The Day 1 order is now login skeleton, models, then CI.
+**Update:** The owner subsequently approved Day 1 and supplied binding decisions in [CLARIFICATIONS.md](../CLARIFICATIONS.md). Those decisions supersede any open-question wording or recommended defaults below. Do not ask those questions again. The Day 1 order is now login skeleton, models, then CI.
 
 ## 1. Project in my own words
 
@@ -41,7 +41,7 @@ Mobile app, PWA, React, Celery, Redis, Kafka, microservices, SMS, push notificat
 - Public domain name and server (VM with SSH or PaaS account): **not provided**. Default is local build/test; Day 1 public deployment is blocked until supplied.
 - Pilot area centre latitude and longitude: **not provided**. The instruction explicitly says ask and do not guess. This is needed for the pilot area; no value is assumed here.
 - Final complaint category list (3 to 6): **not explicitly confirmed**. Section 0 default is pothole, garbage, drainage, streetlight, water_leakage, other. Please confirm or supply the final list.
-- College report format or mandated technologies: **not provided**. Section 0 default is none; follow AGENTS.md.
+- College report format or mandated technologies: **not provided**. Section 0 default is none; follow `docs/internal/AGENTS.md`.
 
 ## 4. Key rules
 
@@ -75,7 +75,7 @@ When behind, cut duplicate detection first, then AI integration (retain evaluati
 
 ### h. End-of-day evidence
 
-For every day, list files, work in small steps, run tests, deploy, show gate evidence, update `PROGRESS.md`, and tag `day-N`. Day-specific gates are: Day 1 live login page, CI pytest run, and `check --deploy` output; Day 2 a real-phone submission visible with photo/location/ward; Day 3 transition and IDOR tests; Day 4 live lifecycle with four logins; Day 5 live suggestion plus evaluation artifacts or documented dropped slice; Day 6 restore log, scan report and trial bugs; Day 7 fresh-account demo without notes. The task instructions also require command output or screenshot proof for claims of completion.
+For every day, list files, work in small steps, run tests, deploy, show gate evidence, update `docs/CHANGELOG.md`, and tag `day-N`. Day-specific gates are: Day 1 live login page, CI pytest run, and `check --deploy` output; Day 2 a real-phone submission visible with photo/location/ward; Day 3 transition and IDOR tests; Day 4 live lifecycle with four logins; Day 5 live suggestion plus evaluation artifacts or documented dropped slice; Day 6 restore log, scan report and trial bugs; Day 7 fresh-account demo without notes. The task instructions also require command output or screenshot proof for claims of completion.
 
 ## 5. Issues and recommended defaults
 
@@ -88,7 +88,7 @@ These are issues in the instructions, not silently resolved decisions. “Questi
 | 1.1, 2, 9.1 | Core idea says registration never depends on maps being available, while report requirements mandate ward lookup and refusal outside known ward coverage. | Interpret this as no third-party interactive map/tile dependency for submission: allow manual pin coordinates; perform server-side lookup against locally available ward data and clearly report unavailable ward data. Confirm intended behavior if map/ward data itself is unavailable. |
 | 1.1, 13 Day 1 | Day 1 gate requires public HTTPS, while section 0 says domain/server details may be missing and default explicitly blocks deployment. | If no server/domain arrives, record deployment as blocked and show local skeleton evidence; do not claim the Day 1 gate passed. |
 | 1.1, 13 | “After each step run the tests and the app” is not measurable and can be expensive for every file operation. | Define a step as a coherent feature/configuration change; run its focused tests and startup/smoke check, with full suite at gate. |
-| 1.5, 13, user task | AGENTS says commit at every task and tag each day, but this task explicitly permits touching only `docs/UNDERSTANDING.md` and says stop. | For this read-and-understand task, save only the named file and do not commit/tag; resume the repo's commit/tag rule when implementation is authorized. |
+| 1.5, 13, user task | AGENTS says commit at every task and tag each day, but this task explicitly permits touching only `docs/internal/UNDERSTANDING.md` and says stop. | For this read-and-understand task, save only the named file and do not commit/tag; resume the repo's commit/tag rule when implementation is authorized. |
 | 4, 5 | “Django (current LTS)” is temporally variable and no exact compatible package matrix is stated; Python 3.12 and GeoDjango/system libraries constrain it. | Verify official Django and dependency docs plus compatibility before pinning; record exact tested versions in DECISIONS before writing requirements. |
 | 4, 5, 12 | Compose lists a worker from the start, but it is enabled from Day 5; Docker tags must be pinned, yet no tag/update policy is defined. | Define worker as optional Compose profile/service disabled until Day 5; pin tested image tags (including PostGIS and Python base) and document update policy. |
 | 4 | Bootstrap “served from static files” and Leaflet are specified without saying whether vendored assets or a package manager/CDN is allowed. CDN use complicates availability/privacy and local-first operation. | Vendor pinned static assets locally and record their versions/licences, subject to verifying distribution terms. |
@@ -207,7 +207,7 @@ This is a plan only. It is not authorization to start Day 1. Exact versions, pac
 18. `tests/conftest.py` and focused Day 1 tests under `tests/` — custom user creation/email login, model registration/constraints, settings/timezone and login page smoke behavior.
 19. `pyproject.toml` — pytest and ruff configuration with verified options.
 20. `.github/workflows/ci.yml` — verified/pinned GitHub Actions workflow for lint, pytest, dependency audit and production deploy check against PostGIS service.
-21. `PROGRESS.md` — dated Day 1 work, evidence, next step, and explicit blocked/unblocked gate status.
+21. `docs/CHANGELOG.md` — dated Day 1 work, evidence, next step, and explicit blocked/unblocked gate status.
 22. `scripts/deploy.sh`, `Caddyfile`, and `docker-compose.prod.yml` — only if domain/server credentials exist and deploy is within authorized Day 1 work; otherwise list as blocked, do not invent production values.
 
 The file order is a dependency-aware proposal, not a requirement to create empty app trees before their contents. Keep the custom user model configured before creating the initial migration.
@@ -230,7 +230,7 @@ The file order is a dependency-aware proposal, not a requirement to create empty
 - GitHub Actions run showing pytest against PostGIS.
 - Captured `check --deploy` output from production settings.
 - Local app/Compose smoke-test output as supporting evidence.
-- Updated `PROGRESS.md` and `docs/DECISIONS.md`; commit/tag only when carrying out the authorized Day 1 task, not for this read-only understanding task.
+- Updated `docs/CHANGELOG.md` and `docs/DECISIONS.md`; commit/tag only when carrying out the authorized Day 1 task, not for this read-only understanding task.
 
 ## Input status after binding clarification
 

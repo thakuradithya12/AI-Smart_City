@@ -1,8 +1,8 @@
 # Backend completion roadmap
 
-**Status:** maintained execution record, 2026-11-22. This roadmap follows the frozen v1 requirements in [`../AGENTS.md`](../AGENTS.md). It distinguishes local implementation evidence from release gates that need external inputs.
+**Status:** maintained execution record, 2026-11-22. This roadmap follows the frozen v1 requirements in [`internal/AGENTS.md`](internal/AGENTS.md). It distinguishes local implementation evidence from release gates that need external inputs.
 
-**Latest execution update:** Local complaint-to-department routing, the human-reviewed lifecycle, Telangana-only synthetic demo geography, duplicate review, and department default-deny scoping pass the Docker gate. The integrated suite reports 67 tests passing; see [`../docs/TEST_REPORT.md`](TEST_REPORT.md). AI training/inference remain blocked on rights-cleared photos and grouping metadata. Production deployment, authoritative pilot geography, remote CI and device acceptance still need owner-controlled inputs; see [`../docs/PARKING_LOT.md`](PARKING_LOT.md).
+**Latest execution update:** Local complaint-to-department routing, the human-reviewed lifecycle, Telangana-only synthetic demo geography, duplicate review, and department default-deny scoping pass the Docker gate. The integrated suite reports 67 tests passing; see [`TEST_REPORT.md`](TEST_REPORT.md). AI training/inference remain blocked on rights-cleared photos and grouping metadata. Production deployment, authoritative pilot geography, remote CI and device acceptance still need owner-controlled inputs; see [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md).
 
 ## Target
 
@@ -19,7 +19,7 @@ The repository contains Django models and migrations, email login and citizen re
 1. Review `git status`, current diff and recent commits; identify and preserve the pending UI work and unrelated edits. Do not reset or overwrite user work.
 2. Start Docker Desktop's Linux engine and confirm `docker compose ps` and `docker compose config --quiet`.
 3. Rebuild from the current source, start PostGIS and web, apply migrations, then run the existing checks service and production `check --deploy` command documented in `docs/RUNBOOK_UBUNTU.md`.
-4. Open the current local site and verify login, report flow and the role dashboards against the running code. Record exact command output and any errors in `PROGRESS.md`.
+4. Open the current local site and verify login, report flow and the role dashboards against the running code. Record exact command output and any errors in `CHANGELOG.md`.
 5. Add missing canonical documents: `docs/LIMITS.md`, `docs/TEST_REPORT.md`, `docs/ARCHITECTURE.md`, `docs/USER_GUIDE.md` (or update their equivalent if created meanwhile). Separate known implementation from verified implementation.
 
 **Gate:** reproducible current-HEAD local build and checks, or a concise blocker log with the exact failing command. Do not call CI green without the run result.
@@ -28,7 +28,7 @@ The repository contains Django models and migrations, email login and citizen re
 
 **Work**
 
-1. Compare each model and workflow transition to AGENTS.md sections 6–8. Fix only discrepancies needed for the defined lifecycle; add migrations only when the data model requires them.
+1. Compare each model and workflow transition to `internal/AGENTS.md` sections 6–8. Fix only discrepancies needed for the defined lifecycle; add migrations only when the data model requires them.
 2. Ensure complaint creation, initial `submitted → in_triage`, first evidence, audit record, generated public ID and due date commit or roll back atomically. Confirm registration does not call AI, email, geocoding or external map services.
 3. Confirm every status mutation uses `transition()` and its transaction/row lock; ensure required fields and actor-role checks cover all allowed and forbidden transitions. Audit overrides and routing rule versions.
 4. Confirm resolution claim fields remain separate from verification outcome, and citizen silence never closes a complaint.
@@ -94,17 +94,17 @@ The model slice is not being marked complete by the preflight work. `other` rema
 
 ## Phase 6 — End-to-end acceptance and handoff
 
-**Status: local regression and documentation gates pass; release acceptance remains incomplete.** Current evidence and the item-by-item remaining checklist are in [`PHASE6_ACCEPTANCE.md`](PHASE6_ACCEPTANCE.md) and [`PARKING_LOT.md`](PARKING_LOT.md). The worktree has no Git remote; each verified local change is committed, but remote CI and public release are not claimed.
+**Status: local regression and documentation gates pass; release acceptance remains incomplete.** Current evidence and the item-by-item remaining checklist are in [`PHASE6_ACCEPTANCE.md`](PHASE6_ACCEPTANCE.md) and [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md). The worktree has no Git remote; each verified local change is committed, but remote CI and public release are not claimed.
 
 1. Run the complete test suite, lint, dependency audit, production checks and CI on the exact final commit. Record counts/results with commit SHA in `docs/TEST_REPORT.md`.
 2. Exercise fresh demo accounts for citizen → triage → official → field worker → supervisor/citizen verification; also dispute/reopen/reassign and cancellation. Demo passwords are random, printed once, and must not be committed or posted in chat.
 3. Check report and triage UI on two real phones and one desktop; keyboard and contrast checks; record any untested device as unverified.
-4. Complete README, architecture, user guide, limits, recovery instructions and demo rehearsal. Review all AGENTS.md definition-of-done items and mark any unsupported item as not done with evidence.
+4. Complete README, architecture, user guide, limits, recovery instructions and demo rehearsal. Review all `internal/AGENTS.md` definition-of-done items and mark any unsupported item as not done with evidence.
 5. Commit the completed phase with a clear message. Apply `day-N` tags only when the corresponding day gate genuinely passed; do not move historical tags.
 
 ## Execution order and stop rules
 
-Work in this order: establish baseline → integrity/state machine → authorization/evidence → real geography → optional AI/duplicate → production operations → final acceptance. Each coherent change gets focused tests and a local smoke check; each gate gets the full suite. If a gate fails, fix the cause or cut optional scope per AGENTS.md. Never trade away the human-reviewed lifecycle, audit trail, access controls, backups/restore evidence, or transition tests to make a date.
+Work in this order: establish baseline → integrity/state machine → authorization/evidence → real geography → optional AI/duplicate → production operations → final acceptance. Each coherent change gets focused tests and a local smoke check; each gate gets the full suite. If a gate fails, fix the cause or cut optional scope per `internal/AGENTS.md`. Never trade away the human-reviewed lifecycle, audit trail, access controls, backups/restore evidence, or transition tests to make a date.
 
 ### Owner inputs still required for specific gates
 

@@ -10,7 +10,7 @@ Audience: the coding agent working in this repo. Owner: Thakur Adithya Singh (so
 ## 0. Operating rules (non-negotiable)
 
 1. **Evidence or it did not happen.** Never write "passes", "fixed" or "verified" unless you ran the command in this session. Record command, exit code, counts and commit SHA in `docs/TEST_REPORT.md`. If you could not run it, write "not verified" and why.
-2. **No invention.** Do not invent coordinates, ward boundaries, metrics, dataset licences, library versions, API signatures or file contents. If an input is missing, add it to `docs/DECISIONS_NEEDED.md` and continue with other work.
+2. **No invention.** Do not invent coordinates, ward boundaries, metrics, dataset licences, library versions, API signatures or file contents. If an input is missing, add it to `docs/internal/DECISIONS_NEEDED.md` and continue with other work.
 3. **Verify before pinning.** Before adding or changing any dependency, confirm the exact version exists on the package index (`pip index versions <pkg>` or `pip install --dry-run`) and record the date. Same for GitHub Actions versions and Docker image tags.
 4. **Check claims in this file against the code.** Items marked **[VERIFY]** are suspected, not confirmed. Reproduce first. If it is not real, close it with evidence and do not "fix" it.
 5. **One task = one commit** with focused tests first (red → green). Commit message: `<task-id>: <summary>`. Never mix tasks.
@@ -21,7 +21,7 @@ Audience: the coding agent working in this repo. Owner: Thakur Adithya Singh (so
 10. **Do not delete user data.** `private_media/` holds 349 original photos plus 349 display copies in the snapshot; six local files were already recorded as orphaned. Never delete or commit them.
 11. **Never print or commit secrets.** The snapshot's `.env` holds a real-looking `DJANGO_SECRET_KEY`; treat it as exposed (task 0.3).
 12. **Ask, don't guess.** Anything in section 2 (owner decisions) blocks only its dependent tasks.
-13. **Task report format** (append to `PROGRESS.md`, max 10 lines): task id, what changed, files, tests added, commands run with results, anything not verified.
+13. **Task report format** (append to `docs/CHANGELOG.md`, max 10 lines): task id, what changed, files, tests added, commands run with results, anything not verified.
 14. **Stop conditions:** if a task needs a human decision, a credential, or a physical device, stop that task, log it, move on.
 
 ---
@@ -33,7 +33,7 @@ Audience: the coding agent working in this repo. Owner: Thakur Adithya Singh (so
 - 12 statuses, a single `TRANSITIONS` table, append-only status/audit events at ORM level, `Complaint.objects.visible_to(user)` on every query.
 - 11 live templates: base, home, login, register, logged_out, report, my_complaints, complaint detail, triage_queue, department_inbox, field_tasks, field_task_detail. The public landing page is a static Stitch mockup (`docs/ui_reference/public_landing_civicops/code.html`) served by `apps/console/urls.py::ui_showcase`.
 - 47 mockup screens exist in `docs/ui_reference/`; they are references, not implementations.
-- Not done (per the repo's own `LIMITS.md`/`PARKING_LOT.md`): public deployment, real pilot ward, AI, remote CI, production backups/monitoring, device acceptance.
+- Not done (per the repo's own `LIMITS.md`/`internal/PARKING_LOT.md`): public deployment, real pilot ward, AI, remote CI, production backups/monitoring, device acceptance.
 
 ---
 
@@ -51,7 +51,7 @@ Audience: the coding agent working in this repo. Owner: Thakur Adithya Singh (so
 | D8 | SLA numbers per category and escalation levels | 3.2 | Keep `default_due_hours`; no escalation until set |
 | D9 | Translation owner/reviewer for Telugu and Hindi | 7.x | English only until a reviewer exists |
 | D10 | Submission cut line and deadline date | scheduling | See section 4 |
-| D11 | Formal scope amendment: owner confirms the frozen v1 exclusions in `AGENTS.md` §3 (notifications, public map, multi-language, SLA escalation, API) are lifted for the items in this roadmap | all of phases 3–7 | Not assumed; task 0.2 records it |
+| D11 | Formal scope amendment: owner confirms the frozen v1 exclusions in `docs/internal/AGENTS.md` §3 (notifications, public map, multi-language, SLA escalation, API) are lifted for the items in this roadmap | all of phases 3–7 | Not assumed; task 0.2 records it |
 
 ---
 
@@ -66,7 +66,7 @@ Run `docker compose run --rm checks`, `python manage.py check --deploy --setting
 *Acceptance:* `docs/TEST_REPORT.md` has a dated entry for the current HEAD, with any discrepancy from earlier claims called out.
 
 **0.2 Scope amendment and docs truth (S).** Depends: D11.
-Add a dated section to `docs/CLARIFICATIONS.md` listing exactly which frozen exclusions are lifted. Update `AGENTS.md` §3 and `docs/SPEC.md` "v1 exclusions" to match. Remove the duplicated 2026-11-23 row in `docs/DECISIONS.md`. Fix stale statements (e.g. `docs/ARCHITECTURE.md` says the landing is static; update after 2.1).
+Add a dated section to `docs/CLARIFICATIONS.md` listing exactly which frozen exclusions are lifted. Update `docs/internal/AGENTS.md` §3 and `docs/SPEC.md` "v1 exclusions" to match. Remove the duplicated 2026-11-23 row in `docs/DECISIONS.md`. Fix stale statements (e.g. `docs/ARCHITECTURE.md` says the landing is static; update after 2.1).
 *Acceptance:* no document contradicts another about scope; `grep -rn "Out of scope"` shows the amended list.
 
 **0.3 Secrets and repo hygiene (S).**
@@ -109,7 +109,7 @@ Work: add `reassign_complaint(complaint, actor, assignee, reason)` in `apps/work
 
 **1.2 Info-request timeout (M).**
 Evidence: `transition()` accepts `data["timeout"]` but nothing triggers it.
-Work: `manage.py expire_info_requests` (configurable days via env, default decided in `DECISIONS_NEEDED.md`) moving `info_requested → in_triage` with `actor=None`, role `system`, reason "no reply within N days". It never closes or rejects. Idempotent; safe to run twice.
+Work: `manage.py expire_info_requests` (configurable days via env, default decided in `docs/internal/DECISIONS_NEEDED.md`) moving `info_requested → in_triage` with `actor=None`, role `system`, reason "no reply within N days". It never closes or rejects. Idempotent; safe to run twice.
 *Acceptance:* freeze-time tests; audit row written; triage reviewer sees a "timed out" marker.
 
 **1.3 Align table, views, permissions (S).** Resolves V10. Decide with the owner whether `department_official` may mark work done; then make `TRANSITIONS`, the view, templates and the matrix test agree.
@@ -336,7 +336,7 @@ Follow `docs/RUNBOOK_UBUNTU.md` (not reviewed in this analysis; read it first an
 ### Phase 10 — Documentation and portfolio
 
 - `README.md` for humans: what it is, screenshots, quickstart (three commands), architecture diagram (Mermaid), ERD (generated from models), role/permission matrix generated from `TRANSITIONS`, roadmap status.
-- Consolidate `docs/`: shrink `PROGRESS.md` into a changelog, keep decisions as dated ADRs, delete contradictions, mark the agent-process documents (`AGENTS.md`, `UNDERSTANDING.md`) as internal.
+- Consolidate `docs/`: keep `docs/CHANGELOG.md` as a changelog, keep decisions as dated ADRs, delete contradictions, and keep the agent-process documents (`docs/internal/AGENTS.md`, `docs/internal/UNDERSTANDING.md`) under `docs/internal/`.
 - A 2-minute demo video and a seeded demo script that uses fresh random passwords.
 - Pilot validation (the foundation document's P0): talk to at least a few real users or officials; record questions and findings in `docs/PILOT_NOTES.md`. Do not fabricate testimonials or usage numbers.
 - Resume bullets with only measured, reproducible numbers (tests, coverage, response times you measured).

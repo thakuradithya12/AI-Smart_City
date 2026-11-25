@@ -40,7 +40,7 @@ Mobile app/PWA, SMS/WhatsApp/phone integrations, push notifications, autonomous 
 
 ## Delivery state
 
-The local Django/PostGIS workflow and automated suite are implemented. External release gates and undelivered AI inputs are itemized in [`LIMITS.md`](LIMITS.md) and [`PARKING_LOT.md`](PARKING_LOT.md). Local test results are recorded in [`TEST_REPORT.md`](TEST_REPORT.md); local passing checks do not claim public deployment or pilot acceptance.
+The local Django/PostGIS workflow and automated suite are implemented. External release gates and undelivered AI inputs are itemized in [`LIMITS.md`](LIMITS.md) and [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md). Local test results are recorded in [`TEST_REPORT.md`](TEST_REPORT.md); local passing checks do not claim public deployment or pilot acceptance.
 
 
 

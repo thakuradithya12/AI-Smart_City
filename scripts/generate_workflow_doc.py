@@ -102,7 +102,7 @@ def render():
         "",
         "The approved V2 design in `docs/ROADMAP_V2.md` task 1.4 and `docs/SPEC.md` permits an admin to cancel any "
         "non-terminal complaint with a reason, recorded as an `admin_override`. The earlier base transition table "
-        "in `AGENTS.md` listed citizen cancellation but did not include that admin recovery operation. The current "
+        "in `docs/internal/AGENTS.md` listed citizen cancellation but did not include that admin recovery operation. The current "
         "table implements the later approved V2 rule. The remaining roles and transitions match the designed "
         "workflow: citizens may cancel in any pre-acknowledgement state, including while information is requested; "
         "field workers make the completion claim, and citizens or "

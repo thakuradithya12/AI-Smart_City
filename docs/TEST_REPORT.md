@@ -202,7 +202,7 @@
 
 ## 2026-11-23 — ROADMAP_V2 task 2.8 blocked by D6
 
-- Did not add CSP middleware because the roadmap says `img-src` must match the owner-selected tile provider; D6 is unresolved. The exact provider/traffic question and OSM demo recommendation are recorded in `docs/DECISIONS_NEEDED.md`.
+- Did not add CSP middleware because the roadmap says `img-src` must match the owner-selected tile provider; D6 is unresolved. The exact provider/traffic question and OSM demo recommendation are recorded in `docs/internal/DECISIONS_NEEDED.md`.
 - `git push origin phase1` for task 2.4 — exit 0; remote branch advanced from `5ec4072` to `6b97f7b`. Remote CI was not inspected.
 - `git diff --check` — exit 0; no application test applies to this documentation-only blocker.
 
@@ -244,7 +244,7 @@
 
 ## 2026-11-23 — ROADMAP_V2 task 3.4 decision record
 
-- No reminder code was added because the roadmap requires an owner-selected delay and D8 did not set one. `docs/DECISIONS_NEEDED.md` records the exact question and a 3-day, one-reminder recommendation.
+- No reminder code was added because the roadmap requires an owner-selected delay and D8 did not set one. `docs/internal/DECISIONS_NEEDED.md` records the exact question and a 3-day, one-reminder recommendation.
 
 ## Static risk notes for unverified Phase 0 commits
 
@@ -368,7 +368,7 @@ These notes are based on the named `git show` diffs. No runtime verification is 
 | --- | --- | --- |
 | Configured Git remotes | None | `git remote -v` produced no output (exit 0). No push or remote CI run was attempted. |
 | Existing action tags | Source-verified | Official release pages confirm `actions/checkout@v6.0.0` and `actions/setup-python@v5.6.0` on 2026-11-23. |
-| Green Actions run | Not verified | Requires owner-controlled GitHub repository URL and authenticated remote setup; see `docs/DECISIONS_NEEDED.md`. |
+| Green Actions run | Not verified | Requires owner-controlled GitHub repository URL and authenticated remote setup; see `docs/internal/DECISIONS_NEEDED.md`. |
 
 ## 2026-11-23 — ROADMAP_V2 Phase 0.5 V1 password reset
 
@@ -451,7 +451,7 @@ These notes are based on the named `git show` diffs. No runtime verification is 
 | Check | Result | Evidence |
 | --- | --- | --- |
 | Suspected defect reproduction | Confirmed from source | `TRANSITIONS` allows both `field_worker` and `department_official`; `mark_work_done` explicitly requires `field_worker`. The roadmap requires the owner to choose. |
-| Decision | Blocked on owner | No code changed. Recommended default: field worker only, matching the role matrix and current view. See `docs/DECISIONS_NEEDED.md`. |
+| Decision | Blocked on owner | No code changed. Recommended default: field worker only, matching the role matrix and current view. See `docs/internal/DECISIONS_NEEDED.md`. |
 
 ## 2026-11-23 — ROADMAP_V2 Phase 0.5 V11 report photo hints
 
@@ -483,14 +483,14 @@ These notes are based on the named `git show` diffs. No runtime verification is 
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| v1 spec and remaining-work record | Passed | Added `SPEC.md` and `PARKING_LOT.md`; clarified that the local Hyderabad polygon is synthetic demo geography and not pilot coverage. |
+| v1 spec and remaining-work record | Passed | Added `SPEC.md` and `internal/PARKING_LOT.md`; clarified that the local Hyderabad polygon is synthetic demo geography and not pilot coverage. |
 | Duplicate candidates | Passed | Triage complaint detail suggests recent open reports in the same category within 30 m, using geography-distance metres and a seven-day window. A triage reviewer can link a candidate; both reports remain visible and open. |
 | Duplicate authorization and audit | Passed | Tests cover near/far, category, age and terminal-state filtering; reviewer linking creates an audit event; citizens cannot invoke the action. |
 | Department default-deny | Fixed and tested | Staff accounts without a department now see no unassigned complaints. Department officials and supervisors receive 404 for detail access and zero dashboard rows; regression covers both roles. |
 | Full Docker gate | Passed | Migration check `No changes detected`; `67 passed in 67.57s`; Ruff passed; Bandit 0 findings across 1,544 lines; pip-audit found no known vulnerabilities. |
 | Production configuration check | Passed with documented warnings | `check --deploy` exited 0; only HSTS subdomain/preload warnings `security.W005` and `security.W021` remain pending a confirmed domain/subdomain policy. |
 | Production image and route smoke | Passed | Latest web image rebuilt; `collectstatic` copied 152 files and post-processed 446. `/` returned 200; protected `/workspace/`, `/console/triage/`, and `/console/department/` returned expected signed-out 302 redirects. |
-| Release gates requiring external inputs | Still open | No public domain/server, pilot boundaries, rights-cleared AI photos/manifest, Git remote, production monitoring account, or physical-device test environment is configured. See [`PARKING_LOT.md`](PARKING_LOT.md). |
+| Release gates requiring external inputs | Still open | No public domain/server, pilot boundaries, rights-cleared AI photos/manifest, production monitoring account, or physical-device test environment is configured. See [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md). |
 
 ## 2026-11-22 — Citizen-to-department routing visibility
 
@@ -699,7 +699,7 @@ The first run produced one failed **test expectation** because its shared fixtur
 
 ### ROADMAP_V2 task 1.3 (2026-11-23)
 
-- Blocked on the owner decision recorded as D-V10 in `docs/DECISIONS_NEEDED.md` (department official work-done authority).
+- Blocked on the owner decision recorded as D-V10 in `docs/internal/DECISIONS_NEEDED.md` (department official work-done authority).
 - Existing policy remains field-worker-only; no code or test was changed. `git diff --check` — exit 0. `python manage.py makemigrations --check --dry-run` — exit 1 (`ModuleNotFoundError: No module named 'django'`). Runtime matrix tests were not run because Django/Docker are unavailable.
 
 ### ROADMAP_V2 task 1.4 attempt (2026-11-23)
@@ -725,7 +725,7 @@ The first run produced one failed **test expectation** because its shared fixtur
 
 ### ROADMAP_V2 task 1.9 (2026-11-23)
 
-- Not implemented: D3 retention periods and the deletion process are owner decisions. The blocker is recorded in `docs/DECISIONS_NEEDED.md`; no data retention values or purge behavior were invented.
+- Not implemented: D3 retention periods and the deletion process are owner decisions. The blocker is recorded in `docs/internal/DECISIONS_NEEDED.md`; no data retention values or purge behavior were invented.
 - No code or tests changed for this decision-only commit. `git diff --check` — exit 0. `python manage.py makemigrations --check --dry-run` — exit 1 (`ModuleNotFoundError: No module named 'django'`).
 
 ### ROADMAP_V2 task 1.10 attempt (2026-11-23)

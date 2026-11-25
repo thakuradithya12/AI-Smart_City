@@ -78,4 +78,4 @@ The checks service runs the migration drift check, pytest, Ruff, Bandit and pip-
 - [Privacy and retention notice](docs/PRIVACY.md)
 - [Limits](docs/LIMITS.md)
 - [Test report](docs/TEST_REPORT.md)
-- [Changelog](PROGRESS.md)
+- [Changelog](docs/CHANGELOG.md)
