@@ -50,6 +50,11 @@
 - Run #26's admin reassignments correctly included `operation: complaint_reassigned` in the `admin_override` audit payload, while the test expected only `assignee_id`. Updated the test to assert the full intentional audit record.
 - `python -m py_compile tests/test_day4_workflow.py` — exit 0; focused pytest exited 4 during collection because Django is unavailable locally; `git diff --check` — exit 0.
 
+## 2026-11-25 — CI pytest triage pagination fixture
+
+- Run #26's pagination assertion expected only `PAGE-T-` IDs from an unfiltered triage queue. The queue correctly includes other active statuses; filtered the test to `in_triage` for that case.
+- `python -m py_compile tests/test_console_workflow.py` — exit 0; focused pytest exited 4 during collection because Django is unavailable locally; `git diff --check` — exit 0.
+
 ## 2026-11-25 — CI run #25 error-template URL fix
 
 - The supplied pytest output reports four custom error-page failures: `NoReverseMatch: Reverse for 'home' not found` while rendering templates. `tests.error_urls` overrides the root URLConf but did not provide the named `home` route used by the shared error templates.

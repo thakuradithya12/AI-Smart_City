@@ -514,6 +514,11 @@
 
 - Updated the admin reassignment assertion to include the audited `operation` discriminator emitted with the `admin_override` event; this preserves a clear audit action while checking the full payload.
 - `python -m py_compile tests/test_day4_workflow.py` — exit 0; focused pytest exited 4 during collection because Django is unavailable locally; `git diff --check` — exit 0.
+
+### CI pytest: status-filtered triage pagination fixture (2026-11-25)
+
+- The reviewer queue intentionally lists all non-terminal complaints, but the pagination test asserted every reviewer row had the `PAGE-T-` prefix while also creating other active statuses. Added an explicit `in_triage` filter to that case so it tests the target list slice.
+- `python -m py_compile tests/test_console_workflow.py` — exit 0; focused pytest exited 4 during collection because Django is unavailable locally; `git diff --check` — exit 0.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.

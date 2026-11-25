@@ -92,8 +92,9 @@ def test_all_complaint_lists_are_paginated_with_stable_pages(client, console_set
     )
     for actor, view_name, prefix in cases:
         client.force_login(actor)
-        first_page = client.get(reverse(view_name))
-        second_page = client.get(reverse(view_name), {"page": 2})
+        filters = {"status": Complaint.Status.IN_TRIAGE} if view_name == "triage_queue" else {}
+        first_page = client.get(reverse(view_name), filters)
+        second_page = client.get(reverse(view_name), {**filters, "page": 2})
         assert first_page.status_code == second_page.status_code == 200
         assert len(first_page.context["complaints"]) == 5
         assert len(second_page.context["complaints"]) == 5
