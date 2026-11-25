@@ -1,17 +1,37 @@
-from datetime import timedelta
+from datetime import date, timedelta
 
 import pytest
-from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import MultiPolygon, Point, Polygon
 from django.core.management import call_command
 from django.utils import timezone
 
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, StatusEvent
+from apps.accounts.models import User
+from apps.geography.models import Category, Ward
+
+
+@pytest.fixture
+def expiry_setup(db):
+    citizen = User.objects.create_user(
+        email="expiry-citizen@example.test", password="Strong!Password982", name="Expiry Citizen"
+    )
+    reviewer = User.objects.create_user(
+        email="expiry-reviewer@example.test", password="Strong!Password982",
+        name="Expiry Reviewer", role=User.Role.TRIAGE_REVIEWER,
+    )
+    ring = Polygon(((-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)))
+    ward = Ward.objects.create(
+        name="Expiry Test Ward", boundary=MultiPolygon(ring, srid=4326),
+        source="test-only synthetic polygon", effective_from=date(2026, 1, 1),
+    )
+    category = Category.objects.create(name="expiry-test")
+    return {"citizen": citizen, "reviewer": reviewer, "ward": ward, "category": category}
 
 
 @pytest.mark.django_db
-def test_expire_info_requests_transitions_and_is_idempotent(day4_setup, settings, capsys):
-    setup = day4_setup
+def test_expire_info_requests_transitions_and_is_idempotent(expiry_setup, settings, capsys):
+    setup = expiry_setup
     settings.INFO_REQUEST_TIMEOUT_DAYS = 10
     complaint = Complaint.objects.create(
         public_id="INFO-TIMEOUT", citizen=setup["citizen"], category=setup["category"],
@@ -34,8 +54,8 @@ def test_expire_info_requests_transitions_and_is_idempotent(day4_setup, settings
 
 
 @pytest.mark.django_db
-def test_timeout_is_not_applied_before_deadline_and_marker_is_shown(client, day4_setup, settings):
-    setup = day4_setup
+def test_timeout_is_not_applied_before_deadline_and_marker_is_shown(client, expiry_setup, settings):
+    setup = expiry_setup
     settings.INFO_REQUEST_TIMEOUT_DAYS = 10
     complaint = Complaint.objects.create(
         public_id="INFO-NOT-DUE", citizen=setup["citizen"], category=setup["category"],

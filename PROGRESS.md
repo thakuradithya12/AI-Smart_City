@@ -469,6 +469,11 @@
 - The CI retry tests fail because `send_notifications` increments `attempts` but omitted that field from both success and failure `update_fields`, so the database retained zero attempts and retry caps never applied. Persisted the field on both paths.
 - Existing tests cover successful delivery, failure isolation, and retry cap. `python -m py_compile apps/notifications/management/commands/send_notifications.py` — exit 0; focused pytest collection exited 2 (`ModuleNotFoundError: No module named 'django'`); `git diff --check` — exit 0.
 - Runtime behavior awaits CI verification.
+
+### CI pytest: information-request expiry test fixture (2026-11-25)
+
+- The expiry tests requested `day4_setup`, a fixture defined only inside `test_day4_workflow.py` and therefore unavailable to other test modules. Added a purpose-built local fixture with only the users, category and synthetic ward these tests need.
+- `python -m py_compile tests/test_info_request_expiry.py` — exit 0; pytest collection exited 2 because Django is not installed locally; `git diff --check` — exit 0. CI must verify behavior.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.
