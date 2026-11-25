@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — public database health route
+
+- Confirmed the existing `/healthz/` route is public, runs `SELECT 1`, returns only status/scheduler health metadata, and does not expose complaint data. It is in `PUBLIC_ROUTE_ALLOWLIST` in the route inventory test.
+- Existing `tests/test_observability.py` cases cover unauthenticated health access and a generic 503 when the database is unavailable. No test or code change was needed for this item. Django-backed route tests are not verified on the current post-deployment commits.
+
 ## 2026-11-25 — Render startup and PostGIS migration bootstrap
 
 - Added `scripts/start_render.sh` to run migrations, collect static assets, conditionally seed only when `DEMO_SEED=1`, and start Gunicorn. Added a `DEMO_SEED=0` template default.
