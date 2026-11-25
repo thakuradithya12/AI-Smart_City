@@ -78,7 +78,7 @@ Add a dated section to `docs/CLARIFICATIONS.md` listing exactly which frozen exc
 
 **0.4 Git remote and first CI run (S).** Needs owner to create the repo.
 Push, fix whatever the first remote run reveals. Verify pinned action versions exist (`checkout@v6`, `setup-python@v5` appear in `ci.yml`; confirm).
-*Acceptance:* a green run URL recorded with the commit SHA.
+*Acceptance:* a green run URL recorded with the commit SHA. **Verified for phase1:** run [45562646639](https://github.com/thakuradithya12/AI-Smart_City/actions/runs/45562646639) succeeded on `b91531009a681f5ab293f0d1aa3a6c6b7a633630`; see `docs/TEST_REPORT.md`. This verifies the run only, not deployment or physical-device acceptance.
 
 **0.5 Resolve the [VERIFY] list (M).** For each, reproduce with a failing test or a captured command, then fix or close with evidence. Each becomes its own commit.
 

@@ -1,5 +1,10 @@
 # Progress
 
+## 2026-11-25 — B.4 phase1 CI promotion
+
+- Owner-provided checks and Actions run `45562646639` are green on `b91531009a681f5ab293f0d1aa3a6c6b7a633630` (179 tests passed; migration check, Ruff, Bandit, pip-audit and deploy check completed successfully).
+- Recorded the run in `docs/TEST_REPORT.md` and marked only roadmap task 0.4 as verified for this run. Promoted this documentation commit to `master` and tagged it `verified-phase1`; deployment and device acceptance remain unverified.
+
 ## 2026-11-23 — Phone-based citizen accounts and shared UI motion
 
 - Changed new citizen registration and login to use unique Indian mobile numbers, normalized to `+91` format. Added a custom authentication backend and login lockout-compatible form normalization. Existing email-only staff/demo accounts remain able to sign in until an administrator assigns a phone number; new citizen accounts store no email.

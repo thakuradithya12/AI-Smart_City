@@ -1,5 +1,11 @@
 # Test report
 
+## 2026-11-25 — phase1 CI promotion evidence
+
+- GitHub Actions run [45562646639](https://github.com/thakuradithya12/AI-Smart_City/actions/runs/45562646639) — **success** for commit `b91531009a681f5ab293f0d1aa3a6c6b7a633630` (`tests: include login route in error page URL config`). Owner-provided `_ci/runs.txt` and `_ci/checks.txt` agree on the successful run; checks report no pending migrations, `179 passed`, Ruff and Bandit clean, and pip-audit found no known vulnerabilities.
+- This green run verifies the code and tests on that SHA, including accounts migration `0005`, the CI migration-state check, and the error-page test URL fixture. It does not verify deployment, physical-device acceptance, or work outside that commit.
+
+
 ## 2026-11-25 — CI pytest notification retry accounting
 
 - Run #26 showed notification delivery tests with `attempts == 0` after a send and four sends despite a three-attempt limit. Both send result paths omitted `attempts` from `save(update_fields=...)`; the counter increment therefore was not persisted. Added it to success and failure updates.
