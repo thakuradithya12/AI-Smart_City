@@ -27,3 +27,12 @@ def can_link_duplicate(user, complaint):
         and complaint.status == Complaint.Status.IN_TRIAGE
         and Complaint.objects.visible_to(user).filter(pk=complaint.pk).exists()
     )
+
+
+def can_view_audit(user):
+    """Audit history is limited to administrators and department supervisors."""
+    return bool(
+        user.is_authenticated
+        and user.is_active
+        and user.role in {"admin", "supervisor"}
+    )

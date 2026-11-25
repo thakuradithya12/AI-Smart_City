@@ -30,6 +30,7 @@
         {% elif request.user.role == "field_worker" %}
           <a href="{% url 'field_tasks' %}"{% if request.resolver_match.url_name == 'field_tasks' %} aria-current="page"{% endif %}>My field tasks</a>
         {% endif %}
+        {% if request.user.role == "supervisor" or request.user.role == "admin" %}<a href="{% url 'audit_workspace' %}"{% if request.resolver_match.url_name == 'audit_workspace' %} aria-current="page"{% endif %}>Audit workspace</a>{% endif %}
       </nav>
       <div class="account-menu"><span class="user-name">{{ request.user.name|default:request.user.phone_number }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button-quiet" type="submit">Sign out</button></form></div>
       {% else %}<a class="button" href="{% url 'login' %}">Sign in</a>{% endif %}

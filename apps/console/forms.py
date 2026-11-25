@@ -42,6 +42,19 @@ class VerifyForm(forms.Form):
     method = forms.ChoiceField(choices=(("site_review", "Site review"), ("citizen_confirmation", "Citizen confirmation")))
 
 
+class AuditFilterForm(forms.Form):
+    action = forms.CharField(required=False, max_length=64)
+    object_type = forms.CharField(required=False, max_length=120)
+    date_from = forms.DateField(required=False, input_formats=["%Y-%m-%d"])
+    date_to = forms.DateField(required=False, input_formats=["%Y-%m-%d"])
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("date_from") and cleaned.get("date_to") and cleaned["date_from"] > cleaned["date_to"]:
+            raise forms.ValidationError("Start date must be on or before end date.")
+        return cleaned
+
+
 class AssignComplaintForm(forms.Form):
     assignee = forms.ModelChoiceField(queryset=User.objects.none())
 

@@ -1,15 +1,20 @@
+import csv
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db.models import OuterRef, Subquery
 from django.core.exceptions import ValidationError
-from django.http import Http404
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.models import User
+from apps.audit.services import visible_audit_events
 from apps.complaints.listing import filter_and_paginate_complaints
 from apps.complaints.models import Complaint, StatusEvent
 from apps.geography.models import Department
-from apps.workflow.permissions import can_link_duplicate, can_transition
+from apps.workflow.permissions import can_link_duplicate, can_transition, can_view_audit
 from apps.workflow.services import (
     add_field_evidence,
     link_duplicate as link_duplicate_service,
@@ -19,7 +24,74 @@ from apps.workflow.services import (
 )
 
 from .forms import (AssignComplaintForm, DuplicateLinkForm, FieldEvidenceForm, MessageForm, ReasonForm,
-                    RejectComplaintForm, RouteComplaintForm, TransferComplaintForm, VerifyForm, WorkDoneForm)
+                    AuditFilterForm, RejectComplaintForm, RouteComplaintForm, TransferComplaintForm,
+                    VerifyForm, WorkDoneForm)
+
+
+def _filtered_audit_events(request):
+    form = AuditFilterForm(request.GET)
+    events = visible_audit_events(request.user)
+    if form.is_valid():
+        filters = form.cleaned_data
+        if filters["action"]:
+            events = events.filter(action=filters["action"])
+        if filters["object_type"]:
+            events = events.filter(object_type=filters["object_type"])
+        if filters["date_from"]:
+            events = events.filter(created_at__date__gte=filters["date_from"])
+        if filters["date_to"]:
+            events = events.filter(created_at__date__lte=filters["date_to"])
+    elif form.is_bound:
+        events = events.none()
+    return form, events
+
+
+def safe_csv_cell(value):
+    cell = "" if value is None else str(value)
+    if cell.lstrip(" \t\r\n").startswith(("=", "+", "-", "@")):
+        return f"'{cell}"
+    return cell
+
+
+@login_required
+def audit_workspace(request):
+    if not can_view_audit(request.user):
+        raise Http404
+    form, events = _filtered_audit_events(request)
+    page_obj = Paginator(events, 25).get_page(request.GET.get("page"))
+    return render(request, "console/audit_workspace.html", {
+        "filter_form": form,
+        "page_obj": page_obj,
+        "events": page_obj.object_list,
+    })
+
+
+@login_required
+def audit_export_csv(request):
+    if not can_view_audit(request.user):
+        raise Http404
+    form, events = _filtered_audit_events(request)
+    if not form.is_valid():
+        return HttpResponseBadRequest("Invalid audit filters.")
+    response = HttpResponse(content_type="text/csv; charset=utf-8")
+    response["Content-Disposition"] = 'attachment; filename="audit-events.csv"'
+    response["Cache-Control"] = "private, no-store"
+    writer = csv.writer(response)
+    writer.writerow(["created_at", "actor", "role", "action", "object_type", "object_id", "before", "after", "reason", "ip"])
+    for event in events.iterator(chunk_size=500):
+        writer.writerow([
+            safe_csv_cell(event.created_at.isoformat()),
+            safe_csv_cell(event.actor.name if event.actor_id else "System"),
+            safe_csv_cell(event.role),
+            safe_csv_cell(event.action),
+            safe_csv_cell(event.object_type),
+            safe_csv_cell(event.object_id),
+            safe_csv_cell(json.dumps(event.before, ensure_ascii=False, sort_keys=True, default=str)),
+            safe_csv_cell(json.dumps(event.after, ensure_ascii=False, sort_keys=True, default=str)),
+            safe_csv_cell(event.reason),
+            safe_csv_cell(event.ip),
+        ])
+    return response
 
 
 def _triage_user(user):

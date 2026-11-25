@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — E.5 audit workspace and safe CSV
+
+- Added admin and department-scoped supervisor audit pages, filters, pagination and CSV export. Added formula-cell neutralisation and tests for role access, supervisor department scope, CSV output and cells beginning with `=`, `+`, `-` and `@`.
+- `python -m py_compile` and `git diff --check` pass. Runtime tests are not verified because the host lacks Django and Docker cannot reach its engine.
+
 ## 2026-11-25 — E.4 reduced role dashboards
 
 - Added role-specific dashboard summaries and shortcuts for five roles, using `Complaint.objects.visible_to(user)` for complaint counts and recent records. Existing list/detail/action screens remain the linked role workflows.

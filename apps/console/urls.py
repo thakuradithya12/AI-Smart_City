@@ -103,7 +103,7 @@ def dashboard(request):
                 {"label": "Active field work", "value": visible.filter(status__in=[Complaint.Status.ASSIGNED, Complaint.Status.IN_PROGRESS]).count(), "help": "Assigned or underway"},
                 {"label": "Field workers", "value": team_count, "help": "Active workers in your department"},
             ],
-            dashboard_actions=[("Department work queue", "department_inbox"), ("Notifications", "notifications_inbox")],
+            dashboard_actions=[("Department work queue", "department_inbox"), ("Audit workspace", "audit_workspace"), ("Notifications", "notifications_inbox")],
         )
     elif role == User.Role.ADMIN:
         context.update(
@@ -115,7 +115,7 @@ def dashboard(request):
                 {"label": "Overdue", "value": active.filter(due_at__lt=timezone.now()).count(), "help": "Open reports past their due date"},
                 {"label": "Verified closed", "value": context["closed_count"], "help": "Fixes independently confirmed"},
             ],
-            dashboard_actions=[("Triage queue", "triage_queue"), ("Notifications", "notifications_inbox")],
+            dashboard_actions=[("Triage queue", "triage_queue"), ("Audit workspace", "audit_workspace"), ("Notifications", "notifications_inbox")],
             admin_configuration_url="/admin/",
         )
     return render(request, "home.html", context)
@@ -141,6 +141,8 @@ urlpatterns = [
     path("console/field/<int:pk>/start/", workflow_views.start_work, name="start_work"),
     path("console/field/<int:pk>/evidence/", workflow_views.upload_field_evidence, name="upload_field_evidence"),
     path("console/field/<int:pk>/done/", workflow_views.mark_work_done, name="mark_work_done"),
+    path("console/audit/", workflow_views.audit_workspace, name="audit_workspace"),
+    path("console/audit.csv", workflow_views.audit_export_csv, name="audit_export_csv"),
     path("complaints/<int:pk>/verify/", workflow_views.verify_resolution, name="verify_resolution"),
     path("complaints/<int:pk>/dispute/", workflow_views.dispute_resolution, name="dispute_resolution"),
     path("complaints/<int:pk>/cancel/", workflow_views.citizen_cancel, name="citizen_cancel"),

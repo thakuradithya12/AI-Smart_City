@@ -1,5 +1,11 @@
 # Progress
 
+## 2026-11-25 — E.5 audit workspace and safe CSV
+
+- Added an admin audit viewer/export and a supervisor view scoped to complaints visible in the supervisor's department. Added action, object-type and date filters with pagination.
+- CSV cells beginning with `=`, `+`, `-` or `@` (also after leading whitespace) are prefixed with an apostrophe. Added tests for department scope, admin export, citizen denial and formula injection.
+- `py_compile` and `git diff --check` passed. Runtime pytest remains not verified because the local Python has no Django and Docker cannot connect.
+
 ## 2026-11-25 — E.4 reduced role dashboards
 
 - Implemented a role-specific live dashboard for citizen, field worker, department official, supervisor and admin, based on `citizen_dashboard_mobile`, `field_dashboard_mobile`, `department_dashboard_water_sewer`, `supervisor_overview_qa`, and `city_overview_admin_dashboard` references.
