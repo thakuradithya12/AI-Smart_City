@@ -1,33 +1,79 @@
-# AI SMART CITY
+# AI Smart City
 
-A Django website for citizens to report civic issues and follow their resolution. AI, if delivered, only suggests a category to a human reviewer.
+AI Smart City is a Django website for reporting civic problems and tracking the response. A citizen submits a complaint with a category, description, map pin and photo. Reviewers route it to a department; department staff assign a field worker; a supervisor or the citizen checks the work before the complaint is closed. Status changes and audit records are kept for accountability.
 
-## Local development
+## Complaint workflow
 
-1. Install Docker Desktop with its Linux engine and Docker Compose.
-2. Copy `.env.example` to `.env` and replace the local placeholder values.
-3. Build and start the local PostGIS database and web app with `docker compose up --build`.
-4. In another terminal run `docker compose exec web python manage.py migrate` and `docker compose exec web python manage.py seed_demo` to create the local synthetic Telangana demo area and role accounts. The command prints each new random password once. Use `docker compose exec web python manage.py changepassword triage_reviewer@example.test` if the local triage password was already printed and lost.
-5. Open `http://localhost:8000/` and sign in at `http://localhost:8000/accounts/login/`.
+The status labels, outgoing transitions and permitted roles below are generated from [`docs/WORKFLOW.md`](docs/WORKFLOW.md), which in turn is generated from the transition table in `apps/workflow/services.py`. Run `python scripts/sync_readme_workflow.py` after regenerating the workflow reference.
 
-Initial migrations for the model-bearing apps are included. The local demo database currently has a synthetic square area centered in Hyderabad, Telangana. It is provided only to exercise local reporting and routing; it is not a real municipal ward or pilot boundary. Authoritative pilot coordinates and ward polygons have not been supplied. The public HTTPS deployment is not configured because no domain or server has been supplied.
+<!-- WORKFLOW_TABLE_START -->
 
-## Current status and known limits
+| Status | Allowed transitions |
+|---|---|
+| `submitted` — Submitted | `in_triage` (System); `cancelled` (Admin, Citizen) |
+| `in_triage` — In triage | `info_requested` (Triage reviewer); `routed` (Admin, Triage reviewer); `rejected` (Admin, Triage reviewer); `cancelled` (Admin, Citizen) |
+| `info_requested` — Information requested | `in_triage` (Citizen, System); `cancelled` (Admin, Citizen) |
+| `routed` — Routed | `acknowledged` (Department official, Supervisor); `in_triage` (Department official, Supervisor); `cancelled` (Admin, Citizen) |
+| `acknowledged` — Acknowledged | `assigned` (Department official, Supervisor); `cancelled` (Admin) |
+| `assigned` — Assigned | `in_progress` (Field worker); `cancelled` (Admin) |
+| `in_progress` — In progress | `resolved_pending_verification` (Field worker); `cancelled` (Admin) |
+| `resolved_pending_verification` — Awaiting verification | `verified_closed` (Citizen, Supervisor); `reopened` (Citizen, Supervisor); `cancelled` (Admin) |
+| `verified_closed` — Verified closed | None (terminal) |
+| `rejected` — Rejected | None (terminal) |
+| `cancelled` — Cancelled | None (terminal) |
+| `reopened` — Reopened | `assigned` (Supervisor); `cancelled` (Admin) |
 
-The local citizen and staff complaint lifecycle is implemented through report submission, triage/routing, department assignment, field evidence and work claims, and separate verification/reopen actions. The CivicOps UI archive integration is documented in [`docs/UI_DESIGN.md`](docs/UI_DESIGN.md), with the extracted screens in [`docs/ui_reference/`](docs/ui_reference/).
+<!-- WORKFLOW_TABLE_END -->
 
-The v1 behavior contract is [`docs/SPEC.md`](docs/SPEC.md). The sequenced plan for finishing and proving the backend is [`docs/BACKEND_ROADMAP.md`](docs/BACKEND_ROADMAP.md). It distinguishes existing implementation from gates that still require current evidence.
+## Roles
 
-The component map is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md); role-based operating steps are in [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md). Phase 6 acceptance evidence and remaining release gates are in [`docs/PHASE6_ACCEPTANCE.md`](docs/PHASE6_ACCEPTANCE.md).
+| Role | Main responsibility |
+|---|---|
+| Citizen | Submit reports, follow their own complaints, and confirm or dispute a claimed fix. |
+| Triage reviewer | Review incoming reports, select a department, request information, or reject with a reason. |
+| Department official | Acknowledge department work, transfer with a reason, and assign a field worker. |
+| Field worker | See assigned tasks, add before/after evidence, and record a work-completion claim. |
+| Supervisor | Assign or reassign department work and verify or reopen claimed fixes. |
+| Admin | Manage application configuration and users; administrative overrides are audited. |
 
-The public HTTPS deployment remains unconfigured because no domain or server has been supplied. Pilot centre coordinates and authoritative ward boundaries are pending; the local synthetic demo area must not be used as pilot data. AI training and inference were not delivered because no rights-cleared owner photo set and grouping manifest are present. The candidate dataset research is documented in [`ml/DATASETS.md`](ml/DATASETS.md). Latest deployment and verification limits are recorded in [`PROGRESS.md`](PROGRESS.md), [`docs/LIMITS.md`](docs/LIMITS.md), and [`docs/PARKING_LOT.md`](docs/PARKING_LOT.md).
+Complaint access is scoped on the server by `Complaint.objects.visible_to(user)`. A work-completion claim and the verification outcome are separate records; a claim never closes a complaint by itself.
 
-Day 2 local routes, demo seeding and the vendor asset download/check command are documented in [`docs/README.md`](docs/README.md).
+## Run locally
 
-## Privacy and retention
+The local setup needs Docker Desktop with the Linux engine and Docker Compose. It starts Django with PostGIS and uses private local media storage.
 
-New citizen accounts store a unique Indian phone number and name, complaint descriptions, map pins and evidence photos. Existing staff email identifiers remain only until their accounts are assigned phone numbers. SMS/OTP verification is not implemented. The report form records consent. Do not submit emergency requests; this platform is not an emergency service. Evidence is served only to users authorized for the associated complaint. No automatic complaint or photo deletion is configured. Before public deployment, the project owner must approve and publish a retention period and deletion process; until then, production data collection is not authorized.
+```powershell
+Copy-Item .env.example .env
+docker compose up --build -d db web
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py seed_demo
+```
 
-## Production operations
+Open `http://localhost:8000/`. The seed command creates a synthetic Hyderabad demo ward and demo role accounts. It generates random passwords and prints each new password once; store them securely for the session. The demo seed is for a disposable development database only.
 
-The detailed fresh Ubuntu VM, deploy, rollback, backup, and restore commands are in [`docs/RUNBOOK_UBUNTU.md`](docs/RUNBOOK_UBUNTU.md). Do not deploy until a real server/domain and pilot location have been supplied and reviewed.
+## Run checks
+
+```powershell
+docker compose run --rm checks
+docker compose run --rm -e DJANGO_SETTINGS_MODULE=config.settings.prod -e DJANGO_SECRET_KEY=local-check-only-change-before-use -e DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1 -e DJANGO_CSRF_TRUSTED_ORIGINS=https://localhost web python manage.py check --deploy
+```
+
+The checks service runs the migration drift check, pytest, Ruff, Bandit and pip-audit. The second command runs Django's production configuration check; its HSTS warnings should be reviewed against the configured production host. GitHub Actions runs the checks on pushes and pull requests. A change is CI-verified only when the run evidence names that exact commit SHA.
+
+## Limits and current operating status
+
+- **AI is off.** No classifier model or inference is delivered. AI may not route, prioritize or close complaints; E.6 and browser automation are outside the current delivery cut.
+- **Geography is demo-only.** The seed ward is a synthetic area around Hyderabad and is not an authoritative municipal boundary. Pilot coordinates and ward data are still required.
+- **Email is console-only in local development.** Local email is printed by Django's console backend. Production delivery needs owner-supplied SMTP settings; SMS/OTP is not implemented.
+- **D1 deployment inputs are owner to supply.** No public server/domain values are assumed. Do not treat the local deployment as a live HTTPS pilot.
+- **This is not an emergency service.** Location pins and photos can be imperfect evidence, and the project has no official government integration.
+
+## Project documents
+
+- [Local and production operations runbook](docs/RUNBOOK_UBUNTU.md)
+- [Workflow reference](docs/WORKFLOW.md)
+- [User guide](docs/USER_GUIDE.md)
+- [Privacy and retention notice](docs/PRIVACY.md)
+- [Limits](docs/LIMITS.md)
+- [Test report](docs/TEST_REPORT.md)
+- [Changelog](PROGRESS.md)

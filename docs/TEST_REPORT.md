@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — human-written README and changelog
+
+- Replaced `README.md` with a product overview, generated workflow status table, role summary, local setup/check commands, and current limits (AI off, synthetic demo geography, local console email, and owner-supplied deployment inputs). Reworked `PROGRESS.md` as a concise dated changelog.
+- Added a test asserting the README workflow table stays synchronized with `docs/WORKFLOW.md`. `python scripts/sync_readme_workflow.py --check`, Python syntax compilation, and focused pytest passed (1 passed). Django-backed tests and CI on this commit are not verified.
+
 ## 2026-11-25 — Ubuntu operations runbook
 
 - Updated `docs/RUNBOOK_UBUNTU.md` with owner-supplied D1 prerequisites, the complete `.env.example` variable groups, first production startup, local-only demo loading, Caddy/HTTPS, hourly scheduler-driven retention, backups, restore rehearsal, updates and rollback.
