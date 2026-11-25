@@ -2,17 +2,34 @@
 
 import django.contrib.gis.db.models.fields
 import django.db.models.deletion
+from django.db import DatabaseError
 from django.db import migrations, models
+
+
+def ensure_postgis(apps, schema_editor):
+    """Create PostGIS before any model migration creates geometry columns."""
+    if schema_editor.connection.vendor != "postgresql":
+        raise RuntimeError("PostGIS is required; configure a PostgreSQL/PostGIS database.")
+    try:
+        schema_editor.execute("CREATE EXTENSION IF NOT EXISTS postgis")
+    except DatabaseError as exc:
+        raise RuntimeError(
+            "Could not enable the required PostGIS extension. The database role must be "
+            "allowed to run CREATE EXTENSION postgis; ask the database owner to enable "
+            "PostGIS, then rerun migrations."
+        ) from exc
 
 
 class Migration(migrations.Migration):
 
     initial = True
+    atomic = True
 
     dependencies = [
     ]
 
     operations = [
+        migrations.RunPython(ensure_postgis, migrations.RunPython.noop),
         migrations.CreateModel(
             name='Department',
             fields=[

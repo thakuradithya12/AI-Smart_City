@@ -1,5 +1,11 @@
 # Test report
 
+## 2026-11-25 — Render startup and PostGIS migration bootstrap
+
+- Added `scripts/start_render.sh` to run migrations, collect static assets, conditionally seed only when `DEMO_SEED=1`, and start Gunicorn. Added a `DEMO_SEED=0` template default.
+- The first geography migration now runs `CREATE EXTENSION IF NOT EXISTS postgis` before spatial tables, inside an explicit atomic migration, with a clear permission/setup error. A Render restart does not clear Neon migration history; interruption during this atomic migration rolls back both extension/schema work and the migration record, while a completed migration remains recorded in persistent Neon. Manually deleting `django_migrations` is a deployment blocker because the rest of the schema migrations are not replay-safe.
+- `tests/test_render_start_command.py` — 1 passed; Python syntax compilation and `git diff --check` passed. PostGIS migration tests were added but cannot collect locally because Django is unavailable. No Neon role/extension test has been run.
+
 ## 2026-11-25 — deployment settings and DATABASE_URL parsing
 
 - `config.settings.base` now reads `DATABASE_URL`, `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, and `CSRF_TRUSTED_ORIGINS`, while retaining the existing `DJANGO_*`/Postgres Compose aliases. The URL parser uses only the Python standard library, percent-decodes credentials and database name, carries connection query options such as `sslmode=require`, and always selects Django's PostGIS engine.
