@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — phase1 promotion
+
+- GitHub Actions run [45601898000](https://github.com/thakuradithya12/AI-Smart_City/actions/runs/45601898000) succeeded on `6de99703e478dea3f5defbda3c2bc5e7965071ce`. The owner refreshed CI artifacts on this exact SHA: 201 pytest tests passed, all checks passed, Bandit reported no issues, and pip-audit reported no known vulnerabilities.
+- Fast-forwarded `master` to the tested SHA and pushed tag `verified-phase1-2` at that same SHA. This report entry is a follow-up documentation change and is not itself CI-verified.
+
 ## 2026-11-25 — CI dashboard fixture correction
 
 - Run [45569758547](https://github.com/thakuradithya12/AI-Smart_City/actions/runs/45569758547) on `e6960b38d66bf11bc9ef46cfac8ac31ab13b6342` failed: 1 failed, 200 passed. The only failure was `tests/test_role_dashboards.py::test_role_dashboard_uses_role_scoped_complaints_and_quick_links[citizen-Your reports-My reports]` (assertion at the recent-complaints visibility check): the fixture assigned every operational complaint to the citizen, while expecting her to see only her own complaint. Corrected test data to use a separate reporter for operational complaints and reserve the citizen account for `DASH-CITIZEN`; production visibility logic is unchanged. This corrects an invalid test fixture, not an authorization behavior.
