@@ -25,6 +25,11 @@
 - The no-email notification test reused a citizen fixture with a non-empty email. Clear the address before invoking the command so the test exercises the intended email-less path.
 - `python -m py_compile tests/test_notifications.py` — exit 0; focused pytest exited 4 during collection because Django is not installed locally; `git diff --check` — exit 0.
 
+## 2026-11-25 — CI pytest development email backend assertion
+
+- Run #26 showed the test's `settings.EMAIL_BACKEND` read as Django's expected `locmem` test backend. Updated the test to inspect `config.settings.dev.EMAIL_BACKEND`, the actual development default, rather than Django's test-time override.
+- `python -m py_compile tests/test_notifications.py` — exit 0; focused pytest exited 4 during collection because Django is not installed locally; `git diff --check` — exit 0.
+
 ## 2026-11-25 — CI run #25 error-template URL fix
 
 - The supplied pytest output reports four custom error-page failures: `NoReverseMatch: Reverse for 'home' not found` while rendering templates. `tests.error_urls` overrides the root URLConf but did not provide the named `home` route used by the shared error templates.

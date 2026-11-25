@@ -14,6 +14,7 @@ from apps.geography.models import Category, Department, Ward
 from apps.notifications.models import Notification
 from apps.notifications.services import notify_overdue_supervisors, notify_transition
 from apps.workflow.services import transition
+from config.settings import dev as dev_settings
 
 
 @pytest.fixture
@@ -63,8 +64,9 @@ def notification_setup(db):
     )
 
 
-def test_development_uses_console_email_backend(settings):
-    assert settings.EMAIL_BACKEND == "django.core.mail.backends.console.EmailBackend"
+def test_development_uses_console_email_backend():
+    # Django's test environment replaces the runtime backend with locmem; inspect dev config itself.
+    assert dev_settings.EMAIL_BACKEND == "django.core.mail.backends.console.EmailBackend"
 
 
 @pytest.mark.django_db

@@ -489,6 +489,11 @@
 
 - Corrected the email-less notification test to clear the email on its citizen fixture; the shared fixture otherwise had an email and could not exercise the in-app-only path.
 - `python -m py_compile tests/test_notifications.py` — exit 0; focused pytest exited 4 during collection because Django is not installed locally; `git diff --check` — exit 0.
+
+### CI pytest: development email backend assertion (2026-11-25)
+
+- The test runner intentionally swaps Django's email backend to `locmem`; changed the assertion to inspect the development settings module directly, which is the configuration the test intends to verify.
+- `python -m py_compile tests/test_notifications.py` — exit 0; focused pytest exited 4 during collection because Django is not installed locally; `git diff --check` — exit 0.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.
