@@ -1,7 +1,13 @@
 .git/
-.env
-.env.*
+.github/
+_ci/
+.env*
 *.zip
+node_modules/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
 ml/data/
 private_media/
 backups/
@@ -12,4 +18,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
 staticfiles/

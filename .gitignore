@@ -1,17 +1,31 @@
-.env
+# Secrets and local environment files
+.env*
+!.env.example
+
+# Python environments, bytecode and test artifacts
 .venv/
 .python-runtime/
 .uv-cache/
 __pycache__/
 *.py[cod]
 *.sqlite3
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
 staticfiles/
+
+# Local/user data and downloaded inputs
 private_media/
 backups/
 ml/data/
-.pytest_cache/
-.ruff_cache/
-coverage.xml
 _ci/
-
 *.zip
+
+# JavaScript packages and editor/OS state
+node_modules/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
