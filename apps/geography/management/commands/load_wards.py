@@ -71,10 +71,16 @@ class Command(BaseCommand):
                 if has_area_overlap(ward.boundary, other.boundary):
                     raise CommandError(f"Ward boundary '{ward.name}' overlaps active ward '{other.name}'.")
 
-        for ward in wards:
+        for index, ward in enumerate(wards):
             existing_ward = Ward.objects.filter(name=ward.name).first()
             if existing_ward:
-                ward.pk = existing_ward.pk
+                # Validate updates on the persisted instance so unique checks exclude itself.
+                existing_ward.boundary = ward.boundary
+                existing_ward.source = ward.source
+                existing_ward.effective_from = ward.effective_from
+                existing_ward.effective_to = None
+                ward = existing_ward
+                wards[index] = ward
             try:
                 ward.full_clean()
             except ValidationError as exc:
