@@ -8,6 +8,7 @@
 - Standardized Gunicorn resource defaults at one worker and two threads, with Render/Compose ports supplied through environment (deployment item 4).
 - Added two original, clearly labeled sample illustrations and idempotent demo complaints that restore missing private evidence files after restart (deployment item 5).
 - Added a focused regression test for D6's configurable OSM tile URL, visible attribution, and exact CSP image-host allow-list (deployment item 6).
+- Added the Render + Neon free-demo browser guide, with provider limits and the Neon permission gate recorded (deployment item 7).
 - Added privacy export, account deletion/anonymisation, retention cleanup and the rolling 12-hour session test (E.1–E.2).
 - Added the first three-day citizen verification reminder, reduced role dashboards, and the scoped audit viewer with formula-safe CSV (E.3–E.5).
 - Corrected the dashboard authorization test fixture. CI run 45601898000 passed on `6de99703e478dea3f5defbda3c2bc5e7965071ce`; `master` was fast-forwarded and `verified-phase1-2` was tagged at that exact SHA.

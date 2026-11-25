@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — free Render + Neon deployment guide
+
+- Added browser-based Render Docker + Neon PostGIS steps, environment variable name inventory, migration/extension permission gate, free-tier warm-up and ephemeral evidence limitations, migration-history warning, and durable-platform migration path. Linked the guide from README. No `render.yaml` was added because dashboard setup is sufficient and the owner has not supplied service/account values; the guide cites Render's official Docker/service docs and Neon's official PostGIS instructions.
+- Documentation-only change; `git diff --check` passed. No provider accounts, Neon role, Render service, or free-tier behavior has been exercised.
+
 ## 2026-11-25 — OSM demo tiles and CSP
 
 - Confirmed D6's configurable canonical OSM demo URL, visible copyright attribution, and CSP restriction to the OSM tile host. Added a static regression test that checks the template, map script and exact CSP `img-src` host list.
