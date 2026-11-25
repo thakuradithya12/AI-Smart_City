@@ -84,14 +84,14 @@ class Command(BaseCommand):
                         min(notification.attempts - 1, len(settings.NOTIFICATION_RETRY_DELAYS_SECONDS) - 1)
                     ]
                     notification.next_attempt_at = timezone.now() + timedelta(seconds=delay)
-                notification.save(update_fields=["last_error", "next_attempt_at"])
+                notification.save(update_fields=["attempts", "last_error", "next_attempt_at"])
                 failed += 1
             else:
                 notification.attempts += 1
                 notification.sent_at = timezone.now()
                 notification.next_attempt_at = None
                 notification.last_error = ""
-                notification.save(update_fields=["sent_at", "next_attempt_at", "last_error"])
+                notification.save(update_fields=["attempts", "sent_at", "next_attempt_at", "last_error"])
                 sent += 1
 
         self.stdout.write(

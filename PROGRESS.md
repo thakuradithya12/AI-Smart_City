@@ -463,6 +463,12 @@
 - `python -m pytest tests/test_error_pages.py::test_custom_error_templates_render -q` — exit 4 during collection (`ModuleNotFoundError: No module named 'django'`); `python -m py_compile tests/error_urls.py` — exit 0; `git diff --check` — exit 0.
 - Error-page behavior remains unverified locally; CI rerun required.
 - Marked the two public landing tests as database-enabled because the live landing query reads recent status events. `python -m py_compile tests/test_error_pages.py` — exit 0; `git diff --check` — exit 0; runtime pytest remains unavailable without Django.
+
+### CI pytest: notification attempt counter persistence (2026-11-25)
+
+- The CI retry tests fail because `send_notifications` increments `attempts` but omitted that field from both success and failure `update_fields`, so the database retained zero attempts and retry caps never applied. Persisted the field on both paths.
+- Existing tests cover successful delivery, failure isolation, and retry cap. `python -m py_compile apps/notifications/management/commands/send_notifications.py` — exit 0; focused pytest collection exited 2 (`ModuleNotFoundError: No module named 'django'`); `git diff --check` — exit 0.
+- Runtime behavior awaits CI verification.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.
