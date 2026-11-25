@@ -84,7 +84,8 @@ def test_every_url_has_an_explicit_public_or_role_checked_policy():
     route_names = {name for name, _ in routes}
     private_app_routes = set(PRIVATE_ROUTE_GUARDS)
     private_admin_routes = {
-        name for name in route_names if name.startswith("admin:") and name not in PUBLIC_ROUTE_ALLOWLIST
+        name for name in route_names
+        if (name == "admin" or name.startswith("admin:")) and name not in PUBLIC_ROUTE_ALLOWLIST
     }
     classified_routes = PUBLIC_ROUTE_ALLOWLIST | private_app_routes | private_admin_routes
 
@@ -96,7 +97,7 @@ def test_every_url_has_an_explicit_public_or_role_checked_policy():
     for name, callback in routes:
         if name in PUBLIC_ROUTE_ALLOWLIST:
             continue
-        if name.startswith("admin:"):
+        if name == "admin" or name.startswith("admin:"):
             # Django's AdminSite wraps private views with its staff/superuser permission gate.
             assert getattr(callback, "__wrapped__", None) is not None, name
             continue

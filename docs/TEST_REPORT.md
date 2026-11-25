@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — CI route inventory root admin route
+
+- Run 45605763174 on `e17c30d534cba36426c29ef4679385057cf7c330` reported the root Django admin index route as unclassified (`name == "admin"`), while nested routes use the `admin:` namespace. Added the index route to the private admin inventory and require the same Django admin wrapper. This is one root-cause fix; no route policy was relaxed.
+- Syntax compilation and `git diff --check` pass. The Django-backed inventory test is pending refreshed CI evidence.
+
 ## 2026-11-25 — production deploy check attempt
 
 - Attempted `python manage.py check --deploy --settings=config.settings.prod` with local-only `SECRET_KEY`, `DEBUG=0`, `ALLOWED_HOSTS=localhost,127.0.0.1`, and `CSRF_TRUSTED_ORIGINS=https://localhost`. It exited before Django checks with `ModuleNotFoundError: No module named 'django'`.

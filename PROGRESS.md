@@ -2,6 +2,10 @@
 
 ## 2026-11-25
 
+- Fixed one route-inventory CI failure by classifying the unnamespaced Django admin index alongside the namespaced admin routes, retaining the staff-wrapper assertion.
+
+## 2026-11-25
+
 - Added environment aliases for deployment settings and a standard-library `DATABASE_URL` parser that always selects Django's PostGIS backend (deployment item 1).
 - Added a Render startup command and atomic, idempotent PostGIS extension creation to the first geography migration; migration-ledger deletion is explicitly a deploy blocker (deployment item 2).
 - Confirmed the public database health endpoint and route allow-list meet deployment item 3; existing tests cover its public response and generic DB failure.
