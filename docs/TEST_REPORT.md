@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — route authorisation inventory
+
+- Added a resolver-wide route inventory. Public routes must appear on a named allow-list; private app routes must be listed with the source-level role/object guard and carry `login_required`; Django admin routes must be wrapped by its staff permission gate. Any new unclassified route fails the test.
+- `python -m py_compile tests/test_route_authorisation.py` and `git diff --check` pass. Focused pytest could not collect because Django is not installed in the host Python (`ModuleNotFoundError: django`); runtime behavior and CI are not verified.
+
 ## 2026-11-25 — phase1 promotion
 
 - GitHub Actions run [45601898000](https://github.com/thakuradithya12/AI-Smart_City/actions/runs/45601898000) succeeded on `6de99703e478dea3f5defbda3c2bc5e7965071ce`. The owner refreshed CI artifacts on this exact SHA: 201 pytest tests passed, all checks passed, Bandit reported no issues, and pip-audit reported no known vulnerabilities.
