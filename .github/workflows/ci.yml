@@ -47,6 +47,7 @@ jobs:
       - run: python -m pip install -r requirements/dev.txt
       - run: ruff check .
       - run: bandit -r apps -ll
+      - run: python manage.py makemigrations --check --dry-run
       - run: pytest
       - run: pip-audit -r requirements/base.txt
       - run: python manage.py check --deploy --settings=config.settings.prod
