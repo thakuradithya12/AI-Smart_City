@@ -30,3 +30,13 @@ class PhoneOrLegacyEmailBackend(ModelBackend):
         if user.check_password(password) and self.user_can_authenticate(user):
             return user
         return None
+
+
+def axes_username(request, credentials):
+    """Use the same canonical identifier for Axes lockout keys as login lookup."""
+    identifier = credentials.get("username") or credentials.get("phone_number") or ""
+    try:
+        return normalize_phone_number(identifier)
+    except ValidationError:
+        # Legacy staff emails are case-insensitive; normalize other invalid input too.
+        return str(identifier).strip().casefold()

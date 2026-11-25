@@ -32,6 +32,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {"default": {"ENGINE": "django.contrib.gis.db.backends.postgis", "NAME": os.environ.get("POSTGRES_DB", "smart_city"), "USER": os.environ.get("POSTGRES_USER", "smart_city"), "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""), "HOST": os.environ.get("POSTGRES_HOST", "localhost"), "PORT": os.environ.get("POSTGRES_PORT", "5432")}}
 AUTH_USER_MODEL = "accounts.User"
 AUTHENTICATION_BACKENDS = ["axes.backends.AxesStandaloneBackend", "apps.accounts.backends.PhoneOrLegacyEmailBackend"]
+AXES_USERNAME_CALLABLE = "apps.accounts.backends.axes_username"
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = 1
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.PBKDF2PasswordHasher"]

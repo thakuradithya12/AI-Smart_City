@@ -479,6 +479,11 @@
 
 - Added the department supervisor missing from `console_setup`; the message-history query test uses that role to read an in-department complaint.
 - `python -m py_compile tests/test_console_workflow.py` — exit 0; `git diff --check` — exit 0. Runtime pytest is not verified locally because Django is unavailable.
+
+### CI pytest: canonical Axes lockout identifiers (2026-11-25)
+
+- Configured django-axes 9's documented `AXES_USERNAME_CALLABLE` to reuse phone normalization and case-fold legacy email identifiers, preventing spelling variants from splitting one user's failed-login counter. Added the decision record; existing phone/email lockout integration tests cover the behavior.
+- `python -m py_compile apps/accounts/backends.py config/settings/base.py` — exit 0; `git diff --check` — exit 0; `python -m pytest tests/test_accounts.py -k axes_locks -q` — exit 2 during collection (`ModuleNotFoundError: No module named 'django'`). CI verification is required.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.
