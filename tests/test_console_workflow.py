@@ -20,6 +20,7 @@ def console_setup(db):
     citizen = User.objects.create_user(email="console-citizen@example.test", password="Strong!Password982", name="Console Citizen")
     reviewer = User.objects.create_user(email="console-reviewer@example.test", password="Strong!Password982", name="Console Reviewer", role=User.Role.TRIAGE_REVIEWER)
     official = User.objects.create_user(email="console-official@example.test", password="Strong!Password982", name="Road Official", role=User.Role.DEPARTMENT_OFFICIAL, department=department_a)
+    supervisor = User.objects.create_user(email="console-supervisor@example.test", password="Strong!Password982", name="Road Supervisor", role=User.Role.SUPERVISOR, department=department_a)
     field_worker = User.objects.create_user(email="console-worker@example.test", password="Strong!Password982", name="Road Worker", role=User.Role.FIELD_WORKER, department=department_a)
     other_official = User.objects.create_user(email="water-official@example.test", password="Strong!Password982", name="Water Official", role=User.Role.DEPARTMENT_OFFICIAL, department=department_b)
     admin = User.objects.create_user(email="console-admin@example.test", password="Strong!Password982", name="Console Admin", role=User.Role.ADMIN)

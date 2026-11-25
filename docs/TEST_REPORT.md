@@ -10,6 +10,11 @@
 - Run #26 could not set up either expiry test because `day4_setup` was module-local to `test_day4_workflow.py`. Added a local, minimal expiry fixture.
 - `python -m py_compile tests/test_info_request_expiry.py` — exit 0; pytest collection exited 2 because Django is not installed locally; `git diff --check` — exit 0. Runtime behavior is pending CI.
 
+## 2026-11-25 — CI pytest console supervisor fixture
+
+- Run #26 reported `KeyError: 'supervisor'` in the complaint-detail query-count test because its shared console fixture omitted the supervisor account. Added a department-scoped supervisor to that fixture.
+- `python -m py_compile tests/test_console_workflow.py` — exit 0; `git diff --check` — exit 0. Runtime pytest is pending CI.
+
 ## 2026-11-25 — CI run #25 error-template URL fix
 
 - The supplied pytest output reports four custom error-page failures: `NoReverseMatch: Reverse for 'home' not found` while rendering templates. `tests.error_urls` overrides the root URLConf but did not provide the named `home` route used by the shared error templates.
