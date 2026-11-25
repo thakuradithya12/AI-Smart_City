@@ -1,5 +1,10 @@
 # Progress
 
+## 2026-11-25 — E.2 D14 rolling session test
+
+- Kept the already configured 12-hour rolling session policy and added a database-backed test that advances the request clock, checks session-store expiry moves forward, and checks the refreshed cookie max-age.
+- `python -m py_compile tests/test_observability.py` and `git diff --check` passed. Runtime test is not verified because Django is unavailable to the host Python and Docker is unavailable.
+
 ## 2026-11-25 — E.1 privacy and retention
 
 - Added the public privacy page, versioned consent capture, signed-in JSON export (including phone number), citizen deletion requests with anonymised accounts and preserved audit actors, and `purge_expired` for 12/6/24-month retention. The scheduler already discovers and runs this command hourly.

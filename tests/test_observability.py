@@ -3,7 +3,9 @@ import os
 import subprocess
 import sys
 import uuid
+from datetime import timedelta
 from logging import INFO, LogRecord
+from unittest.mock import patch
 
 import pytest
 from django.db import OperationalError
@@ -62,6 +64,29 @@ def test_explicit_same_site_cookie_policy(settings):
 def test_idle_session_timeout_uses_rolling_twelve_hour_window(settings):
     assert settings.SESSION_COOKIE_AGE == 43200
     assert settings.SESSION_SAVE_EVERY_REQUEST is True
+
+
+@pytest.mark.django_db
+def test_session_expiry_slides_forward_after_an_authenticated_request(client, settings):
+    from django.contrib.sessions.models import Session
+
+    from apps.accounts.models import User
+
+    user = User.objects.create_user(
+        phone_number="9876501234", password="Strong!Password982", name="Session Test"
+    )
+    client.force_login(user)
+    session_key = client.session.session_key
+    original_expiry = Session.objects.get(session_key=session_key).expire_date
+    later_request = original_expiry - timedelta(hours=6)
+
+    with patch("django.utils.timezone.now", return_value=later_request):
+        response = client.get("/healthz/")
+
+    refreshed_expiry = Session.objects.get(session_key=session_key).expire_date
+    assert refreshed_expiry == later_request + timedelta(seconds=settings.SESSION_COOKIE_AGE)
+    assert refreshed_expiry > original_expiry
+    assert int(response.cookies[settings.SESSION_COOKIE_NAME]["max-age"]) == 43200
 
 
 def test_owner_retention_defaults_are_configurable(settings):

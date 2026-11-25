@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — E.2 D14 rolling session test
+
+- Added a test that checks a later authenticated request refreshes the stored 12-hour expiry and cookie max-age. The settings already matched D14 (`43200`, `SESSION_SAVE_EVERY_REQUEST=True`).
+- `python -m py_compile tests/test_observability.py` — exit 0; `git diff --check` — exit 0. Runtime Django test is not verified in this host; Docker engine is unavailable.
+
 ## 2026-11-25 — E.1 privacy and retention
 
 - Added a privacy notice/export/deletion flow, versioned consent, account anonymisation that preserves audit actor references, and a PostGIS-backed retention command for expired complaint details and evidence. Added coverage for phone-number export, complaint visibility, account anonymisation, retention cleanup, the 24-month inactive-account rule, consent version and overlapping-run lock behavior.
