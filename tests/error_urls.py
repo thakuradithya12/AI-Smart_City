@@ -22,6 +22,7 @@ def server_error_trigger(request):
 
 urlpatterns = [
     path("", home, name="home"),
+    path("login/", home, name="login"),
     path("400/", bad_request_trigger),
     path("403/", forbidden_trigger),
     path("500/", server_error_trigger),
