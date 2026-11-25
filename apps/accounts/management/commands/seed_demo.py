@@ -13,6 +13,14 @@ from django.utils import timezone
 # Fixed local demo centre in Hyderabad, Telangana; this is not pilot geography.
 DEMO_LATITUDE = 17.3850
 DEMO_LONGITUDE = 78.4867
+DEMO_ACCOUNT_PHONES = {
+    User.Role.CITIZEN: "+919876502201",
+    User.Role.TRIAGE_REVIEWER: "+919876502202",
+    User.Role.DEPARTMENT_OFFICIAL: "+919876502203",
+    User.Role.FIELD_WORKER: "+919876502204",
+    User.Role.SUPERVISOR: "+919876502205",
+    User.Role.ADMIN: "+919876502206",
+}
 
 class Command(BaseCommand):
     help = "Create local demo accounts with random passwords (printed once)."
@@ -58,26 +66,56 @@ class Command(BaseCommand):
             User.Role.CITIZEN,
             User.Role.TRIAGE_REVIEWER,
             User.Role.DEPARTMENT_OFFICIAL,
-            User.Role.SUPERVISOR,
             User.Role.FIELD_WORKER,
+            User.Role.SUPERVISOR,
+            User.Role.ADMIN,
         ]
         for role in roles:
             email = f"{role}@example.test"
+            phone_number = DEMO_ACCOUNT_PHONES[role]
             password = secrets.token_urlsafe(24)
             defaults = {
                 "name": f"Demo {role.replace('_', ' ').title()}",
                 "role": role,
-                "username": email,
+                "username": phone_number,
+                "phone_number": phone_number,
+                "email": email if role != User.Role.CITIZEN else None,
             }
             if role in {User.Role.DEPARTMENT_OFFICIAL, User.Role.SUPERVISOR, User.Role.FIELD_WORKER}:
                 defaults["department"] = demo_department
-            user, created = User.objects.get_or_create(email=email, defaults=defaults)
+            if role == User.Role.ADMIN:
+                defaults.update(is_staff=True, is_superuser=True)
+            user = User.objects.filter(phone_number=phone_number).first()
+            if user is None:
+                # Migrate a previous email-only local demo seed in place when one exists.
+                user = User.objects.filter(email=email).first()
+            created = user is None
             if created:
-                user.set_password(password)
-                user.save(update_fields=["password"])
-                self.stdout.write(f"{email} {password}")
+                if role == User.Role.ADMIN:
+                    user = User.objects.create_superuser(
+                        phone_number=phone_number, password=password,
+                        name=defaults["name"], email=None,
+                    )
+                else:
+                    user = User.objects.create_user(
+                        phone_number=phone_number, password=password,
+                        name=defaults["name"], role=role,
+                        email=defaults["email"],
+                        department=defaults.get("department"),
+                    )
             else:
-                if role in {User.Role.DEPARTMENT_OFFICIAL, User.Role.SUPERVISOR, User.Role.FIELD_WORKER} and user.department_id != demo_department.pk:
+                user.phone_number = phone_number
+                user.username = phone_number
+                user.email = defaults["email"]
+                user.role = role
+                user.name = defaults["name"]
+                if role in {User.Role.DEPARTMENT_OFFICIAL, User.Role.SUPERVISOR, User.Role.FIELD_WORKER}:
                     user.department = demo_department
-                    user.save(update_fields=["department"])
-                self.stdout.write(f"Skipped existing account: {email}")
+                if role == User.Role.ADMIN:
+                    user.is_staff = True
+                    user.is_superuser = True
+                user.save()
+            if created:
+                self.stdout.write(f"Created {role} login {phone_number}; password (shown once): {password}")
+            else:
+                self.stdout.write(f"Skipped existing demo account: {phone_number}")

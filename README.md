@@ -71,6 +71,7 @@ The checks service runs the migration drift check, pytest, Ruff, Bandit and pip-
 ## Project documents
 
 - [Local and production operations runbook](docs/RUNBOOK_UBUNTU.md)
+- [10-minute lifecycle demo](docs/DEMO_SCRIPT.md)
 - [Workflow reference](docs/WORKFLOW.md)
 - [User guide](docs/USER_GUIDE.md)
 - [Privacy and retention notice](docs/PRIVACY.md)

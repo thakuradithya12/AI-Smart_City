@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — phone-based demo accounts and walkthrough
+
+- Added `docs/DEMO_SCRIPT.md`, a timed role-by-role flow from citizen submission through independent `verified_closed` verification and an admin audit review. Extended local-only `seed_demo` to create synthetic phone logins for citizen, triage, department, field worker, supervisor and admin; new passwords remain random and are printed once. Added a seed idempotence/account test.
+- Python syntax compilation, README workflow synchronization, and `git diff --check` pass. Focused pytest could not collect because Django is not installed in the host Python. Seed behavior and CI are not verified.
+
 ## 2026-11-25 — human-written README and changelog
 
 - Replaced `README.md` with a product overview, generated workflow status table, role summary, local setup/check commands, and current limits (AI off, synthetic demo geography, local console email, and owner-supplied deployment inputs). Reworked `PROGRESS.md` as a concise dated changelog.

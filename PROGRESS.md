@@ -6,6 +6,7 @@
 - Added the first three-day citizen verification reminder, reduced role dashboards, and the scoped audit viewer with formula-safe CSV (E.3–E.5).
 - Corrected the dashboard authorization test fixture. CI run 45601898000 passed on `6de99703e478dea3f5defbda3c2bc5e7965071ce`; `master` was fast-forwarded and `verified-phase1-2` was tagged at that exact SHA.
 - Added a route authorization inventory test, completed the Ubuntu operations runbook, rewrote the README with the generated workflow table, and replaced this file with a concise changelog.
+- Added a 10-minute lifecycle demo script and phone-based local demo accounts for all six roles; passwords remain random and are printed only on account creation.
 - AI remains off and Playwright remains out of scope. The route inventory and documentation commits after the green run have not yet been CI-verified.
 
 ## 2026-11-23
