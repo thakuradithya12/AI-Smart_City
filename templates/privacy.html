@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Privacy notice · AI Smart City{% endblock %}
+{% block content %}
+<section class="page-intro"><p class="eyebrow">Your information</p><h1>Privacy notice</h1><p>This notice explains what AI Smart City stores to receive and process civic reports.</p></section>
+<section class="panel">
+  <h2>Information we use</h2>
+  <p>Citizen accounts use your name and Indian mobile number. The number is not verified by SMS. We do not ask for a government ID. A report may include its category, description, landmark, confirmed map pin, consent record and photos. Staff accounts may retain an email address during phone migration.</p>
+  <h2>How we use reports</h2>
+  <p>Authorised reviewers and service departments use report details to route and complete civic work. Photos are stored privately. The platform is not an emergency service.</p>
+  <h2>Consent version</h2>
+  <p>Current notice version: <strong>{{ privacy_notice_version }}</strong>. We record the notice version and time when you submit a report.</p>
+  <h2>Retention</h2>
+  <ul>
+    <li>Verified and closed complaint details and photos: 12 months after closure.</li>
+    <li>Rejected or cancelled complaint details and photos: 6 months after that decision.</li>
+    <li>Inactive accounts: 24 months.</li>
+    <li>Deletion requests: processed within 30 days. We anonymise the account and retain append-only audit and status history.</li>
+  </ul>
+  <p>When complaint retention expires, we remove its description, landmark, precise map pin and evidence files. The status-history and audit rows stay for traceability. Earlier audit records may retain message text that was recorded as part of an action. These periods are owner-provided implementation defaults, not legal advice.</p>
+  {% if request.user.is_authenticated %}
+    <h2>Your data</h2>
+    <p><a class="button" href="{% url 'privacy_export' %}">Download a copy of my data</a></p>
+    {% if request.user.role == "citizen" %}
+      {% if pending_deletion %}
+        <p role="status">A deletion request is pending. It will be handled within {{ deletion_request_days }} days.</p>
+      {% else %}
+        <form method="post" action="{% url 'privacy_delete_request' %}">
+          {% csrf_token %}
+          <p>Request account deletion. We will anonymise your profile and retain complaint history and audit rows under the retention schedule (within {{ deletion_request_days }} days).</p>
+          <button class="button-danger" type="submit">Request account deletion</button>
+        </form>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+</section>
+{% endblock %}

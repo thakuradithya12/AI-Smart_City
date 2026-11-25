@@ -75,7 +75,7 @@
 
     <section class="report-step" data-step="4" aria-labelledby="step-consent-title">
       <h2 id="step-consent-title">5. Privacy and consent</h2>
-      <label class="check">{{ form.consent }} <span>I have read the privacy notice. We store your name, phone number and report details to process this complaint.</span></label>
+      <label class="check">{{ form.consent }} <span>I have read the <a href="{% url 'privacy_notice' %}" target="_blank" rel="noopener">privacy notice</a>. We store your name, phone number and report details to process this complaint.</span></label>
       {{ form.consent.errors }}
       <label class="check">{{ form.pin_confirmed }} <span>{{ form.pin_confirmed.label }}</span></label>
       {{ form.pin_confirmed.errors }}

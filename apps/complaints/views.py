@@ -85,6 +85,7 @@ def report(request):
                         gps_accuracy_m=form.cleaned_data["gps_accuracy_m"],
                         ward=ward, due_at=timezone.now() + timedelta(hours=category.default_due_hours),
                         consent_at=timezone.now(),
+                        consent_version=settings.PRIVACY_NOTICE_VERSION,
                     )
                     complaint.public_id = f"ASC-{timezone.localdate():%Y}-{complaint.pk:06d}"
                     complaint.save(update_fields=["public_id"])

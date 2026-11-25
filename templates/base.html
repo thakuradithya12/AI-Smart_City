@@ -39,7 +39,7 @@
     {% for message in messages %}<p class="notice{% if message.tags %} {{ message.tags }}{% endif %}" role="status">{{ message }}</p>{% endfor %}
     {% block content %}{% endblock %}
   </main>
-  <footer class="site-footer"><div><strong>AI Smart City</strong><span>Report local issues. Follow progress. Help improve your neighbourhood.</span></div><span class="footer-note">This platform is not an emergency service.</span></footer>
+  <footer class="site-footer"><div><strong>AI Smart City</strong><span>Report local issues. Follow progress. Help improve your neighbourhood.</span></div><span class="footer-note"><a href="{% url 'privacy_notice' %}">Privacy</a> · This platform is not an emergency service.</span></footer>
   <script defer src="{% static 'js/accessibility.js' %}"></script>
   <script defer src="{% static 'js/city-background.js' %}"></script>
   {% block extra_scripts %}{% endblock %}

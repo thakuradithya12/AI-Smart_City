@@ -1,5 +1,11 @@
 # Test report
 
+## 2026-11-25 — E.1 privacy and retention
+
+- Added a privacy notice/export/deletion flow, versioned consent, account anonymisation that preserves audit actor references, and a PostGIS-backed retention command for expired complaint details and evidence. Added coverage for phone-number export, complaint visibility, account anonymisation, retention cleanup, the 24-month inactive-account rule, consent version and overlapping-run lock behavior.
+- `python -m py_compile` on changed Python modules and tests — exit 0; `git diff --check` — exit 0.
+- `python -m pytest tests/test_privacy.py tests/test_workflow_invariants.py -q` — exit 1 during collection (`ModuleNotFoundError: No module named 'django'`). `docker compose run --rm checks` cannot connect to `npipe:////./pipe/dockerDesktopLinuxEngine`; runtime tests, migrations and PostgreSQL locking are not verified.
+
 ## 2026-11-25 — C workflow lock
 
 - Added generated workflow documentation and invariant tests for reachability, terminal states, pre-acknowledgement cancellation, separate claim/verification fields, citizen silence, and generated-document freshness.

@@ -2,7 +2,7 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import admin
 from apps.accounts.phone_numbers import normalize_phone_number
-from .models import User
+from .models import PrivacyDeletionRequest, User
 
 class AdminUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -29,3 +29,10 @@ class UserAdmin(DjangoUserAdmin):
     )
     add_fieldsets = ((None, {"classes": ("wide",), "fields": ("username", "phone_number", "email", "name", "role", "department", "password1", "password2")} ),)
     search_fields = ("phone_number", "email", "name")
+
+
+@admin.register(PrivacyDeletionRequest)
+class PrivacyDeletionRequestAdmin(admin.ModelAdmin):
+    list_display = ("user", "requested_at", "processed_at")
+    readonly_fields = ("user", "requested_at", "processed_at")
+    ordering = ("processed_at", "requested_at")

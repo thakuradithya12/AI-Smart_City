@@ -1,5 +1,11 @@
 # Progress
 
+## 2026-11-25 — E.1 privacy and retention
+
+- Added the public privacy page, versioned consent capture, signed-in JSON export (including phone number), citizen deletion requests with anonymised accounts and preserved audit actors, and `purge_expired` for 12/6/24-month retention. The scheduler already discovers and runs this command hourly.
+- Added five privacy/retention tests, a report consent-version assertion, and a missing privacy URL in the isolated error-page fixture. Complaint references and append-only status/audit rows are kept; expired report details and evidence files are removed.
+- `py_compile` and `git diff --check` passed. Runtime pytest is **not verified**: collection fails because host Python has no Django; Docker checks cannot connect to the Docker engine. Migration application and overlapping PostgreSQL execution remain unverified.
+
 ## 2026-11-25 — C workflow lock
 
 - Added a generator and generated transition reference from `Complaint.Status` and `TRANSITIONS`; comparison records the approved V2 admin cancellation extension and the citizen pre-acknowledgement cancellation alignment.

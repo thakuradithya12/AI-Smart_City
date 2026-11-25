@@ -372,6 +372,7 @@ def test_report_creates_complaint_evidence_and_events(client, citizen, ward, cat
     assert complaint.status == Complaint.Status.IN_TRIAGE
     assert complaint.public_id.endswith(f"{complaint.pk:06d}")
     assert complaint.ward == ward and complaint.due_at
+    assert complaint.consent_version == "2026-11-25-v1"
     assert str(complaint.gps_accuracy_m) == "4.75"
     assert complaint.evidence.count() == 1
     assert complaint.status_events.count() == 1
