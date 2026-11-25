@@ -20,6 +20,11 @@
 - Run #26's phone-format and legacy-email-case lockout tests reached the expected Axes lockout, then authenticated successfully using a variant spelling because Axes keyed attempts by the raw submitted username. Configured `AXES_USERNAME_CALLABLE` to reuse login's phone normalizer and case-fold legacy email identifiers; the Axes 9.0 API was checked against its official documentation.
 - `python -m py_compile apps/accounts/backends.py config/settings/base.py` — exit 0; `git diff --check` — exit 0; focused pytest exited 2 during collection because Django is unavailable locally. CI verification is required.
 
+## 2026-11-25 — CI pytest in-app-only notification test
+
+- The no-email notification test reused a citizen fixture with a non-empty email. Clear the address before invoking the command so the test exercises the intended email-less path.
+- `python -m py_compile tests/test_notifications.py` — exit 0; focused pytest exited 4 during collection because Django is not installed locally; `git diff --check` — exit 0.
+
 ## 2026-11-25 — CI run #25 error-template URL fix
 
 - The supplied pytest output reports four custom error-page failures: `NoReverseMatch: Reverse for 'home' not found` while rendering templates. `tests.error_urls` overrides the root URLConf but did not provide the named `home` route used by the shared error templates.

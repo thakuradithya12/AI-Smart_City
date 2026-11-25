@@ -318,6 +318,8 @@ def test_send_notifications_retries_then_caps_attempts_without_storing_pii(
 @pytest.mark.django_db
 def test_notifications_without_email_remain_in_app_only(notification_setup):
     setup = notification_setup
+    setup.citizen.email = ""
+    setup.citizen.save(update_fields=["email"])
     notification = Notification.objects.create(
         recipient=setup.citizen, complaint=setup.complaint,
         event=Notification.Event.REPORT_RECEIVED, status=Complaint.Status.IN_TRIAGE,
