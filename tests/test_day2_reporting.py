@@ -16,7 +16,11 @@ from django.test import override_settings
 from django.urls import reverse
 
 from apps.accounts.models import User
-from apps.accounts.management.commands.seed_demo import DEMO_LATITUDE, DEMO_LONGITUDE
+from apps.accounts.management.commands.seed_demo import (
+    DEMO_ACCOUNT_PHONES,
+    DEMO_LATITUDE,
+    DEMO_LONGITUDE,
+)
 from apps.audit.models import AuditEvent
 from apps.complaints.models import Complaint, Evidence, StatusEvent
 from apps.complaints.forms import ReportForm
@@ -341,18 +345,21 @@ def test_seed_demo_creates_hyderabad_demo_ward_defaults_and_prints_passwords_onc
         "pothole": "Pothole", "garbage": "Garbage", "drainage": "Drainage",
         "streetlight": "Streetlight", "water_leakage": "Water leakage", "other": "Other",
     }
-    assert User.objects.count() == 5
+    assert User.objects.count() == len(DEMO_ACCOUNT_PHONES) == 6
+    assert set(User.objects.values_list("role", flat=True)) == set(DEMO_ACCOUNT_PHONES)
+    assert set(User.objects.values_list("phone_number", flat=True)) == set(DEMO_ACCOUNT_PHONES.values())
     assert RoutingRule.objects.filter(ward=ward).count() == 6
     demo_department = User.objects.get(role=User.Role.FIELD_WORKER).department
     assert set(Category.objects.values_list("default_department_id", flat=True)) == {demo_department.pk}
     assert set(RoutingRule.objects.filter(ward=ward).values_list("department_id", flat=True)) == {demo_department.pk}
-    assert output.getvalue().count("@example.test ") == 5
+    assert all(phone_number in output.getvalue() for phone_number in DEMO_ACCOUNT_PHONES.values())
+    assert output.getvalue().count("password (shown once)") == len(DEMO_ACCOUNT_PHONES)
 
     second_output = StringIO()
     with override_settings(DEBUG=True):
         call_command("seed_demo", stdout=second_output)
-    assert "Skipped existing account" in second_output.getvalue()
-    assert "@example.test " not in second_output.getvalue()
+    assert "Skipped existing demo account" in second_output.getvalue()
+    assert "password (shown once)" not in second_output.getvalue()
 
 
 @pytest.mark.django_db

@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — CI demo seed expectation
+
+- Run 45605763174 also found the older `test_seed_demo_creates_hyderabad_demo_ward_defaults_and_prints_passwords_once` still expected five email-based accounts. The explicit demo seed now creates six accounts keyed by phone (including admin), as required for the current login flow. Updated that test to assert all six exact roles and phone numbers and that passwords print only once; ward/category/routing assertions are unchanged. This corrects a stale expectation without weakening product coverage.
+- Syntax compilation and `git diff --check` pass. Database-backed test execution awaits refreshed CI.
+
 ## 2026-11-25 — CI route inventory root admin route
 
 - Run 45605763174 on `e17c30d534cba36426c29ef4679385057cf7c330` reported the root Django admin index route as unclassified (`name == "admin"`), while nested routes use the `admin:` namespace. Added the index route to the private admin inventory and require the same Django admin wrapper. This is one root-cause fix; no route policy was relaxed.

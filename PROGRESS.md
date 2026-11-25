@@ -3,6 +3,7 @@
 ## 2026-11-25
 
 - Fixed one route-inventory CI failure by classifying the unnamespaced Django admin index alongside the namespaced admin routes, retaining the staff-wrapper assertion.
+- Corrected the legacy demo seed test to assert the current six phone-based roles and one-time password output, preserving all ward/category/routing checks.
 
 ## 2026-11-25
 
