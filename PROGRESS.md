@@ -504,6 +504,11 @@
 
 - Updated the map asset test to assert the tile URL is supplied through the template's `map_tile_url` data attribute and consumed by Leaflet, matching the D6-swappable setting instead of requiring a hardcoded OSM URL in JavaScript.
 - `python -m py_compile tests/test_accessibility.py` — exit 0; focused pytest exited 4 during collection because Django is unavailable locally; `git diff --check` — exit 0.
+
+### CI pytest: reassignment test identifier length (2026-11-25)
+
+- Shortened the parameterized reassignment test's generated complaint IDs; including the full `department_official` role and status exceeded the model's 32-character limit before the behavior under test ran.
+- `python -m py_compile tests/test_day4_workflow.py` — exit 0; focused pytest exited 4 during collection because Django is not installed locally; `git diff --check` — exit 0.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.

@@ -200,8 +200,9 @@ def test_authorized_staff_can_reassign_without_changing_status(day4_setup, role,
         email=f"replacement-{role}-{status}@example.test", password="Strong!Password982",
         name="Replacement Worker", role=User.Role.FIELD_WORKER, department=setup["department"],
     )
+    public_id = f"R-{role[:3]}-{status[:3]}"
     complaint = Complaint.objects.create(
-        public_id=f"REASSIGN-{role}-{status}", citizen=setup["citizen"], category=setup["category"],
+        public_id=public_id, citizen=setup["citizen"], category=setup["category"],
         location=Point(0, 0, srid=4326), ward=setup["ward"], department=setup["department"],
         assignee=setup["worker"], status=status, consent_at="2026-01-01T00:00:00Z",
     )

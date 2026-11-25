@@ -40,6 +40,11 @@
 - Run #26's map accessibility test expected the obsolete hardcoded OSM tile URL in JavaScript. The implementation correctly reads D6's configurable `map_tile_url` from the template; updated the assertion to cover that contract.
 - `python -m py_compile tests/test_accessibility.py` — exit 0; focused pytest exited 4 during collection because Django is unavailable locally; `git diff --check` — exit 0.
 
+## 2026-11-25 — CI pytest reassignment test ID length
+
+- Run #26's department-official reassignment cases exceeded the complaint `public_id` field's 32-character maximum while constructing test records. Replaced generated IDs with short role/status identifiers.
+- `python -m py_compile tests/test_day4_workflow.py` — exit 0; focused pytest exited 4 during collection because Django is not installed locally; `git diff --check` — exit 0.
+
 ## 2026-11-25 — CI run #25 error-template URL fix
 
 - The supplied pytest output reports four custom error-page failures: `NoReverseMatch: Reverse for 'home' not found` while rendering templates. `tests.error_urls` overrides the root URLConf but did not provide the named `home` route used by the shared error templates.
