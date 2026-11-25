@@ -1,5 +1,11 @@
 # Progress
 
+## 2026-11-25 — C workflow lock
+
+- Added a generator and generated transition reference from `Complaint.Status` and `TRANSITIONS`; comparison records the approved V2 admin cancellation extension and the citizen pre-acknowledgement cancellation alignment.
+- Added six workflow invariant tests for reachability, terminal states, citizen cancellation during an information request, separate claim/verification, no silence-based closure, and generated-doc freshness.
+- `python scripts/generate_workflow_doc.py --check`, Python syntax compilation, and `git diff --check` passed. Django tests are **not verified**: Docker could not connect to its engine pipe, and the host Python lacks Django.
+
 ## 2026-11-25 — B.4 phase1 CI promotion
 
 - Owner-provided checks and Actions run `45562646639` are green on `b91531009a681f5ab293f0d1aa3a6c6b7a633630` (179 tests passed; migration check, Ruff, Bandit, pip-audit and deploy check completed successfully).

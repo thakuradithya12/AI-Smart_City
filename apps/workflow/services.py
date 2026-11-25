@@ -100,7 +100,7 @@ TRANSITIONS = {
     ("reopened", "assigned"): {"supervisor"},
     ("submitted", "cancelled"): {"citizen", "admin"},
     ("in_triage", "cancelled"): {"citizen", "admin"},
-    ("info_requested", "cancelled"): {"admin"},
+    ("info_requested", "cancelled"): {"admin", "citizen"},
     ("routed", "cancelled"): {"citizen", "admin"},
     ("acknowledged", "cancelled"): {"admin"},
     ("assigned", "cancelled"): {"admin"},

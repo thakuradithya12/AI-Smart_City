@@ -1,5 +1,11 @@
 # Test report
 
+## 2026-11-25 — C workflow lock
+
+- Added generated workflow documentation and invariant tests for reachability, terminal states, pre-acknowledgement cancellation, separate claim/verification fields, citizen silence, and generated-document freshness.
+- `python scripts/generate_workflow_doc.py --check` — exit 0; `python -m py_compile scripts/generate_workflow_doc.py tests/test_workflow_invariants.py` — exit 0; `git diff --check` — exit 0.
+- `docker compose run --rm checks` — not run: Docker could not connect to `npipe:////./pipe/dockerDesktopLinuxEngine`. Host Python has no Django, so runtime tests are not verified.
+
 ## 2026-11-25 — phase1 CI promotion evidence
 
 - GitHub Actions run [45562646639](https://github.com/thakuradithya12/AI-Smart_City/actions/runs/45562646639) — **success** for commit `b91531009a681f5ab293f0d1aa3a6c6b7a633630` (`tests: include login route in error page URL config`). Owner-provided `_ci/runs.txt` and `_ci/checks.txt` agree on the successful run; checks report no pending migrations, `179 passed`, Ruff and Bandit clean, and pip-audit found no known vulnerabilities.
