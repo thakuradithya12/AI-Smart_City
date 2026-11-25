@@ -9,7 +9,7 @@ docker compose up -d db web
 docker compose exec web python manage.py migrate
 ```
 
-Open `http://localhost:8000/`. The public landing page is a supplied UI mockup. `/ui-showcase/` lists 47 static screens for visual review; mockup names, metrics, complaint IDs and locations are sample content. They do not represent live complaint data.
+Open `http://localhost:8000/`. The public landing page is rendered by `templates/landing.html`. The design mockups under `docs/ui_reference/` are reference material only; they are not routes or live complaint data.
 
 Sign in at `/accounts/login/` with an Indian mobile number and password, or register at `/register/` with a unique Indian mobile number, name and password. New citizen accounts do not ask for email. SMS/OTP ownership verification is not part of this release, so use a number you control. Staff accounts are provisioned by an administrator; staff not yet assigned a phone number can continue using their existing email identifier until migrated. Do not use demo accounts or passwords on a public server.
 
@@ -44,8 +44,8 @@ Load an owner-supplied, source-documented ward GeoJSON only after reviewing its 
 
 ## Privacy and support
 
-The app stores a citizen's phone number/name, complaint details, locations and evidence photos. Existing staff email identifiers remain only for unmigrated accounts. Do not submit secrets, identity documents or unrelated personal information. Evidence is private to users authorized for its complaint. No automatic complaint/photo deletion is configured: an owner-approved retention period and deletion process must be set before public deployment. Keep local `.env` values private and rotate any exposed credential.
+The app stores a citizen's phone number/name, complaint details, locations and evidence photos. Existing staff email identifiers remain only for unmigrated accounts. Do not submit secrets, identity documents or unrelated personal information. Evidence is private to users authorized for its complaint. The `purge_expired` command applies the documented retention periods and handles deletion requests; the scheduler is configured in the app, but the free Render host does not run it. A durable scheduled process and a verified production retention run are still required before public deployment. Keep local `.env` values private and rotate any exposed credential.
 
-The project has no municipal system integration and no public-domain deployment. Report outside-area errors indicate that ward data is missing or the chosen pin is unsupported; do not invent or adjust a pin merely to force a submission.
+The project has no municipal system integration and no verified public deployment. Report outside-area errors indicate that ward data is missing or the chosen pin is unsupported; do not invent or adjust a pin merely to force a submission.
 
 See [`docs/README.md`](README.md) for local flow and vendor assets, and [`RUNBOOK_UBUNTU.md`](RUNBOOK_UBUNTU.md) for deployment, rollback and restore instructions.

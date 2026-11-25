@@ -415,14 +415,14 @@ Git does not track directories independently; these paths are derived from the t
 
 ## Untracked and ignored working-tree items
 
-`git status --short --ignored` showed no ordinary untracked files. Ignored items present at inventory time:
+`git status --short --ignored` showed no ordinary untracked files. This is the pre-cleanup inventory recorded before generated caches were removed. Ignored items present at inventory time:
 
 - `.env` — local environment file; preserve and never read values or commit.
 - `.neon` — local Neon project-link metadata from the earlier experiment; retained locally and excluded through `.git/info/exclude`.
 - `_ci/` — owner-provided `runs.txt`, `latest-failed.txt`, and `checks.txt`; preserve as external CI evidence, never commit.
 - `private_media/` — private user/demo evidence files; protected, do not enumerate content in this report, move, or delete.
 - `backups/` — ignored backup directory; protected, preserve.
-- `.pytest_cache/`, `.ruff_cache/`, and all listed `__pycache__/` directories — regenerable ignored caches; cleanup candidates only after this report is committed.
+- `.pytest_cache/`, `.ruff_cache/`, and all listed `__pycache__/` directories — regenerable ignored caches; removed locally after this inventory was committed. They are not tracked.
 - `node_modules/` — absent on `phase1`; generated Neon experiment dependencies were removed from this checkout after the experiment commit was preserved.
 - `.python-runtime/`, `.uv-cache/`, `ml/data/`, and tracked-root ZIP files — absent at inventory time.
 
@@ -432,12 +432,12 @@ The root `.env`, `private_media/`, and `backups/` are protected data. No file co
 
 ### Branches
 
-- `phase1` — active demo-development branch; its remote counterpart is `origin/phase1`.
+- `phase1` — active demo-development branch; at the cleanup report update it points to `4d653e6`, and `origin/phase1` matches.
 - `master` — promoted/stable branch; currently points at the recorded verified phase1 run.
 - `wip/ai-assist` — unmerged AI work; owner-protected and retained.
 - `experiment/neon-realtime` — local-only experiment, commit `487de73ef74a8c4ff957451600eee93a6b094d3e`; owner-protected and unpushed.
 - `origin/master` — remote promoted/stable branch; currently at `2baf1f5`.
-- `origin/phase1` — remote active demo-development branch; current baseline was `1dacbaa` and is not fully merged into master, so it is not eligible for deletion.
+- `origin/phase1` — remote active demo-development branch at `4d653e6`; it is not fully merged into master, so it is not eligible for deletion.
 - `origin/HEAD` — symbolic remote default-branch pointer to `origin/master`, not an independent branch.
 
 ### Tags
@@ -453,7 +453,7 @@ No remote branch was deleted: `origin/phase1` is not fully merged into master. N
 
 ## Reference-check notes before removals
 
-- `git grep` found no source or test import/use of `factory_boy`; its only tracked hits are the dependency line in `requirements/dev.txt` and the historical stack table in `AGENTS.md`. Candidate: remove the dependency line in a separate commit, then rerun `pip-audit` and tests.
+- `git grep -n -F "factory_boy" -- apps tests` returned no hits. The dependency is unused by application/tests, but `pip-audit -r requirements/dev.txt --progress-spinner off` exited 1 without output in this environment, so the dependency remains until the audit can be rerun successfully. No dependency was removed.
 - Bootstrap and Leaflet source maps are referenced by the corresponding minified files' `sourceMappingURL` comments and by tests; keep them.
 - `static/js/accessibility.js` and `static/js/city-background.js` are included by `templates/base.html`; keep them. The civic street SVG is referenced by CSS.
 - ZAP baseline reports are referenced by `docs/TEST_REPORT.md` and `docs/zap.yaml`; keep security evidence.
@@ -461,4 +461,11 @@ No remote branch was deleted: `origin/phase1` is not fully merged into master. N
 
 ## Cleanup changes after inventory
 
-This section will record each later cleanup commit, its reference evidence, verification results, and any files retained despite appearing unused.
+- `d5f63e6` — added this file as the pre-removal inventory; 296 tracked files and 96 tracked-path directories were individually classified. No tracked files were removed.
+- `773ee77` — moved `AGENTS.md`, `UNDERSTANDING.md`, `PARKING_LOT.md`, and `DECISIONS_NEEDED.md` into `docs/internal/`; moved `PROGRESS.md` to `docs/CHANGELOG.md`; added the internal-notes index and corrected inbound references. Markdown relative-link check, README workflow sync, `compileall`, and `git diff --check` passed.
+- `13ac2fb` — rewrote the README for the current product and limits, added the documentation index, internal-note and mockup explanations, screenshot TODO, PR template, CONTRIBUTING, and the owner-selected `All rights reserved` notice. Corrected stale email-login/static-landing/no-remote statements while retaining dated historical test results. Markdown relative-link check, README workflow sync, `compileall`, and `git diff --check` passed.
+- `4d653e6` — strengthened `.gitignore` and `.dockerignore` for secrets, `_ci`, caches, Node packages, IDE and OS clutter. `git check-ignore` confirmed `.env`, `_ci`, `private_media`, Python caches, Node packages and IDE files are excluded; `.env.example` remains visible to Git. `git diff --check` passed.
+- Cleanup report follow-up — corrected `docs/USER_GUIDE.md` so its landing-page and retention descriptions match the application and the free-host scheduler limitation; the Markdown link check found no broken relative links.
+- After `4d653e6`, removed only regenerable `.pytest_cache/`, `.ruff_cache/`, and `__pycache__/` directories under the repository. `.env`, `.neon`, `_ci/`, `private_media/`, and `backups/` were left untouched.
+- No tests, CI steps/checks, application code, migrations, or dependencies were removed or weakened. `factory_boy` remains despite having no source/test references because the required `pip-audit` command did not run successfully. Source maps, referenced static assets, and ZAP reports remain because `git grep` found active references.
+- Dockerfile/startup inputs checked and present: `requirements/base.txt` (explicit Dockerfile COPY), the full build context, `manage.py`, `config/wsgi.py`, `config/settings/{base,prod}.py`, `apps/` including `purge_expired` and `seed_demo`, `templates/`, `static/`, and `scripts/start_render.sh`. Its referenced management commands and Gunicorn application target exist. The Docker daemon and full tests were not verified in this session. Current exact-head CI evidence is pending owner refresh for `4d653e6`; later report-only commits also require new exact-SHA evidence.
