@@ -519,6 +519,11 @@
 
 - The reviewer queue intentionally lists all non-terminal complaints, but the pagination test asserted every reviewer row had the `PAGE-T-` prefix while also creating other active statuses. Added an explicit `in_triage` filter to that case so it tests the target list slice.
 - `python -m py_compile tests/test_console_workflow.py` — exit 0; focused pytest exited 4 during collection because Django is unavailable locally; `git diff --check` — exit 0.
+
+### CI pytest: streamed evidence response test transaction (2026-11-25)
+
+- Marked the multi-role streaming evidence test as transactional because `FileResponse.close()` ends a request and closes the request-scoped DB connection; the test then performs more requests. This allows the test to exercise that lifecycle without retaining a closed connection inside pytest-django's outer atomic transaction.
+- `python -m py_compile tests/test_day4_workflow.py` — exit 0; focused pytest exited 4 during collection because Django is not installed locally; `git diff --check` — exit 0. CI must confirm the diagnosis.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.

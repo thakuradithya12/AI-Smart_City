@@ -147,7 +147,8 @@ def test_worker_cannot_see_unassigned_complaint_or_evidence(client, day4_setup):
     delete_private_files((evidence.original_path, evidence.display_path, evidence.thumbnail_path))
 
 
-@pytest.mark.django_db
+# Streamed responses close request-scoped database connections between role checks.
+@pytest.mark.django_db(transaction=True)
 def test_evidence_display_is_authorized_for_each_role_that_can_see_the_complaint(
     client, day4_setup, monkeypatch
 ):
