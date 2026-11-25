@@ -1,6 +1,11 @@
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.urls import path
 from django.views import defaults
+from django.http import HttpResponse
+
+
+def home(request):
+    return HttpResponse("Test home")
 
 
 def bad_request_trigger(request):
@@ -16,6 +21,7 @@ def server_error_trigger(request):
 
 
 urlpatterns = [
+    path("", home, name="home"),
     path("400/", bad_request_trigger),
     path("403/", forbidden_trigger),
     path("500/", server_error_trigger),

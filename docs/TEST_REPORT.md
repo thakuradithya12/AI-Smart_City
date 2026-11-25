@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — CI run #25 error-template URL fix
+
+- The supplied pytest output reports four custom error-page failures: `NoReverseMatch: Reverse for 'home' not found` while rendering templates. `tests.error_urls` overrides the root URLConf but did not provide the named `home` route used by the shared error templates.
+- Added a minimal test-only `home` route. `python -m py_compile tests/error_urls.py` — exit 0; `git diff --check` — exit 0. `python -m pytest tests/test_error_pages.py::test_custom_error_templates_render -q` — exit 4 during collection because Django is not installed locally; behavior awaits CI verification.
+
 ## 2026-11-25 — CI run #24, pytest startup failure
 
 - The owner-provided log for commit `b5ad417` shows pytest exits during `pytest_load_initial_conftests` while `django.setup()` populates `INSTALLED_APPS`. Exact exception: `django.core.exceptions.ImproperlyConfigured: Could not find the GDAL library ... Is GDAL installed?` at Django's installed `django/contrib/gis/gdal/libgdal.py:64`; this is a runner system-library omission, before test collection.
