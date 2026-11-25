@@ -217,7 +217,10 @@ def test_authorized_staff_can_reassign_without_changing_status(day4_setup, role,
         object_id=str(complaint.pk),
     )
     assert audit.before == {"assignee_id": setup["worker"].pk}
-    assert audit.after == {"assignee_id": replacement.pk}
+    expected_after = {"assignee_id": replacement.pk}
+    if role == User.Role.ADMIN:
+        expected_after["operation"] = "complaint_reassigned"
+    assert audit.after == expected_after
     assert audit.reason == "Worker unavailable for this task"
 
 
