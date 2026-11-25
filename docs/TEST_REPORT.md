@@ -4,6 +4,7 @@
 
 - The supplied pytest output reports four custom error-page failures: `NoReverseMatch: Reverse for 'home' not found` while rendering templates. `tests.error_urls` overrides the root URLConf but did not provide the named `home` route used by the shared error templates.
 - Added a minimal test-only `home` route. `python -m py_compile tests/error_urls.py` — exit 0; `git diff --check` — exit 0. `python -m pytest tests/test_error_pages.py::test_custom_error_templates_render -q` — exit 4 during collection because Django is not installed locally; behavior awaits CI verification.
+- Also marked the two public landing tests that access the database for recent status events with `django_db`. `python -m py_compile tests/test_error_pages.py` — exit 0; `git diff --check` — exit 0; pytest is unavailable locally without Django.
 
 ## 2026-11-25 — CI run #24, pytest startup failure
 

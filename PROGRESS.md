@@ -462,6 +462,7 @@
 - Added the named `home` route to the test error URLConf; Django's error templates reverse `home` while rendering 400/403/404/500 pages.
 - `python -m pytest tests/test_error_pages.py::test_custom_error_templates_render -q` — exit 4 during collection (`ModuleNotFoundError: No module named 'django'`); `python -m py_compile tests/error_urls.py` — exit 0; `git diff --check` — exit 0.
 - Error-page behavior remains unverified locally; CI rerun required.
+- Marked the two public landing tests as database-enabled because the live landing query reads recent status events. `python -m py_compile tests/test_error_pages.py` — exit 0; `git diff --check` — exit 0; runtime pytest remains unavailable without Django.
 # 2026-11-23 — 2.8 CSP default correction
 
 - Corrected the blank `.env.example` toggle behavior so production enforces CSP by default while development stays report-only unless explicitly configured.

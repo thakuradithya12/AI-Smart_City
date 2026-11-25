@@ -28,6 +28,7 @@ def test_custom_error_templates_render(client, path, status, heading):
     assert f"{status}.html" in [template.name for template in response.templates]
 
 
+@pytest.mark.django_db
 def test_public_landing_uses_template_and_archive_files_are_not_routed(client, settings, tmp_path):
     settings.BASE_DIR = tmp_path
 
@@ -65,6 +66,7 @@ def test_runtime_templates_and_scripts_have_no_external_asset_cdn_references():
     )
 
 
+@pytest.mark.django_db
 def test_base_uses_local_design_system_without_bootstrap(client):
     response = client.get("/")
     assert response.status_code == 200
