@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — deployment settings and DATABASE_URL parsing
+
+- `config.settings.base` now reads `DATABASE_URL`, `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, and `CSRF_TRUSTED_ORIGINS`, while retaining the existing `DJANGO_*`/Postgres Compose aliases. The URL parser uses only the Python standard library, percent-decodes credentials and database name, carries connection query options such as `sslmode=require`, and always selects Django's PostGIS engine.
+- `python -m pytest -q tests/test_database_config.py` — 6 passed. Python syntax compilation and `git diff --check` passed. Full Django settings loading, Neon connectivity/extension privileges, and `check --deploy` are not yet verified.
+
 ## 2026-11-25 — phone-based demo accounts and walkthrough
 
 - Added `docs/DEMO_SCRIPT.md`, a timed role-by-role flow from citizen submission through independent `verified_closed` verification and an admin audit review. Extended local-only `seed_demo` to create synthetic phone logins for citizen, triage, department, field worker, supervisor and admin; new passwords remain random and are printed once. Added a seed idempotence/account test.

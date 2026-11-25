@@ -1,11 +1,25 @@
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
+from config.database import database_config_from_url
+
 BASE_DIR = Path(__file__).resolve().parents[2]
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
-DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "true"
-ALLOWED_HOSTS = [host for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if host]
-CSRF_TRUSTED_ORIGINS = [origin for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if origin]
+SECRET_KEY = os.environ.get("SECRET_KEY", os.environ.get("DJANGO_SECRET_KEY", ""))
+DEBUG = os.environ.get("DEBUG", os.environ.get("DJANGO_DEBUG", "False")).lower() in {
+    "1", "true", "yes", "on",
+}
+ALLOWED_HOSTS = [
+    host for host in os.environ.get(
+        "ALLOWED_HOSTS", os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
+    ).split(",") if host
+]
+CSRF_TRUSTED_ORIGINS = [
+    origin for origin in os.environ.get(
+        "CSRF_TRUSTED_ORIGINS", os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "")
+    ).split(",") if origin
+]
 # Cross-origin tile requests require the site origin in Referer; never send full paths externally.
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
@@ -29,7 +43,22 @@ MIDDLEWARE = [
 ROOT_URLCONF = "config.urls"
 TEMPLATES = [{"BACKEND": "django.template.backends.django.DjangoTemplates", "DIRS": [BASE_DIR / "templates"], "APP_DIRS": True, "OPTIONS": {"context_processors": ["django.template.context_processors.request", "django.contrib.auth.context_processors.auth", "django.contrib.messages.context_processors.messages", "apps.notifications.context_processors.notification_badge"]}}]
 WSGI_APPLICATION = "config.wsgi.application"
-DATABASES = {"default": {"ENGINE": "django.contrib.gis.db.backends.postgis", "NAME": os.environ.get("POSTGRES_DB", "smart_city"), "USER": os.environ.get("POSTGRES_USER", "smart_city"), "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""), "HOST": os.environ.get("POSTGRES_HOST", "localhost"), "PORT": os.environ.get("POSTGRES_PORT", "5432")}}
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+if DATABASE_URL:
+    try:
+        default_database = database_config_from_url(DATABASE_URL)
+    except ValueError as exc:
+        raise ImproperlyConfigured(str(exc)) from exc
+else:
+    default_database = {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": os.environ.get("POSTGRES_DB", "smart_city"),
+        "USER": os.environ.get("POSTGRES_USER", "smart_city"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
+        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+        "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+    }
+DATABASES = {"default": default_database}
 AUTH_USER_MODEL = "accounts.User"
 AUTHENTICATION_BACKENDS = ["axes.backends.AxesStandaloneBackend", "apps.accounts.backends.PhoneOrLegacyEmailBackend"]
 AXES_USERNAME_CALLABLE = "apps.accounts.backends.axes_username"
