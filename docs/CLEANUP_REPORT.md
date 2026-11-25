@@ -1,0 +1,464 @@
+# Repository cleanup report
+
+## Scope and baseline
+
+Inventory recorded before any cleanup moves or removals. Baseline `phase1` SHA: `1dacbaa41edf370fab967b3f56c94cd9741057fa`. Git tracks files rather than empty directories; the directory list below is derived from tracked file paths. Disposition reasons are recorded per tracked path. Nothing is removed in this inventory commit.
+
+## Tracked files by disposition
+
+### KEEP
+
+- `.dockerignore` — Repository/container exclusion policy required to keep secrets, user data, caches, and local artifacts out of source/build contexts.
+- `.env.example` — Safe placeholder environment-variable reference used by local and deployment setup.
+- `.github/workflows/ci.yml` — Required CI workflow; do not weaken or remove any check.
+- `.gitignore` — Repository/container exclusion policy required to keep secrets, user data, caches, and local artifacts out of source/build contexts.
+- `Caddyfile` — Reverse-proxy/TLS configuration mounted by the production Compose stack.
+- `Dockerfile` — Application image build used by Docker Compose and Render.
+- `README.md` — Primary human-facing project entry point; rewrite for current scope and truthful status.
+- `apps/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/admin.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/apps.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/backends.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/management/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/management/commands/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/management/commands/purge_expired.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/management/commands/seed_demo.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/migrations/0001_initial.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/migrations/0002_user_phone_number_alter_user_email.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/migrations/0003_user_email_case_insensitive_unique.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/migrations/0004_normalize_legacy_email_usernames.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/migrations/0005_alter_user_options.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/migrations/0006_privacydeletionrequest.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/migrations/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/models.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/phone_numbers.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/urls.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/accounts/views.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/ai_assist/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/ai_assist/admin.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/ai_assist/apps.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/ai_assist/migrations/0001_initial.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/ai_assist/migrations/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/ai_assist/models.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/audit/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/audit/admin.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/audit/apps.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/audit/migrations/0001_initial.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/audit/migrations/0002_append_only_database_triggers.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/audit/migrations/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/audit/models.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/audit/services.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/admin.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/apps.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/fixtures/README.md` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/fixtures/demo-pothole.png` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/fixtures/demo-streetlight.png` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/forms.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/listing.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/management/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/management/commands/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/management/commands/check_sla.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/management/commands/expire_info_requests.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/management/commands/media_reconcile.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/migrations/0001_initial.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/migrations/0002_gps_accuracy_decimal.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/migrations/0003_evidence_thumbnail_path.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/migrations/0004_complaint_list_indexes.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/migrations/0005_complaint_landmark.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/migrations/0006_complaint_sla_fields.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/migrations/0007_privacy_retention_fields.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/migrations/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/models.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/services.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/complaints/views.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/console/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/console/apps.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/console/forms.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/console/urls.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/console/views.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/admin.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/apps.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/geometry.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/management/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/management/commands/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/management/commands/load_wards.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/migrations/0001_initial.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/migrations/0002_ward_ward_effective_window_valid.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/migrations/0003_category_display_fields.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/migrations/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/models.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/geography/services.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/admin.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/apps.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/context_processors.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/management/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/management/commands/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/management/commands/send_citizen_reminders.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/management/commands/send_notifications.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/migrations/0001_initial.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/migrations/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/models.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/services.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/urls.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/notifications/views.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/scheduler/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/scheduler/apps.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/scheduler/management/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/scheduler/management/commands/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/scheduler/management/commands/run_scheduler.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/scheduler/migrations/0001_initial.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/scheduler/migrations/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/scheduler/models.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/workflow/__init__.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/workflow/apps.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/workflow/permissions.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `apps/workflow/services.py` — Django application code, migrations, or command used by installed apps, URL handlers, models, management tasks, or tests.
+- `config/__init__.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/database.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/logging.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/middleware.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/settings/__init__.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/settings/base.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/settings/dev.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/settings/prod.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/urls.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/views.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `config/wsgi.py` — Django runtime configuration, database, URL, WSGI, logging, and middleware imported by the application.
+- `docker-compose.prod.yml` — Local/production service definitions used by the README, operations runbooks, and checks.
+- `docker-compose.yml` — Local/production service definitions used by the README, operations runbooks, and checks.
+- `docs/ARCHITECTURE.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/BACKEND_ROADMAP.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/CLARIFICATIONS.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/DECISIONS.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/DEMO_SCRIPT.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/DEPLOY_FREE.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/DESIGN_SYSTEM.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/LIMITS.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/PERFORMANCE.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/PHASE6_ACCEPTANCE.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/PRIVACY.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/README.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/ROADMAP_V2.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/RUNBOOK_UBUNTU.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/SPEC.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/TEST_REPORT.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/UI_DESIGN.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/USER_GUIDE.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/WORKFLOW.md` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/restore-test-2026-11-21.log` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/ui_reference/account_recovery_civicops_auth/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/analytics_reports_admin/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/audit_logs_admin/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/audit_workspace_supervisor_qa/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/blocked_tasks_water_sewer/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/citizen_dashboard_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/city_overview_admin_dashboard/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/civicops_design_system.md` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/complaint_details_citizen_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/complaint_details_cmp_2026_04182/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/complaint_queue_water_sewer/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/complaint_review_water_sewer/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/complaints_admin_queue/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/completed_work_water_sewer/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/department_dashboard_water_sewer/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/departments_admin/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/escalation_center_admin/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/escalation_review_supervisor_qa/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/field_dashboard_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/geographic_issue_map_admin/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/help_support_civicops/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/inspection_form_field_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/my_assigned_tasks_field_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/my_complaints_citizen_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/nearby_issues_map_citizen_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/notifications_citizen_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/officer_profile_field_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/performance_reports_supervisor_qa/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/personnel_zones_admin/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/profile_settings_citizen_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/public_issues_map_transparency/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/public_landing_civicops/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/register_civicops_auth/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/report_an_issue_guided_flow/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/resolution_feedback_citizen_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/resolution_review_queue_supervisor/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/resolution_review_supervisor/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/sign_in_civicops_auth/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/sla_monitoring_admin/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/supervisor_overview_qa/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/system_settings_admin/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/task_history_field_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/task_location_map_field_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/team_management_water_sewer/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/work_order_details_wo_2026_0891/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/work_order_execution_field_mobile/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/work_orders_admin/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/ui_reference/work_orders_water_sewer/code.html` — Design reference only; not served by the app. Add an explicit README to prevent confusion.
+- `docs/zap-baseline-2026-11-21-final.html` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/zap-baseline-2026-11-21-final.json` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/zap-baseline-2026-11-21.html` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/zap-baseline-2026-11-21.json` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `docs/zap.yaml` — Product, operations, decision, workflow, privacy, security evidence, or historical test documentation; review stale claims and index it.
+- `manage.py` — Django command entry point used by Compose, CI, and operational scripts.
+- `ml/DATASETS.md` — AI-off data-provenance/preflight material referenced by tests and roadmap; no datasets or model weights are tracked.
+- `ml/DATA_INTAKE.md` — AI-off data-provenance/preflight material referenced by tests and roadmap; no datasets or model weights are tracked.
+- `ml/MANIFEST_TEMPLATE.csv` — AI-off data-provenance/preflight material referenced by tests and roadmap; no datasets or model weights are tracked.
+- `ml/dataset_preflight.py` — AI-off data-provenance/preflight material referenced by tests and roadmap; no datasets or model weights are tracked.
+- `pyproject.toml` — Pytest and Ruff configuration consumed by CI and local checks.
+- `requirements/base.txt` — Pinned runtime or development dependency manifest consumed by Docker, Compose, or CI.
+- `requirements/dev.txt` — Keep the test/lint/audit dependency manifest; separately review the unused `factory_boy` entry (git grep found no code or test imports) and rerun pip-audit before removing that entry.
+- `scripts/backup.sh` — Operational, asset-verification, or generated-document script referenced by deployment docs, Docker/Compose, or tests.
+- `scripts/deploy.sh` — Operational, asset-verification, or generated-document script referenced by deployment docs, Docker/Compose, or tests.
+- `scripts/fetch_vendor_assets.ps1` — Operational, asset-verification, or generated-document script referenced by deployment docs, Docker/Compose, or tests.
+- `scripts/generate_workflow_doc.py` — Operational, asset-verification, or generated-document script referenced by deployment docs, Docker/Compose, or tests.
+- `scripts/restore_test.sh` — Operational, asset-verification, or generated-document script referenced by deployment docs, Docker/Compose, or tests.
+- `scripts/start_render.sh` — Operational, asset-verification, or generated-document script referenced by deployment docs, Docker/Compose, or tests.
+- `scripts/sync_readme_workflow.py` — Operational, asset-verification, or generated-document script referenced by deployment docs, Docker/Compose, or tests.
+- `static/css/site.css` — Static asset referenced by a template, stylesheet, application script, or test.
+- `static/img/civic-street-lines.svg` — Static asset referenced by a template, stylesheet, application script, or test.
+- `static/js/accessibility.js` — Static asset referenced by a template, stylesheet, application script, or test.
+- `static/js/city-background.js` — Static asset referenced by a template, stylesheet, application script, or test.
+- `static/js/report-flow.js` — Static asset referenced by a template, stylesheet, application script, or test.
+- `static/js/report-map.js` — Static asset referenced by a template, stylesheet, application script, or test.
+- `static/vendor/bootstrap/LICENSE.txt` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/bootstrap/bootstrap.bundle.min.js` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/bootstrap/bootstrap.bundle.min.js.map` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/bootstrap/bootstrap.min.css` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/bootstrap/bootstrap.min.css.map` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/leaflet/LICENSE.txt` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/leaflet/images/layers-2x.png` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/leaflet/images/layers.png` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/leaflet/images/marker-icon-2x.png` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/leaflet/images/marker-icon.png` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/leaflet/images/marker-shadow.png` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/leaflet/leaflet.css` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/leaflet/leaflet.js` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `static/vendor/leaflet/leaflet.js.map` — Pinned vendored runtime asset or its license/source map; templates/CSS/sourceMappingURL/tests or the fetch script reference it.
+- `templates/400.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/403.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/404.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/500.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/admin/geography/category/change_list.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/admin/geography/category/routing_gaps.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/base.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/complaints/_list_filters.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/complaints/_pagination.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/complaints/detail.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/complaints/my_complaints.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/complaints/register.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/complaints/report.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/console/audit_workspace.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/console/department_inbox.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/console/field_task_detail.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/console/field_tasks.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/console/triage_queue.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/home.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/landing.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/notifications/inbox.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/privacy.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/public_updates.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/registration/logged_out.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/registration/login.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/registration/password_reset_complete.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/registration/password_reset_confirm.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/registration/password_reset_done.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/registration/password_reset_email.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/registration/password_reset_form.html` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `templates/registration/password_reset_subject.txt` — Server-rendered template used through Django render calls, inheritance, or included template fragments.
+- `tests/__init__.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/error_urls.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_accessibility.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_accounts.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_audit_viewer.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_citizen_reminders.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_console_workflow.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_database_config.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_dataset_preflight.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_day2_reporting.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_day4_workflow.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_error_pages.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_geography_admin.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_info_request_expiry.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_login.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_map_tiles.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_notifications.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_observability.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_postgis_bootstrap.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_privacy.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_readme_workflow_sync.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_render_start_command.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_role_dashboards.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_route_authorisation.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_scheduler.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_seed_demo.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_sla.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_ward_import.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_workflow_invariants.py` — Regression or invariant test; removing it would weaken verification.
+- `tests/test_workflow_transitions.py` — Regression or invariant test; removing it would weaken verification.
+
+### MOVE
+
+- `AGENTS.md` — Move to `docs/internal/AGENTS.md`; Project-agent instructions belong with internal working notes.
+- `PROGRESS.md` — Move to `docs/CHANGELOG.md`; The dated progress log is a changelog, not a root-level process file.
+- `docs/DECISIONS_NEEDED.md` — Move to `docs/internal/DECISIONS_NEEDED.md`; This is an internal owner-decision register.
+- `docs/PARKING_LOT.md` — Move to `docs/internal/PARKING_LOT.md`; This is an internal deferred-work register, not user-facing product documentation.
+- `docs/UNDERSTANDING.md` — Move to `docs/internal/UNDERSTANDING.md`; This is an agent's implementation understanding and planning note.
+
+### REMOVE
+
+- None identified at the inventory baseline.
+
+## Tracked directory hierarchy
+
+Git does not track directories independently; these paths are derived from the tracked files above. Each directory is retained unless its contents are explicitly listed under MOVE.
+
+- `.github/workflows/` — KEEP — Repository automation configuration.
+- `apps/` — KEEP — Contains tracked application, documentation, or verification files listed above.
+- `apps/accounts/` — KEEP — Django app module or migration/management subpackage.
+- `apps/accounts/management/` — KEEP — Django app module or migration/management subpackage.
+- `apps/accounts/management/commands/` — KEEP — Django app module or migration/management subpackage.
+- `apps/accounts/migrations/` — KEEP — Django app module or migration/management subpackage.
+- `apps/ai_assist/` — KEEP — Django app module or migration/management subpackage.
+- `apps/ai_assist/migrations/` — KEEP — Django app module or migration/management subpackage.
+- `apps/audit/` — KEEP — Django app module or migration/management subpackage.
+- `apps/audit/migrations/` — KEEP — Django app module or migration/management subpackage.
+- `apps/complaints/` — KEEP — Django app module or migration/management subpackage.
+- `apps/complaints/fixtures/` — KEEP — Django app module or migration/management subpackage.
+- `apps/complaints/management/` — KEEP — Django app module or migration/management subpackage.
+- `apps/complaints/management/commands/` — KEEP — Django app module or migration/management subpackage.
+- `apps/complaints/migrations/` — KEEP — Django app module or migration/management subpackage.
+- `apps/console/` — KEEP — Django app module or migration/management subpackage.
+- `apps/geography/` — KEEP — Django app module or migration/management subpackage.
+- `apps/geography/management/` — KEEP — Django app module or migration/management subpackage.
+- `apps/geography/management/commands/` — KEEP — Django app module or migration/management subpackage.
+- `apps/geography/migrations/` — KEEP — Django app module or migration/management subpackage.
+- `apps/notifications/` — KEEP — Django app module or migration/management subpackage.
+- `apps/notifications/management/` — KEEP — Django app module or migration/management subpackage.
+- `apps/notifications/management/commands/` — KEEP — Django app module or migration/management subpackage.
+- `apps/notifications/migrations/` — KEEP — Django app module or migration/management subpackage.
+- `apps/scheduler/` — KEEP — Django app module or migration/management subpackage.
+- `apps/scheduler/management/` — KEEP — Django app module or migration/management subpackage.
+- `apps/scheduler/management/commands/` — KEEP — Django app module or migration/management subpackage.
+- `apps/scheduler/migrations/` — KEEP — Django app module or migration/management subpackage.
+- `apps/workflow/` — KEEP — Django app module or migration/management subpackage.
+- `config/` — KEEP — Contains tracked application, documentation, or verification files listed above.
+- `config/settings/` — KEEP — Django project configuration package.
+- `docs/` — KEEP — Contains tracked application, documentation, or verification files listed above.
+- `docs/ui_reference/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/account_recovery_civicops_auth/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/analytics_reports_admin/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/audit_logs_admin/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/audit_workspace_supervisor_qa/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/blocked_tasks_water_sewer/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/citizen_dashboard_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/city_overview_admin_dashboard/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/complaint_details_citizen_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/complaint_details_cmp_2026_04182/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/complaint_queue_water_sewer/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/complaint_review_water_sewer/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/complaints_admin_queue/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/completed_work_water_sewer/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/department_dashboard_water_sewer/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/departments_admin/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/escalation_center_admin/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/escalation_review_supervisor_qa/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/field_dashboard_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/geographic_issue_map_admin/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/help_support_civicops/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/inspection_form_field_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/my_assigned_tasks_field_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/my_complaints_citizen_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/nearby_issues_map_citizen_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/notifications_citizen_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/officer_profile_field_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/performance_reports_supervisor_qa/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/personnel_zones_admin/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/profile_settings_citizen_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/public_issues_map_transparency/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/public_landing_civicops/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/register_civicops_auth/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/report_an_issue_guided_flow/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/resolution_feedback_citizen_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/resolution_review_queue_supervisor/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/resolution_review_supervisor/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/sign_in_civicops_auth/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/sla_monitoring_admin/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/supervisor_overview_qa/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/system_settings_admin/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/task_history_field_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/task_location_map_field_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/team_management_water_sewer/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/work_order_details_wo_2026_0891/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/work_order_execution_field_mobile/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/work_orders_admin/` — KEEP — Reference-only mockups; not served by the application.
+- `docs/ui_reference/work_orders_water_sewer/` — KEEP — Reference-only mockups; not served by the application.
+- `ml/` — KEEP — Contains tracked application, documentation, or verification files listed above.
+- `requirements/` — KEEP — Contains tracked application, documentation, or verification files listed above.
+- `scripts/` — KEEP — Contains tracked application, documentation, or verification files listed above.
+- `static/css/` — KEEP — Runtime stylesheet, script, image, or pinned vendor asset subtree.
+- `static/img/` — KEEP — Runtime stylesheet, script, image, or pinned vendor asset subtree.
+- `static/js/` — KEEP — Runtime stylesheet, script, image, or pinned vendor asset subtree.
+- `static/vendor/bootstrap/` — KEEP — Runtime stylesheet, script, image, or pinned vendor asset subtree.
+- `static/vendor/leaflet/` — KEEP — Runtime stylesheet, script, image, or pinned vendor asset subtree.
+- `static/vendor/leaflet/images/` — KEEP — Runtime stylesheet, script, image, or pinned vendor asset subtree.
+- `templates/` — KEEP — Contains tracked application, documentation, or verification files listed above.
+- `templates/admin/geography/category/` — KEEP — Django-rendered template subtree.
+- `templates/complaints/` — KEEP — Django-rendered template subtree.
+- `templates/console/` — KEEP — Django-rendered template subtree.
+- `templates/notifications/` — KEEP — Django-rendered template subtree.
+- `templates/registration/` — KEEP — Django-rendered template subtree.
+- `tests/` — KEEP — Contains tracked application, documentation, or verification files listed above.
+
+## Untracked and ignored working-tree items
+
+`git status --short --ignored` showed no ordinary untracked files. Ignored items present at inventory time:
+
+- `.env` — local environment file; preserve and never read values or commit.
+- `.neon` — local Neon project-link metadata from the earlier experiment; retained locally and excluded through `.git/info/exclude`.
+- `_ci/` — owner-provided `runs.txt`, `latest-failed.txt`, and `checks.txt`; preserve as external CI evidence, never commit.
+- `private_media/` — private user/demo evidence files; protected, do not enumerate content in this report, move, or delete.
+- `backups/` — ignored backup directory; protected, preserve.
+- `.pytest_cache/`, `.ruff_cache/`, and all listed `__pycache__/` directories — regenerable ignored caches; cleanup candidates only after this report is committed.
+- `node_modules/` — absent on `phase1`; generated Neon experiment dependencies were removed from this checkout after the experiment commit was preserved.
+- `.python-runtime/`, `.uv-cache/`, `ml/data/`, and tracked-root ZIP files — absent at inventory time.
+
+The root `.env`, `private_media/`, and `backups/` are protected data. No file contents from `.env`, `private_media/`, or `backups/` were inspected.
+
+## Branches and tags
+
+### Branches
+
+- `phase1` — active demo-development branch; its remote counterpart is `origin/phase1`.
+- `master` — promoted/stable branch; currently points at the recorded verified phase1 run.
+- `wip/ai-assist` — unmerged AI work; owner-protected and retained.
+- `experiment/neon-realtime` — local-only experiment, commit `487de73ef74a8c4ff957451600eee93a6b094d3e`; owner-protected and unpushed.
+- `origin/master` — remote promoted/stable branch; currently at `2baf1f5`.
+- `origin/phase1` — remote active demo-development branch; current baseline was `1dacbaa` and is not fully merged into master, so it is not eligible for deletion.
+- `origin/HEAD` — symbolic remote default-branch pointer to `origin/master`, not an independent branch.
+
+### Tags
+
+- `day-2-local` — local Day 2 gate/evidence checkpoint; keep as history.
+- `day-3` — local Day 3 checkpoint; keep as history.
+- `day-4` — owner-marked Day 4 browser gate checkpoint; keep as history.
+- `verified-phase1` — verified phase1 checkpoint; keep as history.
+- `verified-phase1-2` — verified phase1 follow-up checkpoint; keep as history.
+- `unverified-2026-11-23` — explicitly unverified historical checkpoint; keep as history.
+
+No remote branch was deleted: `origin/phase1` is not fully merged into master. No local branch or tag was deleted.
+
+## Reference-check notes before removals
+
+- `git grep` found no source or test import/use of `factory_boy`; its only tracked hits are the dependency line in `requirements/dev.txt` and the historical stack table in `AGENTS.md`. Candidate: remove the dependency line in a separate commit, then rerun `pip-audit` and tests.
+- Bootstrap and Leaflet source maps are referenced by the corresponding minified files' `sourceMappingURL` comments and by tests; keep them.
+- `static/js/accessibility.js` and `static/js/city-background.js` are included by `templates/base.html`; keep them. The civic street SVG is referenced by CSS.
+- ZAP baseline reports are referenced by `docs/TEST_REPORT.md` and `docs/zap.yaml`; keep security evidence.
+- Other tracked scripts/assets remain KEEP until a focused `git grep` plus runtime/test/build review proves they are orphaned.
+
+## Cleanup changes after inventory
+
+This section will record each later cleanup commit, its reference evidence, verification results, and any files retained despite appearing unused.
