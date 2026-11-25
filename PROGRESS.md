@@ -1,5 +1,10 @@
 # Progress
 
+## 2026-11-25 — CI dashboard fixture correction
+
+- Read refreshed CI artifacts for HEAD `e6960b38d66bf11bc9ef46cfac8ac31ab13b6342`; run 45569758547 failed with one test failure and 200 passes. Fixed the dashboard test fixture: operational complaints now belong to a separate reporter, so the citizen visibility assertion tests ownership correctly.
+- Syntax compilation and whitespace validation pass. Fix is awaiting a refreshed CI run; E.6 remains gated on green CI.
+
 ## 2026-11-25 — E.5 audit workspace and safe CSV
 
 - Added an admin audit viewer/export and a supervisor view scoped to complaints visible in the supervisor's department. Added action, object-type and date filters with pagination.

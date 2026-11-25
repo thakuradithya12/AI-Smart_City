@@ -31,16 +31,19 @@ def dashboard_roles(db):
         phone_number="9876502005", password="Strong!Password982", name="Dashboard Admin",
         role=User.Role.ADMIN,
     )
+    reporter = User.objects.create_user(
+        phone_number="9876502006", password="Strong!Password982", name="Other Reporter"
+    )
     category = Category.objects.create(name="dashboard-test")
 
-    def complaint(public_id, status, *, owner=citizen, assigned_to=None, routed_department=None):
+    def complaint(public_id, status, *, owner=reporter, assigned_to=None, routed_department=None):
         return Complaint.objects.create(
             public_id=public_id, citizen=owner, category=category, status=status,
             department=routed_department, assignee=assigned_to,
             location=Point(78.48, 17.38, srid=4326), consent_at=timezone.now(),
         )
 
-    citizen_complaint = complaint("DASH-CITIZEN", Complaint.Status.IN_TRIAGE)
+    citizen_complaint = complaint("DASH-CITIZEN", Complaint.Status.IN_TRIAGE, owner=citizen)
     department_complaint = complaint(
         "DASH-DEPT", Complaint.Status.ROUTED, routed_department=department
     )

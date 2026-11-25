@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — CI dashboard fixture correction
+
+- Run [45569758547](https://github.com/thakuradithya12/AI-Smart_City/actions/runs/45569758547) on `e6960b38d66bf11bc9ef46cfac8ac31ab13b6342` failed: 1 failed, 200 passed. The only failure was `tests/test_role_dashboards.py::test_role_dashboard_uses_role_scoped_complaints_and_quick_links[citizen-Your reports-My reports]` (assertion at the recent-complaints visibility check): the fixture assigned every operational complaint to the citizen, while expecting her to see only her own complaint. Corrected test data to use a separate reporter for operational complaints and reserve the citizen account for `DASH-CITIZEN`; production visibility logic is unchanged. This corrects an invalid test fixture, not an authorization behavior.
+- `python -m py_compile tests/test_role_dashboards.py` and `git diff --check` pass. Runtime pytest and the CI fix are not verified until the owner refreshes `_ci` files.
+
 ## 2026-11-25 — E.5 audit workspace and safe CSV
 
 - Added admin and department-scoped supervisor audit pages, filters, pagination and CSV export. Added formula-cell neutralisation and tests for role access, supervisor department scope, CSV output and cells beginning with `=`, `+`, `-` and `@`.
