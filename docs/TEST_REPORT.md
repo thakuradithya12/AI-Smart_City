@@ -1,5 +1,11 @@
 # Test report
 
+## 2026-11-25 — production deploy check attempt
+
+- Attempted `python manage.py check --deploy --settings=config.settings.prod` with local-only `SECRET_KEY`, `DEBUG=0`, `ALLOWED_HOSTS=localhost,127.0.0.1`, and `CSRF_TRUSTED_ORIGINS=https://localhost`. It exited before Django checks with `ModuleNotFoundError: No module named 'django'`.
+- Docker fallback (`docker info`) also could not run: permission denied opening `npipe:////./pipe/dockerDesktopLinuxEngine`. Therefore the production `check --deploy`, migration, Render startup, Neon PostGIS extension/role, public TLS, and provider behavior have not been verified.
+- Available focused suite: `python -m pytest -q tests/test_database_config.py tests/test_map_tiles.py tests/test_readme_workflow_sync.py tests/test_render_start_command.py` — 9 passed. `py_compile` for deployment Python modules/tests and `git diff --check` passed. Pytest emits one host warning because this Python has no pytest-django plugin.
+
 ## 2026-11-25 — free Render + Neon deployment guide
 
 - Added browser-based Render Docker + Neon PostGIS steps, environment variable name inventory, migration/extension permission gate, free-tier warm-up and ephemeral evidence limitations, migration-history warning, and durable-platform migration path. Linked the guide from README. No `render.yaml` was added because dashboard setup is sufficient and the owner has not supplied service/account values; the guide cites Render's official Docker/service docs and Neon's official PostGIS instructions.
