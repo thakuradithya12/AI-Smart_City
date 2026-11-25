@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — OSM demo tiles and CSP
+
+- Confirmed D6's configurable canonical OSM demo URL, visible copyright attribution, and CSP restriction to the OSM tile host. Added a static regression test that checks the template, map script and exact CSP `img-src` host list.
+- `python -m pytest -q tests/test_map_tiles.py` — 1 passed; syntax compilation and `git diff --check` passed. Browser tile loading and the Render-origin Referer behavior are not verified on a deployed site.
+
 ## 2026-11-25 — restart-safe demo evidence
 
 - Created `demo-pothole.png` and `demo-streetlight.png` from original Pillow drawing primitives; documented their source and that they are illustrations, not real reports. `seed_demo` now creates two `in_triage` complaints with these images and repairs missing private storage files from the repo fixtures on each explicit seed run. Existing complaint statuses continue through `transition()`.
