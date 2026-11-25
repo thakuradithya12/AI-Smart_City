@@ -1,5 +1,11 @@
 # Progress
 
+## 2026-11-25 — E.4 reduced role dashboards
+
+- Implemented a role-specific live dashboard for citizen, field worker, department official, supervisor and admin, based on `citizen_dashboard_mobile`, `field_dashboard_mobile`, `department_dashboard_water_sewer`, `supervisor_overview_qa`, and `city_overview_admin_dashboard` references.
+- Reused existing scoped list/detail screens for report review, field tasks, department work and verification. Intentionally left maps, work orders, audit workspace, escalation and analytics to their roadmap dependencies.
+- Added a five-role test for metric labels and complaint visibility. `py_compile` and `git diff --check` passed; runtime pytest is not verified because the host has no Django and Docker is unavailable.
+
 ## 2026-11-25 — E.3 citizen verification reminder
 
 - Added the D8-R three-day reminder service and management command, scheduled hourly. It creates one in-app/email notification per work-completion status event and never changes complaint or resolution state.

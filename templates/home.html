@@ -2,15 +2,13 @@
 {% block title %}Overview · AI Smart City{% endblock %}
 {% block content %}
 <header class="page-heading">
-  <div><p class="eyebrow">{{ request.user.get_role_display }} workspace</p><h1>Hello, {{ request.user.name|default:request.user.phone_number }}</h1><p>Review civic reports and follow the work happening across your service area.</p></div>
+  <div><p class="eyebrow">{{ request.user.get_role_display }} workspace</p><h1>{{ dashboard_title }}</h1><p>{{ dashboard_intro }}</p></div>
   {% if request.user.role == "citizen" %}<a class="button" href="{% url 'report' %}">＋ Report an issue</a>{% elif queue_url_name %}<a class="button" href="{% url queue_url_name %}">Open your work queue</a>{% endif %}
 </header>
 <section class="stat-grid" aria-label="Complaint overview">
-  <article class="stat-card"><span class="stat-label">All complaints</span><strong class="stat-value">{{ total_count }}</strong><div class="stat-foot">Visible to your account</div></article>
-  <article class="stat-card"><span class="stat-label">Active</span><strong class="stat-value">{{ active_count }}</strong><div class="stat-foot">Still moving through the workflow</div></article>
-  <article class="stat-card"><span class="stat-label">Verified closed</span><strong class="stat-value">{{ closed_count }}</strong><div class="stat-foot">Fixes independently confirmed</div></article>
-  <article class="stat-card"><span class="stat-label">Needs attention</span><strong class="stat-value">{{ attention_count }}</strong><div class="stat-foot">Triage, routing or verification</div></article>
+  {% for metric in dashboard_metrics %}<article class="stat-card"><span class="stat-label">{{ metric.label }}</span><strong class="stat-value">{{ metric.value }}</strong><div class="stat-foot">{{ metric.help }}</div></article>{% endfor %}
 </section>
+{% if dashboard_actions %}<nav class="panel dashboard-actions" aria-label="Workspace shortcuts"><h2>Quick links</h2><div class="card-actions">{% for label, route_name in dashboard_actions %}<a class="button button-secondary" href="{% url route_name %}">{{ label }}</a>{% endfor %}{% if admin_configuration_url %}<a class="button button-secondary" href="{{ admin_configuration_url }}">Configuration</a>{% endif %}</div></nav>{% endif %}
 <section class="panel" aria-labelledby="recent-title">
   <div class="card-head"><div><p class="eyebrow">Latest activity</p><h2 id="recent-title">Recent complaints</h2></div>
     {% if request.user.role == "citizen" %}<a class="button button-secondary" href="{% url 'my_complaints' %}">View all</a>{% elif queue_url_name %}<a class="button button-secondary" href="{% url queue_url_name %}">Open queue</a>{% endif %}

@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — E.4 reduced role dashboards
+
+- Added role-specific dashboard summaries and shortcuts for five roles, using `Complaint.objects.visible_to(user)` for complaint counts and recent records. Existing list/detail/action screens remain the linked role workflows.
+- Added a parametrised five-role test for dashboard metrics and cross-role complaint exclusion. `python -m py_compile` and `git diff --check` pass; runtime test is not verified because Django is unavailable and the Docker engine cannot be reached.
+
 ## 2026-11-25 — E.3 citizen verification reminder
 
 - Implemented a one-time citizen reminder three days after each work-completion claim, queued through the scheduled command and reusing the email/in-app delivery path. The service only writes `Notification`; status and resolution remain unchanged.
