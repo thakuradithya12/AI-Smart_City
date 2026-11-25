@@ -1,10 +1,15 @@
 # AI Smart City
 
-AI Smart City is a Django website for reporting civic problems and tracking the response. A citizen submits a complaint with a category, description, map pin and photo. Reviewers route it to a department; department staff assign a field worker; a supervisor or the citizen checks the work before the complaint is closed. Status changes and audit records are kept for accountability.
+AI Smart City is a Django website for citizens to report civic problems with a photo and map pin, and for city teams to route, assign, complete, and independently verify the work. Status and audit history support accountability; AI suggestions are disabled and never make decisions.
+
+## Demo
+
+- **Live demo:** TODO — owner to supply the current Render URL. No live URL is claimed until it is tested.
+- **Screenshots:** [docs/screenshots/](docs/screenshots/README.md) is an empty placeholder for owner-approved screenshots.
 
 ## Complaint workflow
 
-The status labels, outgoing transitions and permitted roles below are generated from [`docs/WORKFLOW.md`](docs/WORKFLOW.md), which in turn is generated from the transition table in `apps/workflow/services.py`. Run `python scripts/sync_readme_workflow.py` after regenerating the workflow reference.
+The status labels, outgoing transitions and permitted roles below are generated from [`docs/WORKFLOW.md`](docs/WORKFLOW.md), which is generated from the transition table in `apps/workflow/services.py`. Run `python scripts/sync_readme_workflow.py` after regenerating the workflow reference.
 
 <!-- WORKFLOW_TABLE_START -->
 
@@ -27,55 +32,60 @@ The status labels, outgoing transitions and permitted roles below are generated 
 
 ## Roles
 
-| Role | Main responsibility |
+| Role | Responsibility |
 |---|---|
 | Citizen | Submit reports, follow their own complaints, and confirm or dispute a claimed fix. |
-| Triage reviewer | Review incoming reports, select a department, request information, or reject with a reason. |
+| Triage reviewer | Review new reports, choose a category and department, request information, or reject with a reason. |
 | Department official | Acknowledge department work, transfer with a reason, and assign a field worker. |
-| Field worker | See assigned tasks, add before/after evidence, and record a work-completion claim. |
-| Supervisor | Assign or reassign department work and verify or reopen claimed fixes. |
-| Admin | Manage application configuration and users; administrative overrides are audited. |
+| Field worker | See assigned work, add before/after evidence, and record a work-completion claim. |
+| Supervisor | Assign department work, verify completion, or reopen disputed work. |
+| Admin | Manage users and configuration; administrative overrides are audited. |
 
-Complaint access is scoped on the server by `Complaint.objects.visible_to(user)`. A work-completion claim and the verification outcome are separate records; a claim never closes a complaint by itself.
+Complaint queries are scoped through `Complaint.objects.visible_to(user)`. A completion claim is stored separately from verification.
+
+## Technology
+
+- Django templates and Python 3.12
+- PostgreSQL with PostGIS; the Render demo target uses Neon only as its PostgreSQL provider
+- Docker Compose for local development; Render Docker for the free demo host
+- Gunicorn and WhiteNoise; Caddy is available for a self-managed HTTPS deployment
+- Locally vendored Bootstrap and Leaflet; OpenStreetMap tiles with attribution for demo traffic
 
 ## Run locally
 
-The local setup needs Docker Desktop with the Linux engine and Docker Compose. It starts Django with PostGIS and uses private local media storage.
+Requires Docker Desktop with its Linux engine and Docker Compose. These three PowerShell commands copy the example settings, start PostGIS and Django, then migrate and seed synthetic demo data:
 
 ```powershell
 Copy-Item .env.example .env
 docker compose up --build -d db web
-docker compose exec web python manage.py migrate
-docker compose exec web python manage.py seed_demo
+docker compose exec web python manage.py migrate; docker compose exec web python manage.py seed_demo
 ```
 
-Open `http://localhost:8000/`. The seed command creates a synthetic Hyderabad demo ward, six demo role accounts, and two sample complaints with repository-created illustration photos. The images are explicitly marked as illustrations, not real evidence. It generates random passwords and prints each new password once; store them securely for the session. The demo seed is for a disposable development database only.
+Open `http://localhost:8000/`. The seed creates six synthetic role accounts and sample complaints with original illustration photos. It prints random passwords once when creating accounts. Use only a disposable local database; do not seed a production service.
 
 ## Run checks
 
 ```powershell
 docker compose run --rm checks
-docker compose run --rm -e DJANGO_SETTINGS_MODULE=config.settings.prod -e DJANGO_SECRET_KEY=local-check-only-change-before-use -e DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1 -e DJANGO_CSRF_TRUSTED_ORIGINS=https://localhost web python manage.py check --deploy
+docker compose exec web python manage.py check --deploy --settings=config.settings.prod
 ```
 
-The checks service runs the migration drift check, pytest, Ruff, Bandit and pip-audit. The second command runs Django's production configuration check; its HSTS warnings should be reviewed against the configured production host. GitHub Actions runs the checks on pushes and pull requests. A change is CI-verified only when the run evidence names that exact commit SHA.
+The checks service runs migration drift detection, pytest, Ruff, Bandit, and pip-audit. A commit is CI-verified only when the owner-provided Actions evidence shows success on that exact SHA; see [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md).
 
-## Limits and current operating status
+## Deploy
 
-- **AI is off.** No classifier model or inference is delivered. AI may not route, prioritize or close complaints; E.6 and browser automation are outside the current delivery cut.
-- **Geography is demo-only.** The seed ward is a synthetic area around Hyderabad and is not an authoritative municipal boundary. Pilot coordinates and ward data are still required.
-- **Email is console-only in local development.** Local email is printed by Django's console backend. Production delivery needs owner-supplied SMTP settings; SMS/OTP is not implemented.
-- **D1 deployment inputs are owner to supply.** No public server/domain values are assumed. Do not treat the local deployment as a live HTTPS pilot.
-- **This is not an emergency service.** Location pins and photos can be imperfect evidence, and the project has no official government integration.
+The current demo target is Render for the Docker web app and Neon for PostgreSQL only. Follow the [free Render + Neon deployment guide](docs/DEPLOY_FREE.md). The [Ubuntu runbook](docs/RUNBOOK_UBUNTU.md) covers a separately managed VM. Account, domain, and live URL values remain owner-supplied.
+
+## Limits and project status
+
+- AI classification is off. There is no trained model or reviewer suggestion.
+- The seeded Hyderabad ward is synthetic demo geography, not an authoritative municipal boundary.
+- Development email uses Django's console backend. SMTP delivery is not configured for the free demo.
+- Render free storage is ephemeral: uploaded evidence photos can be lost on restart or redeploy. Do not use real complaints or photos on the demo.
+- The free Render service does not run the application scheduler; reminders and scheduled retention cleanup are not available there.
+- There is no official government integration. Map pins and photos can be imperfect evidence.
+- The live demo URL, exact-head CI status, real pilot geography, and physical-device acceptance are not verified here. Check the test report and current `_ci` files before making a release claim.
 
 ## Project documents
 
-- [Local and production operations runbook](docs/RUNBOOK_UBUNTU.md)
-- [Free Render + Neon demo deployment](docs/DEPLOY_FREE.md)
-- [10-minute lifecycle demo](docs/DEMO_SCRIPT.md)
-- [Workflow reference](docs/WORKFLOW.md)
-- [User guide](docs/USER_GUIDE.md)
-- [Privacy and retention notice](docs/PRIVACY.md)
-- [Limits](docs/LIMITS.md)
-- [Test report](docs/TEST_REPORT.md)
-- [Changelog](docs/CHANGELOG.md)
+See [`docs/README.md`](docs/README.md) for the document index. The project code and content are **All rights reserved**; no open-source license is granted. Third-party asset notices remain beside the vendored files.

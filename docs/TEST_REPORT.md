@@ -359,7 +359,7 @@ These notes are based on the named `git show` diffs. No runtime verification is 
 | Django key rotation | Completed locally | `DJANGO_SECRET_KEY` regenerated in `.env` using 64 random bytes; generated value was not printed. |
 | PostgreSQL role password rotation | Not verified | `localhost:5432` connection check failed; Docker API unavailable. Did not change only the env value and leave the existing database volume mismatched. |
 | Cache/archive cleanup | Completed | Removed `.uv-cache/`, `.python-runtime/`, `.pytest_cache/`, `.ruff_cache/`, `__pycache__/`, and the named untracked ZIP. `private_media/` remains present. |
-| Full-history secret scan | Not verified | No `gitleaks`, `trufflehog`, or `git-secrets` executable is installed; no Git remote exists. CI now checks out full history and invokes Gitleaks Action v3. |
+| Full-history secret scan | Not verified | No `gitleaks`, `trufflehog`, or `git-secrets` executable was installed for this dated check. The “no Git remote” observation applied at that time; a remote was configured later. CI now checks out full history and invokes Gitleaks Action v3. |
 | Secret scan action version | Source-verified | Official `gitleaks/gitleaks-action` README/releases were checked 2026-11-23; v3 exists and uses Node 24. No CI run is claimed. |
 
 ## 2026-11-23 — ROADMAP_V2 Phase 0.4 remote and CI

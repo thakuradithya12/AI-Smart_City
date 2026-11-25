@@ -1,35 +1,53 @@
-# Day 2 local citizen flow
+# Documentation index
 
-## Routes
+This index links the maintained project documents. Historical reports retain the facts and command results recorded at the time; check their dates and SHAs before treating them as current.
 
-- `/accounts/login/` — sign in with an Indian mobile number and password. Existing staff accounts can use their legacy email identifier until an administrator assigns a phone number.
-- `/register/` — create and sign in to a citizen account.
-- `/` — signed-in home. Citizens can start a report or open their complaints.
-- `/complaints/new/` — submit category, optional description, required photo, confirmed coordinates, and consent.
-- `/complaints/` — the signed-in citizen's own reports.
-- `/complaints/<id>/` — report detail, evidence image, and status timeline. Other users receive 404.
-- `/evidence/<id>/` — authenticated display image, scoped by the same complaint visibility query.
-- `/console/triage/` — reviewer queue with route, reject and information-request actions.
-- `/console/department/` — department inbox for acknowledgement, transfer and assignment.
-- `/console/field/` and `/console/field/<id>/` — assigned field tasks, start work, before/after evidence uploads and work claim.
-- Complaint detail — chronological status, message and evidence timeline; citizen cancel/reply/confirm/dispute, supervisor verify/dispute/reassign actions when allowed by the state machine.
+## Product and operations
 
-Run the local stack, apply migrations, and seed the synthetic demo ward centered in Hyderabad, Telangana:
+- [Architecture](ARCHITECTURE.md) — application components, complaint lifecycle, and privacy boundaries.
+- [User guide](USER_GUIDE.md) — citizen and staff task instructions.
+- [Demo script](DEMO_SCRIPT.md) — timed role-by-role demo walkthrough.
+- [Free Render + Neon deployment](DEPLOY_FREE.md) — browser setup for Render web hosting and Neon PostgreSQL.
+- [Ubuntu runbook](RUNBOOK_UBUNTU.md) — operations for a separately managed Ubuntu VM.
+- [Privacy](PRIVACY.md) — consent, export, deletion, and retention rules.
+- [Limits](LIMITS.md) — current feature, deployment, and evidence limitations.
+- [Changelog](CHANGELOG.md) — dated project changes.
 
-```powershell
-docker compose up -d db web
-docker compose exec web python manage.py migrate
-docker compose exec web python manage.py seed_demo
-```
+## Design and decisions
 
-The seed command creates a small synthetic square demo ward in Hyderabad, Telangana, the six default categories, demo-labelled departments, and five demo roles with random passwords. The demo category routes use the same demo department as the seeded staff so a single set of demo logins can complete a lifecycle. It prints each new account's password once. With `DEBUG=False`, it refuses unless `--force` is supplied. The Hyderabad boundary is demo-only and is not an authoritative Telangana or municipal ward boundary or pilot data. Use test polygons for automated geography tests.
+- [Specification](SPEC.md) — product scope and core requirements.
+- [Owner clarifications](CLARIFICATIONS.md) — binding project decisions supplied by the owner.
+- [Technical decisions](DECISIONS.md) — recorded implementation choices and reasons.
+- [Design system](DESIGN_SYSTEM.md) — visual tokens and reusable UI rules.
+- [UI design](UI_DESIGN.md) — interface direction and screen planning.
+- [UI reference archive](ui_reference/README.md) — mockups for reference only; not served by the app.
+- [Screenshots placeholder](screenshots/README.md) — TODO for owner-approved, non-sensitive screenshots.
 
-## Local vendor assets
+## Workflow and verification
 
-Bootstrap 5.3.8 (MIT) and Leaflet 1.9.4 (BSD-2-Clause) are loaded from `static/vendor/`; there are no runtime library CDN references. Fetch the official pinned files, verify the published hashes and PNG signatures, and save their licence notices in PowerShell:
+- [Workflow](WORKFLOW.md) — generated status and role transition reference.
+- [Test report](TEST_REPORT.md) — dated command results, CI run IDs, SHAs, and verification limits.
+- [Phase 6 acceptance snapshot](PHASE6_ACCEPTANCE.md) — historical acceptance evidence and remaining gates.
+- [Performance notes](PERFORMANCE.md) — local performance observations and follow-up checks.
+- [Cleanup report](CLEANUP_REPORT.md) — tracked/untracked inventory, reference checks, and cleanup actions.
+- [ZAP configuration](zap.yaml) — baseline scan configuration.
+- [ZAP baseline, initial HTML](zap-baseline-2026-11-21.html) — saved local scan output.
+- [ZAP baseline, initial JSON](zap-baseline-2026-11-21.json) — machine-readable local scan output.
+- [ZAP baseline, final HTML](zap-baseline-2026-11-21-final.html) — reviewed local scan output.
+- [ZAP baseline, final JSON](zap-baseline-2026-11-21-final.json) — machine-readable reviewed scan output.
+- [Restore test log](restore-test-2026-11-21.log) — evidence from the local disposable restore rehearsal.
 
-```powershell
-.\scripts\fetch_vendor_assets.ps1
-```
+## Internal working notes
 
-The hashes above are from the official [Bootstrap 5.3 documentation](https://getbootstrap.com/docs/5.3/) and [Leaflet installation guide](https://leafletjs.com/install.html). Keep library notices with the vendored assets when packaging or redistributing them.
+- [Internal notes index](internal/README.md) — explains the purpose and handling of working notes.
+- [Agent instructions](internal/AGENTS.md) — frozen scope, architecture, security and test requirements.
+- [Repository understanding](internal/UNDERSTANDING.md) — implementation observations and validation checklist.
+- [Parking lot](internal/PARKING_LOT.md) — deferred work and unresolved external gates.
+- [Decisions needed](internal/DECISIONS_NEEDED.md) — owner inputs that block specific tasks.
+- [Backend roadmap](BACKEND_ROADMAP.md) — implementation phases and acceptance work.
+- [Roadmap V2](ROADMAP_V2.md) — owner-amended roadmap and phase gates.
+
+## AI data planning
+
+- [`ml/DATASETS.md`](../ml/DATASETS.md) — dataset rights and suitability review; no training data is included.
+- [`ml/DATA_INTAKE.md`](../ml/DATA_INTAKE.md) — owner-data intake and preflight constraints.

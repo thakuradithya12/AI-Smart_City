@@ -194,7 +194,7 @@ This is a plan only. It is not authorization to start Day 1. Exact versions, pac
 5. `docker-compose.yml` — local db/web and named PostGIS volume; worker disabled/optional until Day 5, Caddy arrangement documented.
 6. `config/__init__.py`, `config/settings/{__init__,base,dev,prod}.py`, `config/urls.py`, `config/wsgi.py` — create settings package with custom user configured before any migration, PostGIS, timezone and secure environment handling.
 7. `manage.py` — standard Django command entry point.
-8. `apps/accounts/{__init__,apps,models,managers}.py` — custom email-login user and role choices.
+8. `apps/accounts/{__init__,apps,models,managers}.py` — custom phone-login user and role choices.
 9. `apps/geography/{__init__,apps,models}.py` — Department, Ward, Category and RoutingRule.
 10. `apps/complaints/{__init__,apps,models}.py` — Complaint, Evidence, StatusEvent and Resolution model definitions; no alternate status mutation path.
 11. `apps/audit/{__init__,apps,models}.py` — AuditEvent and append-only ORM guards.

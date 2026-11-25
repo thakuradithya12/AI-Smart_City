@@ -2,6 +2,8 @@
 
 Date: 2026-11-21 (Asia/Kolkata)
 
+This is a dated snapshot from 2026-11-21. Later remote and CI changes are documented in [`TEST_REPORT.md`](TEST_REPORT.md); the historical statements below describe only the state on this snapshot date.
+
 ## Verification record
 
 | Gate | Result | Evidence and limits |
@@ -39,4 +41,4 @@ Phase 6 is **locally verified but not release-complete**. No unsupported gate is
 
 ## 2026-11-22 local backlog follow-up
 
-The later local backlog pass added a specification and deferred-work register, completed the duplicate-review feature with reviewer-only audited linking, added citizen-to-department visibility regression coverage, and fixed a department-null access-control gap. The latest Compose gate is recorded at the top of [`TEST_REPORT.md`](TEST_REPORT.md): 67 tests, Ruff, Bandit, and pip-audit passed; production configuration check exited 0 with the documented HSTS warnings. The web image was rebuilt and local routes smoke-tested. This does not satisfy the still-open public deployment, pilot geography, remote CI, production operations, licensed AI-data, or physical-device gates listed in [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md).
+The later local backlog pass added a specification and deferred-work register, completed the duplicate-review feature with reviewer-only audited linking, added citizen-to-department visibility regression coverage, and fixed a department-null access-control gap. The Compose gate recorded at the time of this 2026-11-22 follow-up is documented in [`TEST_REPORT.md`](TEST_REPORT.md): 67 tests, Ruff, Bandit, and pip-audit passed; production configuration check exited 0 with the documented HSTS warnings. The web image was rebuilt and local routes smoke-tested. This does not satisfy the still-open public deployment, pilot geography, remote CI, production operations, licensed AI-data, or physical-device gates listed in [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md).

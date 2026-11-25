@@ -1,8 +1,8 @@
 # Backend completion roadmap
 
-**Status:** maintained execution record, 2026-11-22. This roadmap follows the frozen v1 requirements in [`internal/AGENTS.md`](internal/AGENTS.md). It distinguishes local implementation evidence from release gates that need external inputs.
+**Status:** historical maintained execution record, last updated 2026-11-22; later changes are recorded in [`CHANGELOG.md`](CHANGELOG.md) and [`TEST_REPORT.md`](TEST_REPORT.md). This roadmap follows the frozen v1 requirements in [`internal/AGENTS.md`](internal/AGENTS.md). It distinguishes local implementation evidence from release gates that need external inputs.
 
-**Latest execution update:** Local complaint-to-department routing, the human-reviewed lifecycle, Telangana-only synthetic demo geography, duplicate review, and department default-deny scoping pass the Docker gate. The integrated suite reports 67 tests passing; see [`TEST_REPORT.md`](TEST_REPORT.md). AI training/inference remain blocked on rights-cleared photos and grouping metadata. Production deployment, authoritative pilot geography, remote CI and device acceptance still need owner-controlled inputs; see [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md).
+**Latest execution update:** Local complaint-to-department routing, the human-reviewed lifecycle, Telangana-only synthetic demo geography, duplicate review, and department default-deny scoping pass the Docker gate. The dated integrated-suite result was 67 tests passing; see [`TEST_REPORT.md`](TEST_REPORT.md) for the exact run and SHA. AI training/inference remain blocked on rights-cleared photos and grouping metadata. Production deployment, authoritative pilot geography, remote CI and device acceptance still need owner-controlled inputs; see [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md).
 
 ## Target
 
@@ -94,7 +94,7 @@ The model slice is not being marked complete by the preflight work. `other` rema
 
 ## Phase 6 — End-to-end acceptance and handoff
 
-**Status: local regression and documentation gates pass; release acceptance remains incomplete.** Current evidence and the item-by-item remaining checklist are in [`PHASE6_ACCEPTANCE.md`](PHASE6_ACCEPTANCE.md) and [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md). The worktree has no Git remote; each verified local change is committed, but remote CI and public release are not claimed.
+**Status: local regression and documentation gates pass; release acceptance remains incomplete.** Current evidence and the item-by-item remaining checklist are in [`PHASE6_ACCEPTANCE.md`](PHASE6_ACCEPTANCE.md) and [`internal/PARKING_LOT.md`](internal/PARKING_LOT.md). This paragraph records the local state at the time of its 2026-11-22 update. A Git remote was configured later; current CI status is recorded only against exact SHAs in [`TEST_REPORT.md`](TEST_REPORT.md).
 
 1. Run the complete test suite, lint, dependency audit, production checks and CI on the exact final commit. Record counts/results with commit SHA in `docs/TEST_REPORT.md`.
 2. Exercise fresh demo accounts for citizen → triage → official → field worker → supervisor/citizen verification; also dispute/reopen/reassign and cancellation. Demo passwords are random, printed once, and must not be committed or posted in chat.

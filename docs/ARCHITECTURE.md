@@ -2,7 +2,7 @@
 
 ## System shape
 
-AI SMART CITY is a server-rendered Django website backed by PostgreSQL with PostGIS. Django templates render the public landing, citizen report and operations pages. The landing shows real public update data from recent status events; the 47 supplied CivicOps screens remain design references only, and their sample names, counts, locations and complaint IDs are not database records.
+AI SMART CITY is a server-rendered Django website backed by PostgreSQL with PostGIS. Django templates render the public landing, citizen report and operations pages. The landing shows real public update data from recent status events; the supplied CivicOps screens remain design references only, and their sample names, counts, locations and complaint IDs are not database records.
 
 ```text
 Browser
@@ -19,7 +19,7 @@ Local development uses the `db` and `web` Compose services. The `checks` profile
 
 ## Responsibilities
 
-- `apps/accounts` defines the email-login user and roles: citizen, triage reviewer, department official, supervisor, field worker and admin.
+- `apps/accounts` defines the phone-login user and roles: citizen, triage reviewer, department official, supervisor, field worker and admin.
 - `apps/geography` stores departments, categories, wards and versioned routing rules. Complaint locations are WGS84 points. Ward lookup uses the confirmed pin and effective ward geometry; GPS accuracy is metadata, not jurisdiction.
 - `apps/complaints` owns complaint reporting, private image evidence, messages and the citizen-facing timeline. Evidence originals stay in private storage; authenticated views check complaint visibility.
 - `apps/workflow` owns transition rules, permission helpers and business services. Status updates are atomic and create status history plus audit events. Views should call these services instead of assigning status directly.

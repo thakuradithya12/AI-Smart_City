@@ -1,6 +1,6 @@
 # AI SMART CITY — Roadmap V2 (agent execution plan)
 
-Prepared 2026-11-23 from a read of the repository snapshot (HEAD `19be9fd`, "feat: refresh civic landing page UI").
+Prepared 2026-11-23 from the repository snapshot at HEAD `19be9fd` ("feat: refresh civic landing page UI"). The baseline descriptions and counts in section 1 are historical snapshot observations, not current inventory or verification claims; later updates are in `docs/CHANGELOG.md` and `docs/TEST_REPORT.md`.
 Audience: the coding agent working in this repo. Owner: Thakur Adithya Singh (solo, college final-year project).
 
 > **Read this first.** No document can guarantee zero bugs. What this plan provides is (a) every known defect and gap with its evidence, (b) acceptance criteria per task, and (c) rules that make mistakes detectable. You are responsible for proof, not claims.
@@ -29,9 +29,9 @@ Audience: the coding agent working in this repo. Owner: Thakur Adithya Singh (so
 ## 1. Baseline facts (from the snapshot — re-verify in task 0.1)
 
 - Stack: Django 5.2.19, PostGIS 17-3.7, psycopg 3.3.9, Pillow 13.0.0, WhiteNoise, gunicorn, django-axes 9.0.0, Python 3.12 image. Server-rendered templates, no API, no JS framework.
-- Apps: `accounts, geography, complaints, workflow, audit, console, ai_assist`. About 1,550 lines of application code (Bandit's own count in the docs) and 1,447 lines of tests across 9 files; 67 tests reported passing locally (not re-run by the reviewer).
+- Apps present in that snapshot: `accounts, geography, complaints, workflow, audit, console, ai_assist`. The line counts and 67-test result quoted in the original review were snapshot-era measurements and are not current verification evidence.
 - 12 statuses, a single `TRANSITIONS` table, append-only status/audit events at ORM level, `Complaint.objects.visible_to(user)` on every query.
-- 11 live templates: base, home, login, register, logged_out, report, my_complaints, complaint detail, triage_queue, department_inbox, field_tasks, field_task_detail. The public landing page is a static Stitch mockup (`docs/ui_reference/public_landing_civicops/code.html`) served by `apps/console/urls.py::ui_showcase`.
+- The public landing is rendered by `templates/landing.html`; files under `docs/ui_reference/` are design references only and are not served by the app. Template inventory should be taken from the current repository when needed.
 - 47 mockup screens exist in `docs/ui_reference/`; they are references, not implementations.
 - Not done (per the repo's own `LIMITS.md`/`internal/PARKING_LOT.md`): public deployment, real pilot ward, AI, remote CI, production backups/monitoring, device acceptance.
 
@@ -62,7 +62,7 @@ Size: S ≤ half day, M ≈ 1 day, L = 2+ days (agent time, including tests). Ea
 ### Phase 0 — Trustworthy baseline (no features)
 
 **0.1 Reproduce the baseline (S).**
-Run `docker compose run --rm checks`, `python manage.py check --deploy --settings=config.settings.prod`, and the production image build. Record exact outputs. Compare with the docs' claims (67 tests, Ruff clean, Bandit 0 findings, pip-audit clean).
+Run `docker compose run --rm checks`, `python manage.py check --deploy --settings=config.settings.prod`, and the production image build. Record exact outputs. Compare with dated results in `docs/TEST_REPORT.md`; do not reuse historical counts as current results.
 *Acceptance:* `docs/TEST_REPORT.md` has a dated entry for the current HEAD, with any discrepancy from earlier claims called out.
 
 **0.2 Scope amendment and docs truth (S).** Depends: D11.
@@ -180,7 +180,7 @@ Currently `link_duplicate` only stores `duplicate_of`. Define and implement: lin
 
 ### Phase 2 — Frontend and design system
 
-**2.1 Replace the static landing page (M).** Resolves V13.
+**2.1 Landing page implementation (completed in later work).** The app now renders `templates/landing.html`; keep the reference mockup unserved. Resolves V13.
 Build `templates/landing.html` extending `base.html`; real content only (what the service is, how it works, recent public updates via the existing `public_updates.html` data path, sign-in and report buttons). Remove: Tailwind CDN, `lucide@latest`, Google Fonts, inline scripts, `ui_showcase` serving from `docs/`. Move mockups to a dev-only route that is `404` when `DEBUG=False`, or remove the route entirely (recommended).
 *Acceptance:* `grep -rniE "cdn\.|unpkg|googleapis|tailwind" templates static --include=*.html --include=*.js --include=*.css` returns nothing outside `static/vendor`; test asserts `/ui-showcase/` is 404 in prod settings; test asserts landing contains no external origins.
 
