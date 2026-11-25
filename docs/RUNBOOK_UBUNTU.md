@@ -1,6 +1,13 @@
 # Fresh Ubuntu VM runbook
 
-This runbook prepares a single Ubuntu 24.04 LTS VM. It does not provision a server or domain. Replace every `<...>` placeholder with values you control. Do not run the public deployment steps until a domain resolves to the VM, ports 80/443 reach it, and the owner has provided the pilot location.
+This runbook prepares a single Ubuntu 24.04 LTS VM. **D1 (server and public domain): owner to supply.** This document does not provision a server, choose a domain, or invent pilot coordinates. Replace every `<...>` placeholder with values supplied by the owner. Do not run public deployment until the domain resolves to the VM, ports 80/443 reach it, and the owner has provided authoritative pilot ward data.
+
+## Server prerequisites
+
+- Ubuntu 24.04 LTS on an `amd64` VM, with a sudo-capable operator account and SSH key access.
+- A public DNS name and VM supplied by the owner; inbound TCP 22, 80 and 443; outbound HTTPS for package/image downloads and Caddy certificate issuance.
+- Enough disk for the application, PostGIS volume, private uploads, and retained encrypted backups. Monitor free space before each deployment.
+- Keep database and media backups outside the VM on an encrypted, access-restricted destination. Do not store `.env`, backup archives, media, or credentials in Git.
 
 ## 1. Install Docker Engine and Compose
 
@@ -68,7 +75,7 @@ openssl rand -hex 32
 nano .env
 ```
 
-In the editor, set these entries to real values (do not paste secrets into chat or commit `.env`):
+In the editor, set these entries to real values (do not paste secrets into chat or commit `.env`). The values shown in `.env.example` are development placeholders, not production credentials:
 
 ```dotenv
 DJANGO_SETTINGS_MODULE=config.settings.prod
@@ -89,6 +96,18 @@ POSTGRES_HOST=db
 POSTGRES_PORT=5432
 ```
 
+The complete environment-variable inventory is in `.env.example`; keep it as the template and maintain the real values only in the permission-restricted `.env`. Configure variables by group:
+
+- Django: `DJANGO_SETTINGS_MODULE`, `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DJANGO_LOG_LEVEL`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS`, `CSP_REPORT_ONLY`.
+- Email and site links: `DJANGO_EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `EMAIL_USE_SSL`, `DEFAULT_FROM_EMAIL`, `SITE_BASE_URL`.
+- Notifications and scheduler: `NOTIFICATION_BATCH_SIZE`, `NOTIFICATION_MAX_ATTEMPTS`, `SCHEDULER_POLL_SECONDS`, `SCHEDULER_HEARTBEAT_STALE_SECONDS`, `CITIZEN_REMINDER_DAYS`.
+- Host/image/backup: `DOMAIN`, `APP_IMAGE`, `APP_IMAGE_PREVIOUS`, `BACKUP_DIR`.
+- Request/media/UI limits: `REPORT_POST_LIMIT`, `REPORT_POST_WINDOW_SECONDS`, `REPORT_MAX_PHOTOS`, `EVIDENCE_DISPLAY_MAX_EDGE`, `LIST_PAGE_SIZE`, `MAP_TILE_URL`.
+- Privacy retention: `COMPLAINT_RETENTION_DAYS`, `CLOSED_PHOTO_RETENTION_DAYS`, `REJECTED_CANCELLED_RETENTION_DAYS`, `INACTIVE_ACCOUNT_RETENTION_DAYS`, `DELETION_REQUEST_DAYS`, `PRIVACY_NOTICE_VERSION`.
+- Database: `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST`, `POSTGRES_PORT`.
+
+Production Compose overrides `DJANGO_SETTINGS_MODULE`, `DJANGO_DEBUG` and `POSTGRES_HOST` for the web and scheduler containers. The secret key, database password, allowed hosts, CSRF origins, domain, image tags and backup path must be set for this deployment. Email credentials are needed only if production email delivery is configured.
+
 Set DNS `A`/`AAAA` records to the VM first. Caddy obtains certificates automatically when the configured hostname points to this server and the public HTTP/HTTPS ports are reachable. Store backups on a restricted, encrypted disk or copy them to an encrypted restricted-access destination.
 
 The current official `postgis/postgis:17-3.7` tag is published on Debian Trixie. Before using a refreshed database image with any existing Postgres volume, check the exact old and new image digests and follow the PostGIS maintainers' dump-and-restore guidance across OS/base-image changes; never assume a mutable tag points to the same database binary build.
@@ -106,11 +125,26 @@ docker compose --env-file .env -f docker-compose.prod.yml run --rm --no-deps web
 docker compose --env-file .env -f docker-compose.prod.yml run --rm --no-deps web python manage.py createcachetable
 docker compose --env-file .env -f docker-compose.prod.yml run --rm --no-deps web python manage.py createsuperuser
 docker compose --env-file .env -f docker-compose.prod.yml up -d web caddy
+docker compose --env-file .env -f docker-compose.prod.yml up -d scheduler
 docker compose --env-file .env -f docker-compose.prod.yml ps
 curl --fail --show-error --head https://<your-domain>/accounts/login/
 ```
 
 Do not create the first admin password as a shared/demo password. Change the login secret and Postgres password if they were ever exposed. The first browser HTTPS request causes Django to emit the initial short HSTS duration (300 seconds); only increase it after confirming stable HTTPS.
+
+The Compose `scheduler` service runs `manage.py run_scheduler`. It invokes `purge_expired` hourly under PostgreSQL advisory locking, alongside the other scheduled maintenance commands. Confirm it stays running with `docker compose --env-file .env -f docker-compose.prod.yml ps` and review its logs with `docker compose --env-file .env -f docker-compose.prod.yml logs --since=1d scheduler`. Do not add a second cron entry for `purge_expired` unless the scheduler service is deliberately disabled.
+
+### Demo data
+
+For a disposable local development database only, start the development Compose services and run:
+
+```bash
+docker compose up -d db
+docker compose run --rm web python manage.py migrate
+docker compose run --rm web python manage.py seed_demo
+```
+
+`seed_demo` refuses to run with production `DEBUG=False` unless forced. Do not pass `--force` in production. It prints newly generated passwords once; capture them securely for the rehearsal and rotate/delete the demo accounts afterwards. The command creates a synthetic Hyderabad ward, not pilot geography. See `docs/DEMO_SCRIPT.md` for the rehearsal accounts and login details.
 
 ## 5. Deploy an update and roll back
 
@@ -163,6 +197,8 @@ scripts/restore_test.sh /var/backups/ai-smart-city/<db-backup>.dump /var/backups
 ```
 
 Inspect the saved log and checksum manifest. Run the restore test after the first real backup and retain its output in `docs/`.
+
+For an actual disaster recovery, first stop writes and restore into a new/clean PostGIS database using `pg_restore`, then restore the media archive into the application's private media volume. Confirm the migration, user and complaint counts and check the application before directing Caddy traffic to it. The script above is a disposable restore rehearsal and intentionally destroys its temporary database and volume; it does not overwrite production data.
 
 ## Production-like local deployment check
 

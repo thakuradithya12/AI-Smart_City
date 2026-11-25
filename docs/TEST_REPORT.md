@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — Ubuntu operations runbook
+
+- Updated `docs/RUNBOOK_UBUNTU.md` with owner-supplied D1 prerequisites, the complete `.env.example` variable groups, first production startup, local-only demo loading, Caddy/HTTPS, hourly scheduler-driven retention, backups, restore rehearsal, updates and rollback.
+- Documentation-only change; no tests added. `git diff --check` passes. No VM, domain, public TLS, backup or restore operation was run; those remain unverified.
+
 ## 2026-11-25 — route authorisation inventory
 
 - Added a resolver-wide route inventory. Public routes must appear on a named allow-list; private app routes must be listed with the source-level role/object guard and carry `login_required`; Django admin routes must be wrapped by its staff permission gate. Any new unclassified route fails the test.
