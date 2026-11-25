@@ -1,5 +1,11 @@
 # Test report
 
+## 2026-11-25 — CI run #24, pytest startup failure
+
+- The owner-provided log for commit `b5ad417` shows pytest exits during `pytest_load_initial_conftests` while `django.setup()` populates `INSTALLED_APPS`. Exact exception: `django.core.exceptions.ImproperlyConfigured: Could not find the GDAL library ... Is GDAL installed?` at Django's installed `django/contrib/gis/gdal/libgdal.py:64`; this is a runner system-library omission, before test collection.
+- Added a CI apt install step for `binutils gdal-bin libgdal-dev libgeos-dev libproj-dev`, matching the Dockerfile. CI database config matches Django settings: host `127.0.0.1`, port `5432`, with the PostGIS service exposing `5432:5432`.
+- The fix has not yet been exercised by a new CI run. The workflow should proceed past pytest startup; pip-audit and `check --deploy` will run if pytest exits successfully.
+
 ## 2026-11-23 — ROADMAP_V2 task 2.4
 
 - Added report flow tests for rendered wizard/photo controls, optional landmark persistence, the 160-character server-side limit, and preservation of description/landmark/coordinates after ward validation errors.
