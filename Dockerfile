@@ -12,4 +12,4 @@ RUN DJANGO_SETTINGS_MODULE=config.settings.prod \
     DJANGO_SECRET_KEY=build-only-static-collection-key-not-for-runtime \
     python manage.py collectstatic --noinput
 EXPOSE 8000
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["sh", "-c", "exec gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers ${WEB_CONCURRENCY:-1} --threads ${GUNICORN_THREADS:-2}"]

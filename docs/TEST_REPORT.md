@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — low-memory Gunicorn defaults
+
+- Set the container, Render start script, and production Compose services to use `WEB_CONCURRENCY` (default 1) and `GUNICORN_THREADS` (default 2). Render uses its supplied `PORT` (fallback 10000); production Compose uses port 8000 if unset. Added these names/defaults to `.env.example` and the Ubuntu runbook.
+- `tests/test_render_start_command.py` — 1 passed with assertions for environment-backed worker/thread/port values. Docker image startup and Render runtime memory were not exercised.
+
 ## 2026-11-25 — public database health route
 
 - Confirmed the existing `/healthz/` route is public, runs `SELECT 1`, returns only status/scheduler health metadata, and does not expose complaint data. It is in `PUBLIC_ROUTE_ALLOWLIST` in the route inventory test.

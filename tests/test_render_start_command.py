@@ -17,3 +17,6 @@ def test_render_start_migrates_and_collects_static_before_serving():
     assert '0) ;;' in script
     assert '1) python manage.py seed_demo --force ;;' in script
     assert '*) echo "DEMO_SEED must be 0 or 1."' in script
+    assert '"${WEB_CONCURRENCY:-1}"' in script
+    assert '"${GUNICORN_THREADS:-2}"' in script
+    assert '"0.0.0.0:${PORT:-10000}"' in script
