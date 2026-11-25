@@ -71,6 +71,14 @@ def _walk_urlpatterns(patterns, namespace=""):
             yield route_name, pattern.callback
 
 
+def _requires_login(callback):
+    if hasattr(callback, "login_url"):
+        return True
+    # Class-based Django auth views protect dispatch rather than the as_view callback.
+    view_class = getattr(callback, "view_class", None)
+    return hasattr(getattr(view_class, "dispatch", None), "login_url")
+
+
 def test_every_url_has_an_explicit_public_or_role_checked_policy():
     routes = list(_walk_urlpatterns(get_resolver().url_patterns))
     route_names = {name for name, _ in routes}
@@ -94,7 +102,7 @@ def test_every_url_has_an_explicit_public_or_role_checked_policy():
             continue
 
         # login_required adds this metadata to the wrapped callback.
-        assert hasattr(callback, "login_url"), f"{name} must require login"
+        assert _requires_login(callback), f"{name} must require login"
         expected_guard = PRIVATE_ROUTE_GUARDS[name]
         if expected_guard is not None:
             view_source = inspect.getsource(inspect.unwrap(callback))
