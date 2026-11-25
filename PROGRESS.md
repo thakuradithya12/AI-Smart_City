@@ -6,6 +6,7 @@
 - Added a Render startup command and atomic, idempotent PostGIS extension creation to the first geography migration; migration-ledger deletion is explicitly a deploy blocker (deployment item 2).
 - Confirmed the public database health endpoint and route allow-list meet deployment item 3; existing tests cover its public response and generic DB failure.
 - Standardized Gunicorn resource defaults at one worker and two threads, with Render/Compose ports supplied through environment (deployment item 4).
+- Added two original, clearly labeled sample illustrations and idempotent demo complaints that restore missing private evidence files after restart (deployment item 5).
 - Added privacy export, account deletion/anonymisation, retention cleanup and the rolling 12-hour session test (E.1–E.2).
 - Added the first three-day citizen verification reminder, reduced role dashboards, and the scoped audit viewer with formula-safe CSV (E.3–E.5).
 - Corrected the dashboard authorization test fixture. CI run 45601898000 passed on `6de99703e478dea3f5defbda3c2bc5e7965071ce`; `master` was fast-forwarded and `verified-phase1-2` was tagged at that exact SHA.

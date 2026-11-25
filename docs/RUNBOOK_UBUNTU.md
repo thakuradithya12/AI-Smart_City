@@ -145,7 +145,7 @@ docker compose run --rm web python manage.py migrate
 docker compose run --rm web python manage.py seed_demo
 ```
 
-`seed_demo` refuses to run with production `DEBUG=False` unless forced. Do not pass `--force` in production. It prints newly generated passwords once; capture them securely for the rehearsal and rotate/delete the demo accounts afterwards. The command creates a synthetic Hyderabad ward, not pilot geography. See `docs/DEMO_SCRIPT.md` for the rehearsal accounts and login details.
+`seed_demo` refuses to run with production `DEBUG=False` unless forced. Do not pass `--force` in production. It prints newly generated passwords once; capture them securely for the rehearsal and rotate/delete the demo accounts afterwards. The command creates a synthetic Hyderabad ward, not pilot geography, plus two sample complaints with repository-created illustration images that are not real evidence. See `docs/DEMO_SCRIPT.md` for the rehearsal accounts and login details.
 
 ## 5. Deploy an update and roll back
 

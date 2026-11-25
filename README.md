@@ -49,7 +49,7 @@ docker compose exec web python manage.py migrate
 docker compose exec web python manage.py seed_demo
 ```
 
-Open `http://localhost:8000/`. The seed command creates a synthetic Hyderabad demo ward and demo role accounts. It generates random passwords and prints each new password once; store them securely for the session. The demo seed is for a disposable development database only.
+Open `http://localhost:8000/`. The seed command creates a synthetic Hyderabad demo ward, six demo role accounts, and two sample complaints with repository-created illustration photos. The images are explicitly marked as illustrations, not real evidence. It generates random passwords and prints each new password once; store them securely for the session. The demo seed is for a disposable development database only.
 
 ## Run checks
 

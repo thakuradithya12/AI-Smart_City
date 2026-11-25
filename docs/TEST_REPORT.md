@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-25 — restart-safe demo evidence
+
+- Created `demo-pothole.png` and `demo-streetlight.png` from original Pillow drawing primitives; documented their source and that they are illustrations, not real reports. `seed_demo` now creates two `in_triage` complaints with these images and repairs missing private storage files from the repo fixtures on each explicit seed run. Existing complaint statuses continue through `transition()`.
+- Extended the seed test to check both complaints/evidence and storage repair on rerun. Python syntax compilation, Pillow image verification, Ruff, and `git diff --check` pass. The Django seed test cannot collect locally because Django is unavailable; persistent-host restart behavior is not yet verified.
+
 ## 2026-11-25 — low-memory Gunicorn defaults
 
 - Set the container, Render start script, and production Compose services to use `WEB_CONCURRENCY` (default 1) and `GUNICORN_THREADS` (default 2). Render uses its supplied `PORT` (fallback 10000); production Compose uses port 8000 if unset. Added these names/defaults to `.env.example` and the Ubuntu runbook.
