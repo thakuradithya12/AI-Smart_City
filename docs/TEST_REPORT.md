@@ -1,5 +1,9 @@
 # Test report
 
+## 2026-11-26 — phase1 cleanup verification
+
+- GitHub Actions run `45676456360` completed with conclusion `success` on exact commit `16ceb83b3c3158060bfef157df912825862c9494` (`docs: record cleanup actions and current guide`), as recorded in the refreshed `_ci/runs.txt`. This result verifies that SHA only.
+
 ## 2026-11-25 — CI demo seed expectation
 
 - Run 45605763174 also found the older `test_seed_demo_creates_hyderabad_demo_ward_defaults_and_prints_passwords_once` still expected five email-based accounts. The explicit demo seed now creates six accounts keyed by phone (including admin), as required for the current login flow. Updated that test to assert all six exact roles and phone numbers and that passwords print only once; ward/category/routing assertions are unchanged. This corrects a stale expectation without weakening product coverage.
