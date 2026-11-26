@@ -1,5 +1,10 @@
 # Test report
 
+## 2026-11-26 — report categories on Render startup
+
+- Added the idempotent `seed_categories` command to Render startup so the six standard report categories exist even when `DEMO_SEED=0`. It does not create accounts, departments, complaints, or ward geometry and does not overwrite existing category rows.
+- `docker compose run --rm checks` on the pre-commit working tree: migration drift check passed (`No changes detected`); pytest `217 passed`; Ruff passed; Bandit reported no findings; pip-audit reported no known vulnerabilities. This is a local run, not CI evidence for the commit.
+
 ## 2026-11-26 — phase1 cleanup verification
 
 - GitHub Actions run `45676456360` completed with conclusion `success` on exact commit `16ceb83b3c3158060bfef157df912825862c9494` (`docs: record cleanup actions and current guide`), as recorded in the refreshed `_ci/runs.txt`. This result verifies that SHA only.

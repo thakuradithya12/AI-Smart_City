@@ -28,7 +28,7 @@ Neon is separate from the Render service, so a Render restart does not clear the
    sh scripts/start_render.sh
    ```
 
-   This command runs `migrate --noinput`, runs `collectstatic --noinput`, optionally seeds only when `DEMO_SEED=1`, then starts Gunicorn. It binds to Render's `PORT`, defaulting to 10000. The process defaults are one worker (`WEB_CONCURRENCY`) and two threads (`GUNICORN_THREADS`).
+   This command runs `migrate --noinput`, ensures the six standard report categories exist, runs `collectstatic --noinput`, optionally creates demo accounts and sample complaints only when `DEMO_SEED=1`, then starts Gunicorn. It binds to Render's `PORT`, defaulting to 10000. The process defaults are one worker (`WEB_CONCURRENCY`) and two threads (`GUNICORN_THREADS`).
 4. Set the health check path to `/healthz/`. The route is public and tests database connectivity without returning complaint data.
 5. Add environment variables in the Render service's **Environment** page. Names and purposes only:
 
@@ -39,7 +39,7 @@ Neon is separate from the Render service, so a Render restart does not clear the
    | `DEBUG` | Set production debug behavior to off (`0`) |
    | `ALLOWED_HOSTS` | Render-assigned host name |
    | `CSRF_TRUSTED_ORIGINS` | HTTPS origin for the Render-assigned host |
-   | `DEMO_SEED` | Leave off by default; set to `1` only for an intentional demo seed |
+   | `DEMO_SEED` | Leave off by default; standard report categories are initialized regardless; set to `1` only for an intentional demo seed |
    | `WEB_CONCURRENCY` | Gunicorn worker count; default `1` for the 512 MB free instance |
    | `GUNICORN_THREADS` | Gunicorn thread count; default `2` |
    | `PORT` | Render-provided web-service port; do not hard-code a different port |
@@ -55,7 +55,7 @@ Neon is separate from the Render service, so a Render restart does not clear the
 
    Set secret values only in Render's environment interface. Do not commit them, put them in `render.yaml`, or include them in screenshots or logs. `DATABASE_URL` takes precedence over the Compose-style `POSTGRES_*` variables. `SECRET_KEY`, `ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS` take precedence over the legacy `DJANGO_*` aliases.
 6. Save and deploy. Inspect the deploy logs for successful PostGIS setup, migrations and static collection. Open `/healthz/`; then open the service URL and check the login page.
-7. Keep `DEMO_SEED=0` until the owner has confirmed Neon extension permissions and chosen to expose demo accounts. If enabling it, set `DEMO_SEED=1` and redeploy. The command creates synthetic demo accounts, two sample complaints and repository-created illustration images. It prints newly created random passwords in the deploy log; capture them securely and rotate/disable the accounts after the demo. The phone numbers are synthetic login identifiers, not verified or contactable numbers.
+7. Keep `DEMO_SEED=0` until the owner has confirmed Neon extension permissions and chosen to expose demo accounts. Standard report categories are initialized without demo accounts, reports, departments, or ward geometry. If enabling the full demo seed, set `DEMO_SEED=1` and redeploy. It creates synthetic demo accounts, two sample complaints and repository-created illustration images. It prints newly created random passwords in the deploy log; capture them securely and rotate/disable the accounts after the demo. The phone numbers are synthetic login identifiers, not verified or contactable numbers.
 
 Render's free plan spins down a web service after 15 minutes without inbound requests and may take about a minute to wake. Its filesystem is ephemeral and free instances can restart at any time. Free instances do not support persistent disks or background workers; free Postgres services on Render are not used here. See [Render's free instance limits](https://render.com/docs/free). This deployment therefore does not run the application scheduler: reminders, notification delivery, SLA jobs and automatic `purge_expired` scheduling are not available on the free demo. Render free also blocks outbound SMTP ports 25, 465 and 587; email delivery is not part of this demo. In local development, email uses Django's console backend.
 
