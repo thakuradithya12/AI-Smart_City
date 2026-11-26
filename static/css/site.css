@@ -207,7 +207,7 @@ legend { padding: 0 .4rem; color: var(--navy); font-weight: 700; }
   body::before { background-position: center 55%; opacity: .2; }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .header-inner { flex-wrap: wrap; gap: .4rem .75rem; padding: .65rem 1rem; }
   .primary-nav { order: 3; width: 100%; overflow-x: auto; margin: .25rem 0 -.2rem; }
   .primary-nav a { min-height: 40px; padding: .4rem .65rem; white-space: nowrap; }

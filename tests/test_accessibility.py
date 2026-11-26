@@ -144,6 +144,14 @@ def test_keyboard_focus_indicator_meets_three_to_one_contrast():
         assert _contrast_ratio(focus_color, background) >= 3
 
 
+def test_compact_header_layout_starts_before_navigation_runs_out_of_room():
+    stylesheet = Path(__file__).resolve().parents[1] / "static" / "css" / "site.css"
+    css = stylesheet.read_text(encoding="utf-8")
+
+    assert re.search(r"@media\s*\(max-width:\s*900px\)", css)
+    assert ".primary-nav { order: 3; width: 100%; overflow-x: auto;" in css
+
+
 @pytest.mark.django_db
 def test_landing_navigation_targets_real_pages_and_existing_sections(client):
     response = client.get(reverse("home"))
